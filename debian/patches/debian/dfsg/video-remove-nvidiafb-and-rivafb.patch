@@ -15,7 +15,7 @@ probably discontinued 10 years ago.
 ---
 --- a/drivers/video/fbdev/Kconfig
 +++ b/drivers/video/fbdev/Kconfig
-@@ -882,101 +882,6 @@ config FB_ATMEL
+@@ -689,101 +689,6 @@
  	help
  	  This enables support for the AT91 LCD Controller.
  
@@ -119,7 +119,7 @@ probably discontinued 10 years ago.
  	depends on FB && PCI
 --- a/drivers/video/fbdev/Makefile
 +++ b/drivers/video/fbdev/Makefile
-@@ -21,8 +21,6 @@ obj-$(CONFIG_FB_PM3)		  += pm3fb.o
+@@ -21,8 +21,6 @@
  
  obj-$(CONFIG_FB_I740)		  += i740fb.o
  obj-$(CONFIG_FB_MATROX)		  += matrox/

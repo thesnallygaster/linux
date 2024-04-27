@@ -12,7 +12,7 @@ actually used.
 ---
 --- a/fs/notify/fanotify/fanotify_user.c
 +++ b/fs/notify/fanotify/fanotify_user.c
-@@ -1661,6 +1661,14 @@ static int do_fanotify_mark(int fanotify
+@@ -1732,6 +1732,14 @@
  		umask = FANOTIFY_EVENT_FLAGS;
  	}
  

@@ -11,7 +11,7 @@ Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
 --- a/tools/build/feature/test-bpf.c
 +++ b/tools/build/feature/test-bpf.c
-@@ -35,8 +35,10 @@ int main(void)
+@@ -41,8 +41,10 @@
  	attr.prog_flags = 0;
  
  	/*

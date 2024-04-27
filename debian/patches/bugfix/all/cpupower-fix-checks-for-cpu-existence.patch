@@ -24,7 +24,7 @@ negative cases.]
 ---
 --- a/tools/power/cpupower/bench/system.c
 +++ b/tools/power/cpupower/bench/system.c
-@@ -58,12 +58,19 @@ long long int get_time()
+@@ -45,12 +45,19 @@
  
  int set_cpufreq_governor(char *governor, unsigned int cpu)
  {

@@ -24,11 +24,9 @@ Signed-off-by: Geoff Levand <geoff@infradead.org>
  arch/arm64/kernel/acpi.c | 40 ++++++++++++++++++++++++++++++++++++----
  1 file changed, 36 insertions(+), 4 deletions(-)
 
-Index: linux/arch/arm64/kernel/acpi.c
-===================================================================
---- linux.orig/arch/arm64/kernel/acpi.c
-+++ linux/arch/arm64/kernel/acpi.c
-@@ -32,6 +32,8 @@
+--- a/arch/arm64/kernel/acpi.c
++++ b/arch/arm64/kernel/acpi.c
+@@ -34,6 +34,8 @@
  #include <asm/daifflags.h>
  #include <asm/smp_plat.h>
  
@@ -37,7 +35,7 @@ Index: linux/arch/arm64/kernel/acpi.c
  int acpi_noirq = 1;		/* skip ACPI IRQ initialization */
  int acpi_disabled = 1;
  EXPORT_SYMBOL(acpi_disabled);
-@@ -178,6 +180,33 @@ out:
+@@ -173,6 +175,33 @@
  }
  
  /*
@@ -71,7 +69,7 @@ Index: linux/arch/arm64/kernel/acpi.c
   * acpi_boot_table_init() called from setup_arch(), always.
   *	1. find RSDP and get its address, and then find XSDT
   *	2. extract all tables and checksums them all
-@@ -232,11 +261,14 @@ done:
+@@ -226,11 +255,14 @@
  	if (acpi_disabled) {
  		if (earlycon_acpi_spcr_enable)
  			early_init_dt_scan_chosen_stdout();

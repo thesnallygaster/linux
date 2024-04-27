@@ -7,7 +7,7 @@ Signed-off-by: Ben Hutchings <benh@debian.org>
 ---
 --- a/tools/lib/api/Makefile
 +++ b/tools/lib/api/Makefile
-@@ -29,7 +29,7 @@ endif
+@@ -39,7 +39,7 @@
  endif
  
  ifeq ($(DEBUG),0)

@@ -16,7 +16,7 @@ un-blacklist it in udev.
 ---
 --- a/drivers/video/fbdev/via/via-core.c
 +++ b/drivers/video/fbdev/via/via-core.c
-@@ -695,7 +695,14 @@ static const struct pci_device_id via_pc
+@@ -700,7 +700,14 @@
  	  .driver_data = UNICHROME_VX900 },
  	{ }
  };

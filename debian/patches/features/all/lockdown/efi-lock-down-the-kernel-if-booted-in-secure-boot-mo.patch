@@ -26,16 +26,16 @@ Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
 
 --- a/arch/x86/kernel/setup.c
 +++ b/arch/x86/kernel/setup.c
-@@ -1031,6 +1031,8 @@ void __init setup_arch(char **cmdline_p)
+@@ -1028,6 +1028,8 @@
  	if (efi_enabled(EFI_BOOT))
  		efi_init();
  
 +	efi_set_secure_boot(boot_params.secure_boot);
 +
  	reserve_ibft_region();
- 	dmi_setup();
+ 	x86_init.resources.dmi_setup();
  
-@@ -1192,8 +1194,6 @@ void __init setup_arch(char **cmdline_p)
+@@ -1190,8 +1192,6 @@
  	/* Allocate bigger log buffer */
  	setup_log_buf(1);
  
@@ -54,7 +54,7 @@ Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
  
  /*
   * Decide what to do when UEFI secure boot mode is enabled.
-@@ -28,6 +29,10 @@ void __init efi_set_secure_boot(enum efi
+@@ -28,6 +29,10 @@
  			break;
  		case efi_secureboot_mode_enabled:
  			set_bit(EFI_SECURE_BOOT, &efi.flags);
@@ -67,7 +67,7 @@ Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
  		default:
 --- a/include/linux/security.h
 +++ b/include/linux/security.h
-@@ -482,6 +482,7 @@ int security_inode_notifysecctx(struct i
+@@ -486,6 +486,7 @@
  int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen);
  int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
  int security_locked_down(enum lockdown_reason what);
@@ -75,7 +75,7 @@ Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
  #else /* CONFIG_SECURITY */
  
  static inline int call_blocking_lsm_notifier(enum lsm_event event, void *data)
-@@ -1388,6 +1389,11 @@ static inline int security_locked_down(e
+@@ -1404,6 +1405,11 @@
  {
  	return 0;
  }
@@ -89,7 +89,7 @@ Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
  #if defined(CONFIG_SECURITY) && defined(CONFIG_WATCH_QUEUE)
 --- a/security/lockdown/Kconfig
 +++ b/security/lockdown/Kconfig
-@@ -45,3 +45,18 @@ config LOCK_DOWN_KERNEL_FORCE_CONFIDENTI
+@@ -45,3 +45,18 @@
  	 disabled.
  
  endchoice
@@ -110,7 +110,7 @@ Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
 +	  triggered in integrity mode if EFI Secure Boot is set.
 --- a/security/lockdown/lockdown.c
 +++ b/security/lockdown/lockdown.c
-@@ -23,7 +23,7 @@ static const enum lockdown_reason lockdo
+@@ -23,7 +23,7 @@
  /*
   * Put the kernel into lock-down mode.
   */

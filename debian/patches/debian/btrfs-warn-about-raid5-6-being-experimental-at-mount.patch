@@ -19,7 +19,7 @@ https://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git/commit/?id
 
 --- a/fs/btrfs/disk-io.c
 +++ b/fs/btrfs/disk-io.c
-@@ -3832,6 +3832,15 @@ int __cold open_ctree(struct super_block *sb,
+@@ -3501,6 +3501,15 @@
  		btrfs_set_and_info(fs_info, SSD, "enabling ssd optimizations");
  	}
  

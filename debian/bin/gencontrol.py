@@ -336,7 +336,7 @@ linux-signed-{vars['arch']} (@signedtemplate_sourceversion@) {dist}; urgency={ur
         relation_compiler_header = PackageRelationGroup([relation_compiler])
 
         # Generate compiler build-depends for native:
-        # gcc-13 [arm64] <!cross !pkg.linux.nokernel>
+        # gcc-12 [arm64] <!cross !pkg.linux.nokernel>
         self.bundle.packages['source']['Build-Depends-Arch'].merge([
             PackageRelationEntry(
                 relation_compiler,
@@ -346,7 +346,7 @@ linux-signed-{vars['arch']} (@signedtemplate_sourceversion@) {dist}; urgency={ur
         ])
 
         # Generate compiler build-depends for cross:
-        # gcc-13-aarch64-linux-gnu [arm64] <cross !pkg.linux.nokernel>
+        # gcc-12-aarch64-linux-gnu [arm64] <cross !pkg.linux.nokernel>
         self.bundle.packages['source']['Build-Depends-Arch'].merge([
             PackageRelationEntry(
                 relation_compiler,
@@ -357,7 +357,7 @@ linux-signed-{vars['arch']} (@signedtemplate_sourceversion@) {dist}; urgency={ur
         ])
 
         # Generate compiler build-depends for kernel:
-        # gcc-13-hppa64-linux-gnu [hppa] <!pkg.linux.nokernel>
+        # gcc-12-hppa64-linux-gnu [hppa] <!pkg.linux.nokernel>
         if gnutype := config_entry_base.get('kernel-gnu-type'):
             self.bundle.packages['source']['Build-Depends-Arch'].merge([
                 PackageRelationEntry(

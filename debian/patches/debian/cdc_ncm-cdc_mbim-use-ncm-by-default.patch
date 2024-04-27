@@ -13,7 +13,7 @@ once it's ready to speak MBIM.
 ---
 --- a/drivers/net/usb/cdc_ncm.c
 +++ b/drivers/net/usb/cdc_ncm.c
-@@ -53,11 +53,7 @@
+@@ -54,11 +54,7 @@
  #include <linux/usb/cdc.h>
  #include <linux/usb/cdc_ncm.h>
  

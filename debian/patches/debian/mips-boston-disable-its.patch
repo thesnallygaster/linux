@@ -12,7 +12,7 @@ u-boot-tools.
 
 --- a/arch/mips/generic/Platform
 +++ b/arch/mips/generic/Platform
-@@ -13,7 +13,6 @@ cflags-$(CONFIG_MACH_INGENIC_SOC)	+= -I$
+@@ -13,7 +13,6 @@
  cflags-$(CONFIG_MIPS_GENERIC)	+= -I$(srctree)/arch/mips/include/asm/mach-generic
  
  load-$(CONFIG_MIPS_GENERIC)	+= 0xffffffff80100000

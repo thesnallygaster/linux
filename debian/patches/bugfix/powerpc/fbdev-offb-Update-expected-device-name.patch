@@ -28,11 +28,9 @@ Signed-off-by: Helge Deller <deller@gmx.de>
  drivers/video/fbdev/offb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/offb.c b/drivers/video/fbdev/offb.c
-index 0065a77b6dbc8..b5fdef2b74359 100644
 --- a/drivers/video/fbdev/offb.c
 +++ b/drivers/video/fbdev/offb.c
-@@ -696,7 +696,7 @@ MODULE_DEVICE_TABLE(of, offb_of_match_display);
+@@ -694,7 +694,7 @@
  
  static struct platform_driver offb_driver_display = {
  	.driver = {
@@ -41,6 +39,3 @@ index 0065a77b6dbc8..b5fdef2b74359 100644
  		.of_match_table = offb_of_match_display,
  	},
  	.probe = offb_probe_display,
--- 
-2.30.2
-

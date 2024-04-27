@@ -5,27 +5,24 @@ Forwarded: not-needed
 
 [bwh: Tweak further for pure git]
 
-Index: linux/.gitignore
-===================================================================
---- linux.orig/.gitignore
-+++ linux/.gitignore
-@@ -77,11 +77,6 @@ modules.order
- /kernel.spec
+--- a/.gitignore
++++ b/.gitignore
+@@ -78,11 +78,6 @@
  /rpmbuild/
  
--#
+ #
 -# Debian directory (make deb-pkg)
 -#
 -/debian/
 -
- #
+-#
  # Snap directory (make snap-pkg)
  #
-@@ -92,18 +87,6 @@ modules.order
- #
+ /snap/
+@@ -93,18 +88,6 @@
  /tar-install/
  
--#
+ #
 -# We don't want to ignore the following even if they are dot-files
 -#
 -!.clang-format
@@ -37,10 +34,11 @@ Index: linux/.gitignore
 -!.mailmap
 -!.rustfmt.toml
 -
- #
+-#
  # Generated include files
  #
-@@ -170,3 +153,10 @@ sphinx_*/
+ /include/config/
+@@ -170,3 +153,10 @@
  
  # Rust analyzer configuration
  /rust-project.json

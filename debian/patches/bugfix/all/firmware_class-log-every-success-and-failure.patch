@@ -27,7 +27,7 @@ format to detect missing firmware.
 
 --- a/drivers/base/firmware_loader/fallback.c
 +++ b/drivers/base/firmware_loader/fallback.c
-@@ -558,7 +558,7 @@ static int fw_load_from_user_helper(stru
+@@ -135,7 +135,7 @@
  	if (opt_flags & FW_OPT_NOWAIT) {
  		timeout = usermodehelper_read_lock_wait(timeout);
  		if (!timeout) {
@@ -38,7 +38,7 @@ format to detect missing firmware.
  		}
 --- a/drivers/base/firmware_loader/main.c
 +++ b/drivers/base/firmware_loader/main.c
-@@ -535,18 +535,15 @@ fw_get_filesystem_firmware(struct device
+@@ -550,18 +550,15 @@
  						       file_size_ptr,
  						       READING_FIRMWARE);
  		if (rc < 0) {
@@ -61,7 +61,7 @@ format to detect missing firmware.
  		if (decompress) {
  			dev_dbg(device, "f/w decompressing %s\n",
  				fw_priv->fw_name);
-@@ -559,8 +556,6 @@ fw_get_filesystem_firmware(struct device
+@@ -574,8 +571,6 @@
  				continue;
  			}
  		} else {
@@ -70,7 +70,7 @@ format to detect missing firmware.
  			if (!fw_priv->data)
  				fw_priv->data = buffer;
  			fw_priv->size = size;
-@@ -570,6 +565,10 @@ fw_get_filesystem_firmware(struct device
+@@ -585,6 +580,10 @@
  	}
  	__putname(path);
  

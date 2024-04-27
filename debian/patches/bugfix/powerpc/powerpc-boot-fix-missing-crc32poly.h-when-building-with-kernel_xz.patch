@@ -24,11 +24,9 @@ Tested-by: Michal Kubecek <mkubecek@suse.cz>
  arch/powerpc/boot/Makefile | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Index: linux/arch/powerpc/boot/Makefile
-===================================================================
---- linux.orig/arch/powerpc/boot/Makefile
-+++ linux/arch/powerpc/boot/Makefile
-@@ -70,7 +70,7 @@ BOOTCFLAGS	+= -fno-stack-protector
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -99,7 +99,7 @@
  endif
  
  BOOTCFLAGS	+= -include $(srctree)/include/linux/compiler_attributes.h

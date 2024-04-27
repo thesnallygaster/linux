@@ -16,7 +16,7 @@ The error message is based on that used in commit 0126be38d988
 ---
 --- a/Makefile
 +++ b/Makefile
-@@ -218,6 +218,18 @@ ifeq ("$(origin M)", "command line")
+@@ -142,6 +142,18 @@
    KBUILD_EXTMOD := $(M)
  endif
  

@@ -23,11 +23,9 @@ Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
  arch/sh/boot/romimage/Makefile   |  4 ++--
  3 files changed, 9 insertions(+), 9 deletions(-)
 
-Index: linux/arch/sh/Makefile
-===================================================================
---- linux.orig/arch/sh/Makefile
-+++ linux/arch/sh/Makefile
-@@ -102,16 +102,16 @@ UTS_MACHINE		:= sh
+--- a/arch/sh/Makefile
++++ b/arch/sh/Makefile
+@@ -102,16 +102,16 @@
  LDFLAGS_vmlinux		+= -e _stext
  
  ifdef CONFIG_CPU_LITTLE_ENDIAN
@@ -49,11 +47,9 @@ Index: linux/arch/sh/Makefile
  
  # Mach groups
  machdir-$(CONFIG_SOLUTION_ENGINE)		+= mach-se
-Index: linux/arch/sh/boot/compressed/Makefile
-===================================================================
---- linux.orig/arch/sh/boot/compressed/Makefile
-+++ linux/arch/sh/boot/compressed/Makefile
-@@ -36,7 +36,7 @@ endif
+--- a/arch/sh/boot/compressed/Makefile
++++ b/arch/sh/boot/compressed/Makefile
+@@ -29,7 +29,7 @@
  
  ccflags-remove-$(CONFIG_MCOUNT) += -pg
  
@@ -62,7 +58,7 @@ Index: linux/arch/sh/boot/compressed/Makefile
  		   -T $(obj)/../../kernel/vmlinux.lds
  
  KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
-@@ -60,7 +60,7 @@ $(obj)/vmlinux.bin.lzo: $(obj)/vmlinux.b
+@@ -53,7 +53,7 @@
  
  OBJCOPYFLAGS += -R .empty_zero_page
  
@@ -71,11 +67,9 @@ Index: linux/arch/sh/boot/compressed/Makefile
  
  $(obj)/piggy.o: $(obj)/vmlinux.scr $(obj)/vmlinux.bin.$(suffix_y) FORCE
  	$(call if_changed,ld)
-Index: linux/arch/sh/boot/romimage/Makefile
-===================================================================
---- linux.orig/arch/sh/boot/romimage/Makefile
-+++ linux/arch/sh/boot/romimage/Makefile
-@@ -13,7 +13,7 @@ mmcif-obj-$(CONFIG_CPU_SUBTYPE_SH7724)	:
+--- a/arch/sh/boot/romimage/Makefile
++++ b/arch/sh/boot/romimage/Makefile
+@@ -13,7 +13,7 @@
  load-$(CONFIG_ROMIMAGE_MMCIF)		:= $(mmcif-load-y)
  obj-$(CONFIG_ROMIMAGE_MMCIF)		:= $(mmcif-obj-y)
  
@@ -84,7 +78,7 @@ Index: linux/arch/sh/boot/romimage/Makefile
  		   -T $(obj)/../../kernel/vmlinux.lds
  
  $(obj)/vmlinux: $(obj)/head.o $(obj-y) $(obj)/piggy.o FORCE
-@@ -24,7 +24,7 @@ OBJCOPYFLAGS += -j .empty_zero_page
+@@ -24,7 +24,7 @@
  $(obj)/zeropage.bin: vmlinux FORCE
  	$(call if_changed,objcopy)
  

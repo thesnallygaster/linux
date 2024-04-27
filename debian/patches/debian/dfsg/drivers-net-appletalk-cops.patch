@@ -10,7 +10,7 @@ Forwarded: not-needed
 
 --- a/drivers/net/appletalk/Kconfig
 +++ b/drivers/net/appletalk/Kconfig
-@@ -39,35 +39,6 @@ config DEV_APPLETALK
+@@ -39,35 +39,6 @@
  	  connect to the AppleTalk network, say Y.
  	  
  

@@ -11,11 +11,9 @@ To keep backward compatibility skip this check.
  security/integrity/platform_certs/machine_keyring.c | 5 +----
  1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/security/integrity/platform_certs/machine_keyring.c b/security/integrity/platform_certs/machine_keyring.c
-index a401640a63cd..0627f14eacbe 100644
 --- a/security/integrity/platform_certs/machine_keyring.c
 +++ b/security/integrity/platform_certs/machine_keyring.c
-@@ -68,10 +68,7 @@ static bool __init trust_moklist(void)
+@@ -68,10 +68,7 @@
  
  	if (!initialized) {
  		initialized = true;

@@ -22,7 +22,7 @@ of the patch
 ---
 --- a/drivers/base/firmware_loader/main.c
 +++ b/drivers/base/firmware_loader/main.c
-@@ -580,9 +580,12 @@ fw_get_filesystem_firmware(struct device
+@@ -580,9 +580,12 @@
  	}
  	__putname(path);
  
@@ -38,7 +38,7 @@ of the patch
  }
 --- a/drivers/gpu/drm/radeon/radeon_drv.c
 +++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -322,6 +322,7 @@ static int radeon_pci_probe(struct pci_d
+@@ -322,6 +322,7 @@
  	if ((ent->driver_data & RADEON_FAMILY_MASK) >= CHIP_R600 &&
  	    !radeon_firmware_installed()) {
  		DRM_ERROR("radeon kernel modesetting for R600 or later requires firmware installed\n");

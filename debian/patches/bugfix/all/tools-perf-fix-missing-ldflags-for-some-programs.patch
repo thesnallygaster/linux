@@ -6,7 +6,7 @@ Signed-off-by: Ben Hutchings <benh@debian.org>
 ---
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -785,7 +785,7 @@ $(OUTPUT)dlfilters/%.o: dlfilters/%.c in
+@@ -799,7 +799,7 @@
  .SECONDARY: $(DLFILTERS:.so=.o)
  
  $(OUTPUT)dlfilters/%.so: $(OUTPUT)dlfilters/%.o
