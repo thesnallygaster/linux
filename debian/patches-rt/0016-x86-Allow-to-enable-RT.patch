@@ -1,0 +1,24 @@
+From 98c9c62ae579439b1f83ddbeb9d9cf04842c1b6e Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Date: Wed, 7 Aug 2019 18:15:38 +0200
+Subject: [PATCH 016/198] x86: Allow to enable RT
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+
+Allow to select RT.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -28,6 +28,7 @@
+ 	select ARCH_HAS_GIGANTIC_PAGE
+ 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+ 	select ARCH_SUPPORTS_PER_VMA_LOCK
++	select ARCH_SUPPORTS_RT
+ 	select ARCH_USE_CMPXCHG_LOCKREF
+ 	select HAVE_ARCH_SOFT_DIRTY
+ 	select MODULES_USE_ELF_RELA

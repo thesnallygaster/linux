@@ -1,7 +1,8 @@
+From f873113440e07c042dc805df19c8e2ecd3fd5839 Mon Sep 17 00:00:00 2001
 From: Peter Zijlstra <peterz@infradead.org>
 Date: Fri, 15 Sep 2023 17:19:44 +0200
-Subject: [PATCH 7/7] futex/pi: Fix recursive rt_mutex waiter state
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.7-rt18.tar.xz
+Subject: [PATCH 007/198] futex/pi: Fix recursive rt_mutex waiter state
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
 
 Some new assertions pointed out that the existing code has nested rt_mutex wait
 state in the futex code.
@@ -36,13 +37,13 @@ Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Link: https://lkml.kernel.org/r/20230915151943.GD6743@noisy.programming.kicks-ass.net
 ---
- kernel/futex/pi.c      |   76 ++++++++++++++++++++++++++++++-------------------
- kernel/futex/requeue.c |    6 ++-
+ kernel/futex/pi.c      | 76 ++++++++++++++++++++++++++----------------
+ kernel/futex/requeue.c |  6 ++--
  2 files changed, 52 insertions(+), 30 deletions(-)
 
 --- a/kernel/futex/pi.c
 +++ b/kernel/futex/pi.c
-@@ -611,29 +611,16 @@ int futex_lock_pi_atomic(u32 __user *uad
+@@ -611,29 +611,16 @@
  /*
   * Caller must hold a reference on @pi_state.
   */
@@ -75,7 +76,7 @@ Link: https://lkml.kernel.org/r/20230915151943.GD6743@noisy.programming.kicks-as
  	new_owner = top_waiter->task;
  
  	/*
-@@ -1046,20 +1033,34 @@ int futex_lock_pi(u32 __user *uaddr, uns
+@@ -1046,20 +1033,34 @@
  	ret = rt_mutex_wait_proxy_lock(&q.pi_state->pi_mutex, to, &rt_waiter);
  
  cleanup:
@@ -116,7 +117,7 @@ Link: https://lkml.kernel.org/r/20230915151943.GD6743@noisy.programming.kicks-as
  	 * Waiter is unqueued.
  	 */
  	rt_mutex_post_schedule();
-@@ -1143,6 +1144,7 @@ int futex_unlock_pi(u32 __user *uaddr, u
+@@ -1143,6 +1144,7 @@
  	top_waiter = futex_top_waiter(hb, &key);
  	if (top_waiter) {
  		struct futex_pi_state *pi_state = top_waiter->pi_state;
@@ -124,7 +125,7 @@ Link: https://lkml.kernel.org/r/20230915151943.GD6743@noisy.programming.kicks-as
  
  		ret = -EINVAL;
  		if (!pi_state)
-@@ -1155,22 +1157,39 @@ int futex_unlock_pi(u32 __user *uaddr, u
+@@ -1155,22 +1157,39 @@
  		if (pi_state->owner != current)
  			goto out_unlock;
  
@@ -170,7 +171,7 @@ Link: https://lkml.kernel.org/r/20230915151943.GD6743@noisy.programming.kicks-as
  
  		put_pi_state(pi_state);
  
-@@ -1198,6 +1217,7 @@ int futex_unlock_pi(u32 __user *uaddr, u
+@@ -1198,6 +1217,7 @@
  		return ret;
  	}
  
@@ -180,7 +181,7 @@ Link: https://lkml.kernel.org/r/20230915151943.GD6743@noisy.programming.kicks-as
  	 * kernel. Waiters which are about to queue themselves are stuck
 --- a/kernel/futex/requeue.c
 +++ b/kernel/futex/requeue.c
-@@ -850,11 +850,13 @@ int futex_wait_requeue_pi(u32 __user *ua
+@@ -850,11 +850,13 @@
  		pi_mutex = &q.pi_state->pi_mutex;
  		ret = rt_mutex_wait_proxy_lock(pi_mutex, to, &rt_waiter);
  

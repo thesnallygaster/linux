@@ -1,0 +1,16 @@
+From f81d441361f48874bf60195d27353323d287fab5 Mon Sep 17 00:00:00 2001
+From: Clark Williams <clark.williams@gmail.com>
+Date: Mon, 8 Apr 2024 21:34:33 -0500
+Subject: [PATCH 198/198] Linux 6.6.25-rt29 REBASE
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+
+Signed-off-by: Clark Williams <clark.williams@gmail.com>
+---
+ localversion-rt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt23
++-rt29

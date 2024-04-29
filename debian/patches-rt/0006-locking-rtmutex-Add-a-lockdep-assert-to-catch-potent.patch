@@ -1,8 +1,9 @@
+From b7040e508fc47a6a766cba8d7f827b521d97dc83 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Fri, 8 Sep 2023 18:22:53 +0200
-Subject: [PATCH 6/7] locking/rtmutex: Add a lockdep assert to catch potential
- nested blocking
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.7-rt18.tar.xz
+Subject: [PATCH 006/198] locking/rtmutex: Add a lockdep assert to catch
+ potential nested blocking
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
 
 There used to be a BUG_ON(current->pi_blocked_on) in the lock acquisition
 functions, but that vanished in one of the rtmutex overhauls.
@@ -17,14 +18,14 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Link: https://lkml.kernel.org/r/20230908162254.999499-7-bigeasy@linutronix.de
 ---
- kernel/locking/rtmutex.c     |    2 ++
- kernel/locking/rwbase_rt.c   |    2 ++
- kernel/locking/spinlock_rt.c |    2 ++
+ kernel/locking/rtmutex.c     | 2 ++
+ kernel/locking/rwbase_rt.c   | 2 ++
+ kernel/locking/spinlock_rt.c | 2 ++
  3 files changed, 6 insertions(+)
 
 --- a/kernel/locking/rtmutex.c
 +++ b/kernel/locking/rtmutex.c
-@@ -1784,6 +1784,8 @@ static int __sched rt_mutex_slowlock(str
+@@ -1784,6 +1784,8 @@
  static __always_inline int __rt_mutex_lock(struct rt_mutex_base *lock,
  					   unsigned int state)
  {
@@ -35,7 +36,7 @@ Link: https://lkml.kernel.org/r/20230908162254.999499-7-bigeasy@linutronix.de
  
 --- a/kernel/locking/rwbase_rt.c
 +++ b/kernel/locking/rwbase_rt.c
-@@ -133,6 +133,8 @@ static int __sched __rwbase_read_lock(st
+@@ -133,6 +133,8 @@
  static __always_inline int rwbase_read_lock(struct rwbase_rt *rwb,
  					    unsigned int state)
  {
