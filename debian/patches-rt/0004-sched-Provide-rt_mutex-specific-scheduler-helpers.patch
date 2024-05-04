@@ -1,8 +1,8 @@
-From d779fa7b0b348557ed9e2f0a3a5a7710e1aa5c89 Mon Sep 17 00:00:00 2001
+From ee6a52ff754d78ca8baaf9cee995792c11ca1ae2 Mon Sep 17 00:00:00 2001
 From: Peter Zijlstra <peterz@infradead.org>
 Date: Fri, 8 Sep 2023 18:22:51 +0200
-Subject: [PATCH 004/198] sched: Provide rt_mutex specific scheduler helpers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 004/196] sched: Provide rt_mutex specific scheduler helpers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 With PREEMPT_RT there is a rt_mutex recursion problem where
 sched_submit_work() can use an rtlock (aka spinlock_t). More

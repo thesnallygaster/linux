@@ -1,8 +1,8 @@
-From f873113440e07c042dc805df19c8e2ecd3fd5839 Mon Sep 17 00:00:00 2001
+From ae5619abced998dc6a2ebd8efeb943936c76bc43 Mon Sep 17 00:00:00 2001
 From: Peter Zijlstra <peterz@infradead.org>
 Date: Fri, 15 Sep 2023 17:19:44 +0200
-Subject: [PATCH 007/198] futex/pi: Fix recursive rt_mutex waiter state
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 007/196] futex/pi: Fix recursive rt_mutex waiter state
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 Some new assertions pointed out that the existing code has nested rt_mutex wait
 state in the futex code.

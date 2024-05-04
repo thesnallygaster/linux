@@ -1,8 +1,8 @@
-From 75831a0c7ffb6d0882e51932376528634e26c979 Mon Sep 17 00:00:00 2001
+From 513c6c3ea1f00477a40392340ce5eb32fd812c41 Mon Sep 17 00:00:00 2001
 From: Peter Zijlstra <peterz@infradead.org>
 Date: Fri, 8 Sep 2023 18:22:48 +0200
-Subject: [PATCH 001/198] sched: Constrain locks in sched_submit_work()
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 001/196] sched: Constrain locks in sched_submit_work()
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 Even though sched_submit_work() is ran from preemptible context,
 it is discouraged to have it use blocking locks due to the recursion

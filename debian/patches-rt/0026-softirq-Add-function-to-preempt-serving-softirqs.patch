@@ -1,8 +1,8 @@
-From 397fb739b7dea6e8c472d112720511dad74d6253 Mon Sep 17 00:00:00 2001
+From 50ae739f7d9080479dddd7e24c8764a46f918bae Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 4 Aug 2023 13:30:38 +0200
-Subject: [PATCH 026/198] softirq: Add function to preempt serving softirqs.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 026/196] softirq: Add function to preempt serving softirqs.
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 Add a functionality for the softirq handler to preempt its current work
 if needed. The softirq core has no particular state. It reads and resets

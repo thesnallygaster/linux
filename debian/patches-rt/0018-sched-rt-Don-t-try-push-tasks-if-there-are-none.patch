@@ -1,8 +1,8 @@
-From ff02a1bafacf77d91927e5ac7556abfb0f598d34 Mon Sep 17 00:00:00 2001
+From b7d8af745b2e3815d7b1c7f3253a23b9625f8eb8 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Tue, 1 Aug 2023 17:26:48 +0200
-Subject: [PATCH 018/198] sched/rt: Don't try push tasks if there are none.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 018/196] sched/rt: Don't try push tasks if there are none.
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 I have a RT task X at a high priority and cyclictest on each CPU with
 lower priority than X's. If X is active and each CPU wakes their own

@@ -1,8 +1,8 @@
-From 1f68c281021058402d7afdc27d8a3787271ce0c1 Mon Sep 17 00:00:00 2001
+From 4e63f90c02d69205fa778c3a5f35fc04390eaa6c Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:06 +0206
-Subject: [PATCH 075/198] serial: qcom-geni: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 075/196] serial: qcom-geni: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,

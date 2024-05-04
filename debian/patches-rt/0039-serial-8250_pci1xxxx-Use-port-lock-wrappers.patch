@@ -1,8 +1,8 @@
-From dcbb92ff385851014ce2adf8fc88f539bab834da Mon Sep 17 00:00:00 2001
+From c8b000c7f040f3de186cf22130d44296b2b50cc4 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:30 +0206
-Subject: [PATCH 039/198] serial: 8250_pci1xxxx: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 039/196] serial: 8250_pci1xxxx: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,

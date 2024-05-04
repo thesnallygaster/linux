@@ -1,9 +1,9 @@
-From 3dac5e9dbebc192a58df61cb7701ae93e24fc653 Mon Sep 17 00:00:00 2001
+From 674805e879bf962a1cd7fb535e9262cba148cce9 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 4 Aug 2023 13:30:37 +0200
-Subject: [PATCH 025/198] sched/core: Provide a method to check if a task is
+Subject: [PATCH 025/196] sched/core: Provide a method to check if a task is
  PI-boosted.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 Provide a method to check if a task inherited the priority from another
 task. This happens if a task owns a lock which is requested by a task
@@ -31,7 +31,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  extern int task_prio(const struct task_struct *p);
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -8924,6 +8924,21 @@
+@@ -8923,6 +8923,21 @@
  
  #endif /* #ifdef CONFIG_PREEMPT_DYNAMIC */
  

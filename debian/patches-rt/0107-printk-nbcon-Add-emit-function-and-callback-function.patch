@@ -1,9 +1,9 @@
-From 3ed6e3169b7533adb444e3116b44094b9c00326e Mon Sep 17 00:00:00 2001
+From 9237466958f77bac4d9420156e9556bb20744dd5 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sat, 16 Sep 2023 21:26:06 +0206
-Subject: [PATCH 107/198] printk: nbcon: Add emit function and callback
+Subject: [PATCH 107/196] printk: nbcon: Add emit function and callback
  function for atomic printing
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 Implement an emit function for nbcon consoles to output printk
 messages. It utilizes the lockless printk_get_next_message() and

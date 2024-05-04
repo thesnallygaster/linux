@@ -1,8 +1,8 @@
-From 9372712a3d7f5dd1ce1fdee77c5bbdfbbb4b01bf Mon Sep 17 00:00:00 2001
+From c4b2352f67b1122c835414345a024e71d5b7bea4 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:10 +0206
-Subject: [PATCH 079/198] serial: samsung_tty: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 079/196] serial: samsung_tty: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,

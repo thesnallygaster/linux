@@ -1,8 +1,8 @@
-From 0ac36a1ae3846dfd22081abfd17040d1fd8fcaae Mon Sep 17 00:00:00 2001
+From dd81760e09f2013ff0a4cac0c7be0831bd84c295 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:42 +0206
-Subject: [PATCH 051/198] serial: dz: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 051/196] serial: dz: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,

@@ -1,9 +1,9 @@
-From 0655b5650cdb7f54ec9ab9ccf5fcf15136d0bf56 Mon Sep 17 00:00:00 2001
+From 8cdd037254a90be07ba6e7fef15c614258499612 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 8 Sep 2023 18:22:52 +0200
-Subject: [PATCH 005/198] locking/rtmutex: Use rt_mutex specific scheduler
+Subject: [PATCH 005/196] locking/rtmutex: Use rt_mutex specific scheduler
  helpers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 Have rt_mutex use the rt_mutex specific scheduler helpers to avoid
 recursion vs rtlock on the PI state.

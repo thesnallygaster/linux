@@ -1,9 +1,9 @@
-From 51aa5b4ef3775ca0af1535f4b542b60fce91c8c8 Mon Sep 17 00:00:00 2001
+From a3602dfd77fa95402bcf350520c4a4f5125b174e Mon Sep 17 00:00:00 2001
 From: Frederic Weisbecker <frederic@kernel.org>
 Date: Tue, 5 Apr 2022 03:07:51 +0200
-Subject: [PATCH 020/198] rcutorture: Also force sched priority to timersd on
+Subject: [PATCH 020/196] rcutorture: Also force sched priority to timersd on
  boosting test.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 ksoftirqd is statically boosted to the priority level right above the
 one of rcu_torture_boost() so that timers, which torture readers rely on,

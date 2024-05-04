@@ -1,8 +1,8 @@
-From 6c67e782fccb3ff27f786fe76a440707709ab23b Mon Sep 17 00:00:00 2001
+From 7c86f4628d93a49d4eced7c8e5b39cc4d4315a2b Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:15 +0206
-Subject: [PATCH 084/198] serial: mctrl_gpio: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 084/196] serial: mctrl_gpio: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,

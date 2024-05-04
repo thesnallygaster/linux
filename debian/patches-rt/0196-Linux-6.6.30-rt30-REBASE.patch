@@ -1,0 +1,16 @@
+From 13ff97d07218f67863aa57bc33c6c3359e203a59 Mon Sep 17 00:00:00 2001
+From: Clark Williams <clark.williams@gmail.com>
+Date: Fri, 3 May 2024 09:09:24 -0500
+Subject: [PATCH 196/196] Linux 6.6.30-rt30 REBASE
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+
+Signed-off-by: Clark Williams <clark.williams@gmail.com>
+---
+ localversion-rt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt23
++-rt30

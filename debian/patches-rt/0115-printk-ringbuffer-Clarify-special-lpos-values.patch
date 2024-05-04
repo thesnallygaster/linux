@@ -1,8 +1,8 @@
-From 70596fc48fbc159ec34ce9339df56ad352e09273 Mon Sep 17 00:00:00 2001
+From b43b2028f6a0bf56f094053ee2ea836d250d680f Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Mon, 23 Oct 2023 11:11:05 +0000
-Subject: [PATCH 115/198] printk: ringbuffer: Clarify special lpos values
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 115/196] printk: ringbuffer: Clarify special lpos values
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 For empty line records, no data blocks are created. Instead,
 these valid records are identified by special logical position

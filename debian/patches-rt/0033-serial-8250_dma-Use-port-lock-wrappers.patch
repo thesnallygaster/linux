@@ -1,11 +1,11 @@
-From b975b09242cda03dfa24bc5859e09dcf0719455e Mon Sep 17 00:00:00 2001
+From 6a7b19e1fe2b91de30164972f6201b0034a30d13 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:24 +0206
-Subject: [PATCH 033/198] serial: 8250_dma: Use port lock wrappers
+Subject: [PATCH 033/196] serial: 8250_dma: Use port lock wrappers
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,

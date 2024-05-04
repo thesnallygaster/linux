@@ -1,8 +1,8 @@
-From 1878b10b7153990220aa3a02b8c92e1528701093 Mon Sep 17 00:00:00 2001
+From d8475da44868b971c8bcc067a8152b1c3d93ad03 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Fri, 8 Sep 2023 18:22:50 +0200
-Subject: [PATCH 003/198] sched: Extract __schedule_loop()
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 003/196] sched: Extract __schedule_loop()
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 There are currently two implementations of this basic __schedule()
 loop, and there is soon to be a third.

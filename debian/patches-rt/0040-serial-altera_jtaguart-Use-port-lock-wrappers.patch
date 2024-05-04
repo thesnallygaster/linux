@@ -1,8 +1,8 @@
-From 2e16f769f7b52fd39a09514d755ddacf44fcda84 Mon Sep 17 00:00:00 2001
+From ca8c544c8bd1c93f08a1d4e2030dba9bab5d0b81 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:31 +0206
-Subject: [PATCH 040/198] serial: altera_jtaguart: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 040/196] serial: altera_jtaguart: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,

@@ -1,8 +1,8 @@
-From 28fac1ea3b9ecdcc1db264094f47ba6a20ed21e9 Mon Sep 17 00:00:00 2001
+From fec1f6acc7b3a176512710d53696ad89baa8cc47 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sat, 16 Sep 2023 21:26:05 +0206
-Subject: [PATCH 106/198] printk: nbcon: Add sequence handling
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 106/196] printk: nbcon: Add sequence handling
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 Add an atomic_long_t field @nbcon_seq to the console struct to
 store the sequence number for nbcon consoles. For nbcon consoles

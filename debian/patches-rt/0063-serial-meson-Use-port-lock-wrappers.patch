@@ -1,8 +1,8 @@
-From 7b6095010a23aa78ad87b589ff39473ad892011a Mon Sep 17 00:00:00 2001
+From bd230f0220b276ea422189ec843e15b9d0ba928b Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:54 +0206
-Subject: [PATCH 063/198] serial: meson: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 063/196] serial: meson: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,

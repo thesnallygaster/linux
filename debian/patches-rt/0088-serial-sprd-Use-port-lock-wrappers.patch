@@ -1,8 +1,8 @@
-From 3b9ed6c95a036b76547ea9a369d0a353fd81b72e Mon Sep 17 00:00:00 2001
+From 4e00ff78280a85e99aac4156f854189ba46cbcd5 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:19 +0206
-Subject: [PATCH 088/198] serial: sprd: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 088/196] serial: sprd: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,

@@ -1,8 +1,8 @@
-From 4c21b6f6ec1d1d44387e05e35d0e32e435421ca6 Mon Sep 17 00:00:00 2001
+From b070bf9ad50ba8fe9896acbffe1f7fd88b7d6473 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:47 +0206
-Subject: [PATCH 056/198] serial: ip22zilog: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 056/196] serial: ip22zilog: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,

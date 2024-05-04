@@ -1,8 +1,8 @@
-From 278ee5a1d6e11f88fbd8dd7f08a722c3f0a48c6f Mon Sep 17 00:00:00 2001
+From 9d659bf098eddf3b1d3645c043371dd569dd5012 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:24 +0206
-Subject: [PATCH 093/198] serial: sunsab: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Subject: [PATCH 093/196] serial: sunsab: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,

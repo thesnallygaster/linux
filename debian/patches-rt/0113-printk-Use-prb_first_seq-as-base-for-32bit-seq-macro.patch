@@ -1,9 +1,9 @@
-From fcfa743b20e41c8a1cef0612900f0f1677f8a87b Mon Sep 17 00:00:00 2001
+From 61ae27478353161faf3497477719b4938d511fc2 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Wed, 22 Nov 2023 16:13:37 +0000
-Subject: [PATCH 113/198] printk: Use prb_first_seq() as base for 32bit seq
+Subject: [PATCH 113/196] printk: Use prb_first_seq() as base for 32bit seq
  macros
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.25-rt29.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
 
 Note: This change only applies to 32bit architectures. On 64bit
       architectures the macros are NOPs.
