@@ -2266,7 +2266,7 @@ upstream submission.
  	return err;
 --- a/sound/pci/emu10k1/emu10k1_main.c
 +++ b/sound/pci/emu10k1/emu10k1_main.c
-@@ -864,10 +864,8 @@
+@@ -881,10 +881,8 @@
  	dev_info(emu->card->dev, "emu1010: EMU_HANA_ID = 0x%x\n", reg);
  
  	err = snd_emu1010_load_firmware(emu, 0, &emu->firmware);
