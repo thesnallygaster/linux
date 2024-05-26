@@ -1,9 +1,9 @@
-From ef7ae789fa469962858871c4bb4dc12edba88192 Mon Sep 17 00:00:00 2001
+From 7e6becc18acce824c8c12f2e1f55ffb227a4d621 Mon Sep 17 00:00:00 2001
 From: Bogdan Purcareata <bogdan.purcareata@freescale.com>
 Date: Fri, 24 Apr 2015 15:53:13 +0000
 Subject: [PATCH 183/196] powerpc/kvm: Disable in-kernel MPIC emulation for
  PREEMPT_RT
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 While converting the openpic emulation code to use a raw_spinlock_t enables
 guests to run on RT, there's still a performance issue. For interrupts sent in
@@ -29,9 +29,11 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  arch/powerpc/kvm/Kconfig | 1 +
  1 file changed, 1 insertion(+)
 
+diff --git a/arch/powerpc/kvm/Kconfig b/arch/powerpc/kvm/Kconfig
+index 902611954200..2f188137f830 100644
 --- a/arch/powerpc/kvm/Kconfig
 +++ b/arch/powerpc/kvm/Kconfig
-@@ -224,6 +224,7 @@
+@@ -224,6 +224,7 @@ config KVM_E500MC
  config KVM_MPIC
  	bool "KVM in-kernel MPIC emulation"
  	depends on KVM && PPC_E500
@@ -39,3 +41,6 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  	select HAVE_KVM_IRQCHIP
  	select HAVE_KVM_IRQFD
  	select HAVE_KVM_IRQ_ROUTING
+-- 
+2.45.0
+

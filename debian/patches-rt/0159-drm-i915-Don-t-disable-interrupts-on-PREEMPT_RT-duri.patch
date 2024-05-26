@@ -1,9 +1,9 @@
-From 3bb213458048fdf86094b2634c6e78bd124716cf Mon Sep 17 00:00:00 2001
+From 49ca1fe8b52296a06626fc7689e6d001db8afe23 Mon Sep 17 00:00:00 2001
 From: Mike Galbraith <umgwanakikbuti@gmail.com>
 Date: Sat, 27 Feb 2016 09:01:42 +0100
 Subject: [PATCH 159/196] drm/i915: Don't disable interrupts on PREEMPT_RT
  during atomic updates
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Commit
    8d7849db3eab7 ("drm/i915: Make sprite updates atomic")
@@ -36,9 +36,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/gpu/drm/i915/display/intel_crtc.c | 15 ++++++++++-----
  1 file changed, 10 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/gpu/drm/i915/display/intel_crtc.c b/drivers/gpu/drm/i915/display/intel_crtc.c
+index cfbfbfed3f5e..da2becfbc86c 100644
 --- a/drivers/gpu/drm/i915/display/intel_crtc.c
 +++ b/drivers/gpu/drm/i915/display/intel_crtc.c
-@@ -562,7 +562,8 @@
+@@ -562,7 +562,8 @@ void intel_pipe_update_start(struct intel_atomic_state *state,
  	 */
  	intel_psr_wait_for_idle_locked(new_crtc_state);
  
@@ -48,7 +50,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	crtc->debug.min_vbl = min;
  	crtc->debug.max_vbl = max;
-@@ -587,11 +588,13 @@
+@@ -587,11 +588,13 @@ void intel_pipe_update_start(struct intel_atomic_state *state,
  			break;
  		}
  
@@ -64,7 +66,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	}
  
  	finish_wait(wq, &wait);
-@@ -624,7 +627,8 @@
+@@ -624,7 +627,8 @@ void intel_pipe_update_start(struct intel_atomic_state *state,
  	return;
  
  irq_disable:
@@ -74,7 +76,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_VBLANK_EVADE)
-@@ -728,7 +732,8 @@
+@@ -728,7 +732,8 @@ void intel_pipe_update_end(struct intel_atomic_state *state,
  	 */
  	intel_vrr_send_push(new_crtc_state);
  
@@ -84,3 +86,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (intel_vgpu_active(dev_priv))
  		return;
+-- 
+2.45.0
+

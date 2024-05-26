@@ -1,8 +1,8 @@
-From 64a6f598f84f5c23f5886db4ce6d00db821dd3e6 Mon Sep 17 00:00:00 2001
+From d38b50669829c0504ef4ca4d87d949e86dd135d8 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:16 +0206
 Subject: [PATCH 085/196] serial: txx9: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/serial_txx9.c | 26 +++++++++++++-------------
  1 file changed, 13 insertions(+), 13 deletions(-)
 
+diff --git a/drivers/tty/serial/serial_txx9.c b/drivers/tty/serial/serial_txx9.c
+index be08fb6f749c..eaa980722455 100644
 --- a/drivers/tty/serial/serial_txx9.c
 +++ b/drivers/tty/serial/serial_txx9.c
-@@ -335,13 +335,13 @@
+@@ -335,13 +335,13 @@ static irqreturn_t serial_txx9_interrupt(int irq, void *dev_id)
  	unsigned int status;
  
  	while (1) {
@@ -55,7 +57,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  			break;
  		}
  
-@@ -353,7 +353,7 @@
+@@ -353,7 +353,7 @@ static irqreturn_t serial_txx9_interrupt(int irq, void *dev_id)
  		sio_mask(up, TXX9_SIDISR,
  			 TXX9_SIDISR_TDIS | TXX9_SIDISR_RDIS |
  			 TXX9_SIDISR_TOUT);
@@ -64,7 +66,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  		if (pass_counter++ > PASS_LIMIT)
  			break;
-@@ -367,9 +367,9 @@
+@@ -367,9 +367,9 @@ static unsigned int serial_txx9_tx_empty(struct uart_port *up)
  	unsigned long flags;
  	unsigned int ret;
  
@@ -76,7 +78,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return ret;
  }
-@@ -399,12 +399,12 @@
+@@ -399,12 +399,12 @@ static void serial_txx9_break_ctl(struct uart_port *up, int break_state)
  {
  	unsigned long flags;
  
@@ -91,7 +93,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  #if defined(CONFIG_SERIAL_TXX9_CONSOLE) || defined(CONFIG_CONSOLE_POLL)
-@@ -517,9 +517,9 @@
+@@ -517,9 +517,9 @@ static int serial_txx9_startup(struct uart_port *up)
  	/*
  	 * Now, initialize the UART
  	 */
@@ -103,7 +105,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* Enable RX/TX */
  	sio_mask(up, TXX9_SIFLCR, TXX9_SIFLCR_RSDE | TXX9_SIFLCR_TSDE);
-@@ -541,9 +541,9 @@
+@@ -541,9 +541,9 @@ static void serial_txx9_shutdown(struct uart_port *up)
  	 */
  	sio_out(up, TXX9_SIDICR, 0);	/* disable all intrs */
  
@@ -115,7 +117,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * Disable break condition
-@@ -625,7 +625,7 @@
+@@ -625,7 +625,7 @@ serial_txx9_set_termios(struct uart_port *up, struct ktermios *termios,
  	 * Ok, we're now changing the port state.  Do it with
  	 * interrupts disabled.
  	 */
@@ -124,7 +126,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * Update the per-port timeout.
-@@ -676,7 +676,7 @@
+@@ -676,7 +676,7 @@ serial_txx9_set_termios(struct uart_port *up, struct ktermios *termios,
  	sio_out(up, TXX9_SIFCR, fcr);
  
  	serial_txx9_set_mctrl(up, up->mctrl);
@@ -133,3 +135,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void
+-- 
+2.45.0
+

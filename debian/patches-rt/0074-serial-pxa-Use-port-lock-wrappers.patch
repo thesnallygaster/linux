@@ -1,8 +1,8 @@
-From e89550ebc4642dd198acbdee566da8702745722a Mon Sep 17 00:00:00 2001
+From 3db5ed113aee4685763a8a25d73401d78e25a37b Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:05 +0206
 Subject: [PATCH 074/196] serial: pxa: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/pxa.c | 30 +++++++++++++++---------------
  1 file changed, 15 insertions(+), 15 deletions(-)
 
+diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
+index 73c60f5ea027..46e70e155aab 100644
 --- a/drivers/tty/serial/pxa.c
 +++ b/drivers/tty/serial/pxa.c
-@@ -225,14 +225,14 @@
+@@ -225,14 +225,14 @@ static inline irqreturn_t serial_pxa_irq(int irq, void *dev_id)
  	iir = serial_in(up, UART_IIR);
  	if (iir & UART_IIR_NO_INT)
  		return IRQ_NONE;
@@ -56,7 +58,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	return IRQ_HANDLED;
  }
  
-@@ -242,9 +242,9 @@
+@@ -242,9 +242,9 @@ static unsigned int serial_pxa_tx_empty(struct uart_port *port)
  	unsigned long flags;
  	unsigned int ret;
  
@@ -68,7 +70,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return ret;
  }
-@@ -295,13 +295,13 @@
+@@ -295,13 +295,13 @@ static void serial_pxa_break_ctl(struct uart_port *port, int break_state)
  	struct uart_pxa_port *up = (struct uart_pxa_port *)port;
  	unsigned long flags;
  
@@ -84,7 +86,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static int serial_pxa_startup(struct uart_port *port)
-@@ -346,10 +346,10 @@
+@@ -346,10 +346,10 @@ static int serial_pxa_startup(struct uart_port *port)
  	 */
  	serial_out(up, UART_LCR, UART_LCR_WLEN8);
  
@@ -97,7 +99,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * Finally, enable interrupts.  Note: Modem status interrupts
-@@ -383,10 +383,10 @@
+@@ -383,10 +383,10 @@ static void serial_pxa_shutdown(struct uart_port *port)
  	up->ier = 0;
  	serial_out(up, UART_IER, 0);
  
@@ -110,7 +112,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * Disable break condition and FIFOs
-@@ -434,7 +434,7 @@
+@@ -434,7 +434,7 @@ serial_pxa_set_termios(struct uart_port *port, struct ktermios *termios,
  	 * Ok, we're now changing the port state.  Do it with
  	 * interrupts disabled.
  	 */
@@ -119,7 +121,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * Ensure the port will be enabled.
-@@ -504,7 +504,7 @@
+@@ -504,7 +504,7 @@ serial_pxa_set_termios(struct uart_port *port, struct ktermios *termios,
  	up->lcr = cval;					/* Save LCR */
  	serial_pxa_set_mctrl(&up->port, up->port.mctrl);
  	serial_out(up, UART_FCR, fcr);
@@ -128,7 +130,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void
-@@ -608,9 +608,9 @@
+@@ -608,9 +608,9 @@ serial_pxa_console_write(struct console *co, const char *s, unsigned int count)
  	if (up->port.sysrq)
  		locked = 0;
  	else if (oops_in_progress)
@@ -140,7 +142,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 *	First save the IER then disable the interrupts
-@@ -628,7 +628,7 @@
+@@ -628,7 +628,7 @@ serial_pxa_console_write(struct console *co, const char *s, unsigned int count)
  	serial_out(up, UART_IER, ier);
  
  	if (locked)
@@ -149,3 +151,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	local_irq_restore(flags);
  	clk_disable(up->clk);
  
+-- 
+2.45.0
+

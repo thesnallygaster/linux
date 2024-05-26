@@ -1,9 +1,9 @@
-From 3bcdd69b598bbcada361e6fd7a03015962d28d60 Mon Sep 17 00:00:00 2001
+From be1da17403025511d2213571bdc6a7a3525cae70 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Tue, 23 Jan 2024 12:56:21 +0100
 Subject: [PATCH 194/196] arm: Disable FAST_GUP on PREEMPT_RT if HIGHPTE is
  also enabled.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 gup_pgd_range() is invoked with disabled interrupts and invokes
 __kmap_local_page_prot() via pte_offset_map(), gup_p4d_range().
@@ -25,9 +25,11 @@ Signed-off-by: Clark Williams <clark.williams@gmail.com>
  arch/arm/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index a154ecd2d3c3..e5a283851c02 100644
 --- a/arch/arm/Kconfig
 +++ b/arch/arm/Kconfig
-@@ -97,7 +97,7 @@
+@@ -97,7 +97,7 @@ config ARM
  	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
  	select HAVE_EFFICIENT_UNALIGNED_ACCESS if (CPU_V6 || CPU_V6K || CPU_V7) && MMU
  	select HAVE_EXIT_THREAD
@@ -36,3 +38,6 @@ Signed-off-by: Clark Williams <clark.williams@gmail.com>
  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
  	select HAVE_FUNCTION_ERROR_INJECTION
  	select HAVE_FUNCTION_GRAPH_TRACER
+-- 
+2.45.0
+

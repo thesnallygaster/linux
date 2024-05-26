@@ -1,8 +1,8 @@
-From ca8c544c8bd1c93f08a1d4e2030dba9bab5d0b81 Mon Sep 17 00:00:00 2001
+From 8e0cf5eb1b9bbc5aa3bb012276946dadf604e482 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:31 +0206
 Subject: [PATCH 040/196] serial: altera_jtaguart: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/altera_jtaguart.c | 28 ++++++++++++++--------------
  1 file changed, 14 insertions(+), 14 deletions(-)
 
+diff --git a/drivers/tty/serial/altera_jtaguart.c b/drivers/tty/serial/altera_jtaguart.c
+index 5fab4c978891..7090b251dd4d 100644
 --- a/drivers/tty/serial/altera_jtaguart.c
 +++ b/drivers/tty/serial/altera_jtaguart.c
-@@ -147,14 +147,14 @@
+@@ -147,14 +147,14 @@ static irqreturn_t altera_jtaguart_interrupt(int irq, void *data)
  	isr = (readl(port->membase + ALTERA_JTAGUART_CONTROL_REG) >>
  	       ALTERA_JTAGUART_CONTROL_RI_OFF) & port->read_status_mask;
  
@@ -56,7 +58,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return IRQ_RETVAL(isr);
  }
-@@ -180,14 +180,14 @@
+@@ -180,14 +180,14 @@ static int altera_jtaguart_startup(struct uart_port *port)
  		return ret;
  	}
  
@@ -73,7 +75,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return 0;
  }
-@@ -196,14 +196,14 @@
+@@ -196,14 +196,14 @@ static void altera_jtaguart_shutdown(struct uart_port *port)
  {
  	unsigned long flags;
  
@@ -90,7 +92,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	free_irq(port->irq, port);
  }
-@@ -264,33 +264,33 @@
+@@ -264,33 +264,33 @@ static void altera_jtaguart_console_putc(struct uart_port *port, unsigned char c
  	unsigned long flags;
  	u32 status;
  
@@ -132,3 +134,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  #endif
  
+-- 
+2.45.0
+

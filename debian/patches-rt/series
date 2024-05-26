@@ -193,4 +193,4 @@
 0193-Linux-6.6.18-rt23-REBASE.patch
 0194-arm-Disable-FAST_GUP-on-PREEMPT_RT-if-HIGHPTE-is-als.patch
 0195-printk-nbcon-move-locked_port-flag-to-struct-uart_po.patch
-0196-Linux-6.6.30-rt30-REBASE.patch
+0196-Linux-6.6.31-rt31-REBASE.patch

@@ -1,8 +1,8 @@
-From dc28a1b7d7730f737d979370afaa498540b4a41f Mon Sep 17 00:00:00 2001
+From 20c37c38d55e5bb8b982ba6ac9976e5d316d4c4a Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Wed, 22 Nov 2023 11:56:58 +0000
 Subject: [PATCH 138/196] printk: Coordinate direct printing in panic
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Perform printing by nbcon consoles on the panic CPU from the
 printk() caller context in order to get panic messages printed
@@ -26,17 +26,21 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/printk.c | 53 ++++++++++++++++++++++++++++++++++++------
  3 files changed, 50 insertions(+), 7 deletions(-)
 
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index e26dcf63efb1..cf545b76131f 100644
 --- a/include/linux/printk.h
 +++ b/include/linux/printk.h
-@@ -782,3 +782,5 @@
+@@ -782,3 +782,5 @@ static inline void print_hex_dump_debug(const char *prefix_str, int prefix_type,
  	print_hex_dump_debug(prefix_str, prefix_type, 16, 1, buf, len, true)
  
  #endif
 +
 +void printk_legacy_allow_panic_sync(void);
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 219b69fbe829..f0e91a0c4001 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
-@@ -366,6 +366,8 @@
+@@ -366,6 +366,8 @@ void panic(const char *fmt, ...)
  	 */
  	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
  
@@ -45,9 +49,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	panic_print_sys_info(false);
  
  	kmsg_dump(KMSG_DUMP_PANIC);
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 977a97f0396b..e8d60e29c17f 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -2336,12 +2336,23 @@
+@@ -2336,12 +2336,23 @@ int vprintk_store(int facility, int level,
  	return ret;
  }
  
@@ -72,7 +78,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* Suppress unimportant messages after panic happens */
  	if (unlikely(suppress_printk))
-@@ -2357,15 +2368,43 @@
+@@ -2357,15 +2368,43 @@ asmlinkage int vprintk_emit(int facility, int level,
  
  	if (level == LOGLEVEL_SCHED) {
  		level = LOGLEVEL_DEFAULT;
@@ -119,7 +125,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		/*
  		 * The caller may be holding system-critical or
  		 * timing-sensitive locks. Disable preemption during
-@@ -2385,10 +2424,10 @@
+@@ -2385,10 +2424,10 @@ asmlinkage int vprintk_emit(int facility, int level,
  		preempt_enable();
  	}
  
@@ -133,3 +139,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return printed_len;
  }
+-- 
+2.45.0
+

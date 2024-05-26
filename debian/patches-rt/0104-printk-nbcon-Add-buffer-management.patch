@@ -1,8 +1,8 @@
-From 2d758a6481e4e772a7619e6bbce83106cfa6b195 Mon Sep 17 00:00:00 2001
+From 83d5c558d8c9f54e6b734255eccebe5748b4206a Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sat, 16 Sep 2023 21:26:03 +0206
 Subject: [PATCH 104/196] printk: nbcon: Add buffer management
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 In case of hostile takeovers it must be ensured that the previous
 owner cannot scribble over the output buffer of the emergency/panic
@@ -35,9 +35,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/printk.c   | 22 +++++++-----
  4 files changed, 99 insertions(+), 15 deletions(-)
 
+diff --git a/include/linux/console.h b/include/linux/console.h
+index 98210fd01f18..ca1ef8700e55 100644
 --- a/include/linux/console.h
 +++ b/include/linux/console.h
-@@ -231,6 +231,7 @@
+@@ -231,6 +231,7 @@ enum nbcon_prio {
  };
  
  struct console;
@@ -45,7 +47,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  /**
   * struct nbcon_context - Context for console acquire/release
-@@ -241,6 +242,7 @@
+@@ -241,6 +242,7 @@ struct console;
   *				be used only with NBCON_PRIO_PANIC @prio. It
   *				might cause a system freeze when the console
   *				is used later.
@@ -53,7 +55,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   */
  struct nbcon_context {
  	/* members set by caller */
-@@ -248,6 +250,9 @@
+@@ -248,6 +250,9 @@ struct nbcon_context {
  	unsigned int		spinwait_max_us;
  	enum nbcon_prio		prio;
  	unsigned int		allow_unsafe_takeover	: 1;
@@ -63,7 +65,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  };
  
  /**
-@@ -271,6 +276,7 @@
+@@ -271,6 +276,7 @@ struct nbcon_context {
   * @node:		hlist node for the console list
   *
   * @nbcon_state:	State for nbcon consoles
@@ -71,7 +73,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   */
  struct console {
  	char			name[16];
-@@ -293,6 +299,7 @@
+@@ -293,6 +299,7 @@ struct console {
  
  	/* nbcon console specific members */
  	atomic_t		__private nbcon_state;
@@ -79,9 +81,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  };
  
  #ifdef CONFIG_LOCKDEP
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index 7199d60bfc25..f6161cd75d7d 100644
 --- a/kernel/printk/internal.h
 +++ b/kernel/printk/internal.h
-@@ -13,6 +13,12 @@
+@@ -13,6 +13,12 @@ int devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write,
  #define printk_sysctl_init() do { } while (0)
  #endif
  
@@ -94,7 +98,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  #ifdef CONFIG_PRINTK
  
  #ifdef CONFIG_PRINTK_CALLER
-@@ -63,8 +69,9 @@
+@@ -63,8 +69,9 @@ void defer_console_output(void);
  u16 printk_parse_prefix(const char *text, int *level,
  			enum printk_info_flags *flags);
  
@@ -105,7 +109,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  #else
  
-@@ -81,8 +88,9 @@
+@@ -81,8 +88,9 @@ void nbcon_cleanup(struct console *con);
  #define printk_safe_exit_irqrestore(flags) local_irq_restore(flags)
  
  static inline bool printk_percpu_data_ready(void) { return false; }
@@ -116,6 +120,8 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  #endif /* CONFIG_PRINTK */
  
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index a2a354f859f9..ba1febf15db6 100644
 --- a/kernel/printk/nbcon.c
 +++ b/kernel/printk/nbcon.c
 @@ -5,6 +5,7 @@
@@ -137,7 +143,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   * The release function simply clears the 'prio' field.
   *
   * All operations on @console::nbcon_state are atomic cmpxchg based to
-@@ -459,6 +464,8 @@
+@@ -459,6 +464,8 @@ static int nbcon_context_try_acquire_hostile(struct nbcon_context *ctxt,
  	return 0;
  }
  
@@ -146,7 +152,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  /**
   * nbcon_context_try_acquire - Try to acquire nbcon console
   * @ctxt:	The context of the caller
-@@ -473,6 +480,7 @@
+@@ -473,6 +480,7 @@ static int nbcon_context_try_acquire_hostile(struct nbcon_context *ctxt,
  __maybe_unused
  static bool nbcon_context_try_acquire(struct nbcon_context *ctxt)
  {
@@ -154,7 +160,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	struct console *con = ctxt->console;
  	struct nbcon_state cur;
  	int err;
-@@ -491,7 +499,18 @@
+@@ -491,7 +499,18 @@ static bool nbcon_context_try_acquire(struct nbcon_context *ctxt)
  
  	err = nbcon_context_try_acquire_hostile(ctxt, &cur);
  out:
@@ -174,7 +180,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static bool nbcon_owner_matches(struct nbcon_state *cur, int expected_cpu,
-@@ -530,7 +549,7 @@
+@@ -530,7 +549,7 @@ static void nbcon_context_release(struct nbcon_context *ctxt)
  
  	do {
  		if (!nbcon_owner_matches(&cur, cpu, ctxt->prio))
@@ -183,7 +189,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  		new.atom = cur.atom;
  		new.prio = NBCON_PRIO_NONE;
-@@ -542,26 +561,70 @@
+@@ -542,26 +561,70 @@ static void nbcon_context_release(struct nbcon_context *ctxt)
  		new.unsafe |= cur.unsafe_takeover;
  
  	} while (!nbcon_state_try_cmpxchg(con, &cur, &new));
@@ -257,9 +263,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 +
 +	con->pbufs = NULL;
  }
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index dd68135cb371..58b57deb0cbe 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -3380,12 +3380,6 @@
+@@ -3380,12 +3380,6 @@ static void try_enable_default_console(struct console *newcon)
  		newcon->flags |= CON_CONSDEV;
  }
  
@@ -272,7 +280,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  static void console_init_seq(struct console *newcon, bool bootcon_registered)
  {
  	struct console *con;
-@@ -3499,6 +3493,15 @@
+@@ -3499,6 +3493,15 @@ void register_console(struct console *newcon)
  		goto unlock;
  	}
  
@@ -288,7 +296,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	/*
  	 * See if we want to enable this console driver by default.
  	 *
-@@ -3526,8 +3529,11 @@
+@@ -3526,8 +3529,11 @@ void register_console(struct console *newcon)
  		err = try_enable_preferred_console(newcon, false);
  
  	/* printk() messages are not printed to the Braille console. */
@@ -301,7 +309,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * If we have a bootconsole, and are switching to a real console,
-@@ -3638,7 +3644,7 @@
+@@ -3638,7 +3644,7 @@ static int unregister_console_locked(struct console *console)
  	synchronize_srcu(&console_srcu);
  
  	if (console->flags & CON_NBCON)
@@ -310,3 +318,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	console_sysfs_notify();
  
+-- 
+2.45.0
+

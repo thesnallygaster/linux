@@ -1,8 +1,8 @@
-From 0249946b18967b7861ee4d975907921a87f0eef2 Mon Sep 17 00:00:00 2001
+From c478001d1c9b857939d40cd33446ff9f1dd0d513 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:36 +0206
 Subject: [PATCH 045/196] serial: ar933x: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/ar933x_uart.c | 26 +++++++++++++-------------
  1 file changed, 13 insertions(+), 13 deletions(-)
 
+diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
+index 924c1a89347c..ffd234673177 100644
 --- a/drivers/tty/serial/ar933x_uart.c
 +++ b/drivers/tty/serial/ar933x_uart.c
-@@ -133,9 +133,9 @@
+@@ -133,9 +133,9 @@ static unsigned int ar933x_uart_tx_empty(struct uart_port *port)
  	unsigned long flags;
  	unsigned int rdata;
  
@@ -51,7 +53,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return (rdata & AR933X_UART_DATA_TX_CSR) ? 0 : TIOCSER_TEMT;
  }
-@@ -220,14 +220,14 @@
+@@ -220,14 +220,14 @@ static void ar933x_uart_break_ctl(struct uart_port *port, int break_state)
  		container_of(port, struct ar933x_uart_port, port);
  	unsigned long flags;
  
@@ -68,7 +70,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  /*
-@@ -318,7 +318,7 @@
+@@ -318,7 +318,7 @@ static void ar933x_uart_set_termios(struct uart_port *port,
  	 * Ok, we're now changing the port state. Do it with
  	 * interrupts disabled.
  	 */
@@ -77,7 +79,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* disable the UART */
  	ar933x_uart_rmw_clear(up, AR933X_UART_CS_REG,
-@@ -352,7 +352,7 @@
+@@ -352,7 +352,7 @@ static void ar933x_uart_set_termios(struct uart_port *port,
  			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
  			AR933X_UART_CS_IF_MODE_DCE << AR933X_UART_CS_IF_MODE_S);
  
@@ -86,7 +88,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (tty_termios_baud_rate(new))
  		tty_termios_encode_baud_rate(new, baud, baud);
-@@ -450,7 +450,7 @@
+@@ -450,7 +450,7 @@ static irqreturn_t ar933x_uart_interrupt(int irq, void *dev_id)
  	if ((status & AR933X_UART_CS_HOST_INT) == 0)
  		return IRQ_NONE;
  
@@ -95,7 +97,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	status = ar933x_uart_read(up, AR933X_UART_INT_REG);
  	status &= ar933x_uart_read(up, AR933X_UART_INT_EN_REG);
-@@ -468,7 +468,7 @@
+@@ -468,7 +468,7 @@ static irqreturn_t ar933x_uart_interrupt(int irq, void *dev_id)
  		ar933x_uart_tx_chars(up);
  	}
  
@@ -104,7 +106,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return IRQ_HANDLED;
  }
-@@ -485,7 +485,7 @@
+@@ -485,7 +485,7 @@ static int ar933x_uart_startup(struct uart_port *port)
  	if (ret)
  		return ret;
  
@@ -113,7 +115,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* Enable HOST interrupts */
  	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
-@@ -498,7 +498,7 @@
+@@ -498,7 +498,7 @@ static int ar933x_uart_startup(struct uart_port *port)
  	/* Enable RX interrupts */
  	ar933x_uart_start_rx_interrupt(up);
  
@@ -122,7 +124,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return 0;
  }
-@@ -632,9 +632,9 @@
+@@ -632,9 +632,9 @@ static void ar933x_uart_console_write(struct console *co, const char *s,
  	if (up->port.sysrq)
  		locked = 0;
  	else if (oops_in_progress)
@@ -134,7 +136,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * First save the IER then disable the interrupts
-@@ -654,7 +654,7 @@
+@@ -654,7 +654,7 @@ static void ar933x_uart_console_write(struct console *co, const char *s,
  	ar933x_uart_write(up, AR933X_UART_INT_REG, AR933X_UART_INT_ALLINTS);
  
  	if (locked)
@@ -143,3 +145,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	local_irq_restore(flags);
  }
+-- 
+2.45.0
+

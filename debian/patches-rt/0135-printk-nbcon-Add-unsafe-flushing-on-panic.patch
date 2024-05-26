@@ -1,8 +1,8 @@
-From 0e517cbc21d01adbbc58086f320884bbdff1b200 Mon Sep 17 00:00:00 2001
+From f259ab0f65fb66784d5907b8f515800bf5d6d663 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Fri, 20 Oct 2023 10:03:42 +0000
 Subject: [PATCH 135/196] printk: nbcon: Add unsafe flushing on panic
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Add nbcon_atomic_flush_unsafe() to flush all nbcon consoles
 using the write_atomic() callback and allowing unsafe hostile
@@ -22,9 +22,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/nbcon.c  | 18 ++++++++++++++++--
  3 files changed, 22 insertions(+), 2 deletions(-)
 
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 2aa57a870caf..e26dcf63efb1 100644
 --- a/include/linux/printk.h
 +++ b/include/linux/printk.h
-@@ -199,6 +199,7 @@
+@@ -199,6 +199,7 @@ extern asmlinkage void dump_stack(void) __cold;
  void printk_trigger_flush(void);
  extern void nbcon_acquire(struct uart_port *up);
  extern void nbcon_release(struct uart_port *up);
@@ -32,7 +34,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  #else
  static inline __printf(1, 0)
  int vprintk(const char *s, va_list args)
-@@ -287,6 +288,10 @@
+@@ -287,6 +288,10 @@ static inline void nbcon_release(struct uart_port *up)
  {
  }
  
@@ -43,9 +45,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  #endif
  
  #ifdef CONFIG_SMP
+diff --git a/kernel/panic.c b/kernel/panic.c
+index ef9f9a4e928d..219b69fbe829 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
-@@ -449,6 +449,7 @@
+@@ -449,6 +449,7 @@ void panic(const char *fmt, ...)
  	 * Explicitly flush the kernel log buffer one last time.
  	 */
  	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
@@ -53,9 +57,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	local_irq_enable();
  	for (i = 0; ; i += PANIC_TIMER_STEP) {
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index 3e999784ba5c..1c01f88d596d 100644
 --- a/kernel/printk/nbcon.c
 +++ b/kernel/printk/nbcon.c
-@@ -1030,8 +1030,9 @@
+@@ -1030,8 +1030,9 @@ bool nbcon_atomic_emit_next_record(struct console *con, bool *handover, int cook
   * __nbcon_atomic_flush_all - Flush all nbcon consoles using their
   *					write_atomic() callback
   * @stop_seq:			Flush up until this record
@@ -66,7 +72,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  {
  	struct nbcon_write_context wctxt = { };
  	struct nbcon_context *ctxt = &ACCESS_PRIVATE(&wctxt, ctxt);
-@@ -1059,6 +1060,7 @@
+@@ -1059,6 +1060,7 @@ static void __nbcon_atomic_flush_all(u64 stop_seq)
  			memset(ctxt, 0, sizeof(*ctxt));
  			ctxt->console			= con;
  			ctxt->spinwait_max_us		= 2000;
@@ -74,7 +80,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  			/*
  			 * Atomic flushing does not use console driver
-@@ -1093,7 +1095,19 @@
+@@ -1093,7 +1095,19 @@ static void __nbcon_atomic_flush_all(u64 stop_seq)
   */
  void nbcon_atomic_flush_all(void)
  {
@@ -95,3 +101,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  /**
+-- 
+2.45.0
+

@@ -1,8 +1,8 @@
-From fec1f6acc7b3a176512710d53696ad89baa8cc47 Mon Sep 17 00:00:00 2001
+From c1308c411127593713c4543d3b6c8a6b4c3a0049 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sat, 16 Sep 2023 21:26:05 +0206
 Subject: [PATCH 106/196] printk: nbcon: Add sequence handling
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Add an atomic_long_t field @nbcon_seq to the console struct to
 store the sequence number for nbcon consoles. For nbcon consoles
@@ -33,9 +33,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/printk.c   |  31 +++++++++---
  4 files changed, 136 insertions(+), 7 deletions(-)
 
+diff --git a/include/linux/console.h b/include/linux/console.h
+index ca1ef8700e55..20cd486b76ad 100644
 --- a/include/linux/console.h
 +++ b/include/linux/console.h
-@@ -243,6 +243,7 @@
+@@ -243,6 +243,7 @@ struct printk_buffers;
   *				might cause a system freeze when the console
   *				is used later.
   * @pbufs:			Pointer to the text buffer for this context
@@ -43,7 +45,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   */
  struct nbcon_context {
  	/* members set by caller */
-@@ -253,6 +254,7 @@
+@@ -253,6 +254,7 @@ struct nbcon_context {
  
  	/* members set by acquire */
  	struct printk_buffers	*pbufs;
@@ -51,7 +53,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  };
  
  /**
-@@ -276,6 +278,7 @@
+@@ -276,6 +278,7 @@ struct nbcon_context {
   * @node:		hlist node for the console list
   *
   * @nbcon_state:	State for nbcon consoles
@@ -59,7 +61,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   * @pbufs:		Pointer to nbcon private buffer
   */
  struct console {
-@@ -299,6 +302,7 @@
+@@ -299,6 +302,7 @@ struct console {
  
  	/* nbcon console specific members */
  	atomic_t		__private nbcon_state;
@@ -67,6 +69,8 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	struct printk_buffers	*pbufs;
  };
  
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index f6161cd75d7d..6473f5ae4a18 100644
 --- a/kernel/printk/internal.h
 +++ b/kernel/printk/internal.h
 @@ -4,6 +4,7 @@
@@ -77,7 +81,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  #if defined(CONFIG_PRINTK) && defined(CONFIG_SYSCTL)
  void __init printk_sysctl_init(void);
-@@ -42,6 +43,8 @@
+@@ -42,6 +43,8 @@ enum printk_info_flags {
  	LOG_CONT	= 8,	/* text is a fragment of a continuation line */
  };
  
@@ -86,7 +90,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  __printf(4, 0)
  int vprintk_store(int facility, int level,
  		  const struct dev_printk_info *dev_info,
-@@ -69,6 +72,8 @@
+@@ -69,6 +72,8 @@ void defer_console_output(void);
  u16 printk_parse_prefix(const char *text, int *level,
  			enum printk_info_flags *flags);
  
@@ -95,7 +99,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  bool nbcon_alloc(struct console *con);
  void nbcon_init(struct console *con);
  void nbcon_free(struct console *con);
-@@ -88,6 +93,8 @@
+@@ -88,6 +93,8 @@ void nbcon_free(struct console *con);
  #define printk_safe_exit_irqrestore(flags) local_irq_restore(flags)
  
  static inline bool printk_percpu_data_ready(void) { return false; }
@@ -104,9 +108,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  static inline bool nbcon_alloc(struct console *con) { return false; }
  static inline void nbcon_init(struct console *con) { }
  static inline void nbcon_free(struct console *con) { }
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index 98e4be5429f0..e076096b31c0 100644
 --- a/kernel/printk/nbcon.c
 +++ b/kernel/printk/nbcon.c
-@@ -140,6 +140,101 @@
+@@ -140,6 +140,101 @@ static inline bool nbcon_state_try_cmpxchg(struct console *con, struct nbcon_sta
  	return atomic_try_cmpxchg(&ACCESS_PRIVATE(con, nbcon_state), &cur->atom, new->atom);
  }
  
@@ -208,7 +214,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  /**
   * nbcon_context_try_acquire_direct - Try to acquire directly
   * @ctxt:	The context of the caller
-@@ -510,6 +605,9 @@
+@@ -510,6 +605,9 @@ static bool nbcon_context_try_acquire(struct nbcon_context *ctxt)
  	else
  		ctxt->pbufs = con->pbufs;
  
@@ -218,7 +224,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	return true;
  }
  
-@@ -722,6 +820,8 @@
+@@ -722,6 +820,8 @@ bool nbcon_alloc(struct console *con)
   *
   * nbcon_alloc() *must* be called and succeed before this function
   * is called.
@@ -227,7 +233,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   */
  void nbcon_init(struct console *con)
  {
-@@ -730,6 +830,7 @@
+@@ -730,6 +830,7 @@ void nbcon_init(struct console *con)
  	/* nbcon_alloc() must have been called and successful! */
  	BUG_ON(!con->pbufs);
  
@@ -235,9 +241,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	nbcon_state_set(con, &state);
  }
  
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 58b57deb0cbe..a1ab4760f807 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -494,7 +494,7 @@
+@@ -494,7 +494,7 @@ _DEFINE_PRINTKRB(printk_rb_static, CONFIG_LOG_BUF_SHIFT - PRB_AVGBITS,
  
  static struct printk_ringbuffer printk_rb_dynamic;
  
@@ -246,7 +254,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  /*
   * We cannot access per-CPU data (e.g. per-CPU flush irq_work) before
-@@ -3202,6 +3202,7 @@
+@@ -3202,6 +3202,7 @@ void console_flush_on_panic(enum con_flush_mode mode)
  
  	if (mode == CONSOLE_REPLAY_ALL) {
  		struct console *c;
@@ -254,7 +262,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		int cookie;
  		u64 seq;
  
-@@ -3209,11 +3210,17 @@
+@@ -3209,11 +3210,17 @@ void console_flush_on_panic(enum con_flush_mode mode)
  
  		cookie = console_srcu_read_lock();
  		for_each_console_srcu(c) {
@@ -277,7 +285,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		}
  		console_srcu_read_unlock(cookie);
  	}
-@@ -3799,6 +3806,7 @@
+@@ -3799,6 +3806,7 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
  	struct console *c;
  	u64 last_diff = 0;
  	u64 printk_seq;
@@ -285,7 +293,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	int cookie;
  	u64 diff;
  	u64 seq;
-@@ -3826,6 +3834,9 @@
+@@ -3826,6 +3834,9 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
  		for_each_console_srcu(c) {
  			if (con && con != c)
  				continue;
@@ -295,7 +303,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  			/*
  			 * If consoles are not usable, it cannot be expected
  			 * that they make forward progress, so only increment
-@@ -3833,7 +3844,13 @@
+@@ -3833,7 +3844,13 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
  			 */
  			if (!console_is_usable(c))
  				continue;
@@ -310,3 +318,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  			if (printk_seq < seq)
  				diff += seq - printk_seq;
  		}
+-- 
+2.45.0
+

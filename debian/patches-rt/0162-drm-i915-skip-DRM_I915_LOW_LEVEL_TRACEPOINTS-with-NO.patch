@@ -1,9 +1,9 @@
-From 5ffecc8923595fcb835407f98f278db208ff8ede Mon Sep 17 00:00:00 2001
+From d6917ce5b6ace96027536078f2382161d8239227 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 19 Dec 2018 10:47:02 +0100
 Subject: [PATCH 162/196] drm/i915: skip DRM_I915_LOW_LEVEL_TRACEPOINTS with
  NOTRACE
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 The order of the header files is important. If this header file is
 included after tracepoint.h was included then the NOTRACE here becomes a
@@ -17,9 +17,11 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  drivers/gpu/drm/i915/i915_trace.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/gpu/drm/i915/i915_trace.h b/drivers/gpu/drm/i915/i915_trace.h
+index c54653cf72c9..3c51620d011b 100644
 --- a/drivers/gpu/drm/i915/i915_trace.h
 +++ b/drivers/gpu/drm/i915/i915_trace.h
-@@ -326,7 +326,7 @@
+@@ -326,7 +326,7 @@ DEFINE_EVENT(i915_request, i915_request_add,
  	     TP_ARGS(rq)
  );
  
@@ -28,3 +30,6 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  DEFINE_EVENT(i915_request, i915_request_guc_submit,
  	     TP_PROTO(struct i915_request *rq),
  	     TP_ARGS(rq)
+-- 
+2.45.0
+

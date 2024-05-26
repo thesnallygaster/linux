@@ -1,9 +1,9 @@
-From a2483e420e52736b616cdcbdc453b06440b6508d Mon Sep 17 00:00:00 2001
+From 1e89d1c2fe750e14e2c206c71d226a313450399f Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 3 Aug 2023 12:09:31 +0200
 Subject: [PATCH 008/196] signal: Add proper comment about the preempt-disable
  in ptrace_stop().
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Commit 53da1d9456fe7 ("fix ptrace slowness") added a preempt-disable section
 between read_unlock() and the following schedule() invocation without
@@ -19,9 +19,11 @@ Link: https://lore.kernel.org/r/20230803100932.325870-2-bigeasy@linutronix.de
  kernel/signal.c | 17 ++++++++++++++---
  1 file changed, 14 insertions(+), 3 deletions(-)
 
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 09019017d669..051ed8114cd4 100644
 --- a/kernel/signal.c
 +++ b/kernel/signal.c
-@@ -2329,10 +2329,21 @@
+@@ -2329,10 +2329,21 @@ static int ptrace_stop(int exit_code, int why, unsigned long message,
  		do_notify_parent_cldstop(current, false, why);
  
  	/*
@@ -46,3 +48,6 @@ Link: https://lore.kernel.org/r/20230803100932.325870-2-bigeasy@linutronix.de
  	 */
  	preempt_disable();
  	read_unlock(&tasklist_lock);
+-- 
+2.45.0
+

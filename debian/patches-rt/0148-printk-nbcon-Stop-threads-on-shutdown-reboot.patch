@@ -1,8 +1,8 @@
-From 0787557324207f713a3a76f62fc12b8bcb6615da Mon Sep 17 00:00:00 2001
+From aaaf9f93ce213a1549d8389b512cd0f4e4360bef Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 26 Sep 2023 13:04:15 +0000
 Subject: [PATCH 148/196] printk: nbcon: Stop threads on shutdown/reboot
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Register a syscore_ops shutdown function to stop all threaded
 printers on shutdown/reboot. This allows printk to transition back
@@ -15,6 +15,8 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/nbcon.c | 31 +++++++++++++++++++++++++++++++
  1 file changed, 31 insertions(+)
 
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index 337ec7a10095..57ed4968a653 100644
 --- a/kernel/printk/nbcon.c
 +++ b/kernel/printk/nbcon.c
 @@ -8,6 +8,7 @@
@@ -25,7 +27,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  #include "printk_ringbuffer.h"
  #include "internal.h"
  /*
-@@ -1577,3 +1578,33 @@
+@@ -1577,3 +1578,33 @@ void nbcon_release(struct uart_port *up)
  	con->locked_port = false;
  }
  EXPORT_SYMBOL_GPL(nbcon_release);
@@ -59,3 +61,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 +	return 0;
 +}
 +device_initcall(printk_init_ops);
+-- 
+2.45.0
+

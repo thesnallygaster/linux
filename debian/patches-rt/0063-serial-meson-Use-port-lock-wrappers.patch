@@ -1,8 +1,8 @@
-From bd230f0220b276ea422189ec843e15b9d0ba928b Mon Sep 17 00:00:00 2001
+From 4231207bf5a369eec3ec34d51ffede1e1fc05143 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:54 +0206
 Subject: [PATCH 063/196] serial: meson: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -38,9 +38,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/meson_uart.c | 30 +++++++++++++++---------------
  1 file changed, 15 insertions(+), 15 deletions(-)
 
+diff --git a/drivers/tty/serial/meson_uart.c b/drivers/tty/serial/meson_uart.c
+index 9388b9ddea3b..4c1d2089a0bb 100644
 --- a/drivers/tty/serial/meson_uart.c
 +++ b/drivers/tty/serial/meson_uart.c
-@@ -129,14 +129,14 @@
+@@ -129,14 +129,14 @@ static void meson_uart_shutdown(struct uart_port *port)
  
  	free_irq(port->irq, port);
  
@@ -57,7 +59,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void meson_uart_start_tx(struct uart_port *port)
-@@ -238,7 +238,7 @@
+@@ -238,7 +238,7 @@ static irqreturn_t meson_uart_interrupt(int irq, void *dev_id)
  {
  	struct uart_port *port = (struct uart_port *)dev_id;
  
@@ -66,7 +68,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (!(readl(port->membase + AML_UART_STATUS) & AML_UART_RX_EMPTY))
  		meson_receive_chars(port);
-@@ -248,7 +248,7 @@
+@@ -248,7 +248,7 @@ static irqreturn_t meson_uart_interrupt(int irq, void *dev_id)
  			meson_uart_start_tx(port);
  	}
  
@@ -75,7 +77,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return IRQ_HANDLED;
  }
-@@ -284,7 +284,7 @@
+@@ -284,7 +284,7 @@ static int meson_uart_startup(struct uart_port *port)
  	u32 val;
  	int ret = 0;
  
@@ -84,7 +86,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	val = readl(port->membase + AML_UART_CONTROL);
  	val |= AML_UART_CLEAR_ERR;
-@@ -301,7 +301,7 @@
+@@ -301,7 +301,7 @@ static int meson_uart_startup(struct uart_port *port)
  	val = (AML_UART_RECV_IRQ(1) | AML_UART_XMIT_IRQ(port->fifosize / 2));
  	writel(val, port->membase + AML_UART_MISC);
  
@@ -93,7 +95,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	ret = request_irq(port->irq, meson_uart_interrupt, 0,
  			  port->name, port);
-@@ -341,7 +341,7 @@
+@@ -341,7 +341,7 @@ static void meson_uart_set_termios(struct uart_port *port,
  	unsigned long flags;
  	u32 val;
  
@@ -102,7 +104,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	cflags = termios->c_cflag;
  	iflags = termios->c_iflag;
-@@ -405,7 +405,7 @@
+@@ -405,7 +405,7 @@ static void meson_uart_set_termios(struct uart_port *port,
  					    AML_UART_FRAME_ERR;
  
  	uart_update_timeout(port, termios->c_cflag, baud);
@@ -111,7 +113,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static int meson_uart_verify_port(struct uart_port *port,
-@@ -464,14 +464,14 @@
+@@ -464,14 +464,14 @@ static int meson_uart_poll_get_char(struct uart_port *port)
  	u32 c;
  	unsigned long flags;
  
@@ -128,7 +130,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return c;
  }
-@@ -482,7 +482,7 @@
+@@ -482,7 +482,7 @@ static void meson_uart_poll_put_char(struct uart_port *port, unsigned char c)
  	u32 reg;
  	int ret;
  
@@ -137,7 +139,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* Wait until FIFO is empty or timeout */
  	ret = readl_poll_timeout_atomic(port->membase + AML_UART_STATUS, reg,
-@@ -506,7 +506,7 @@
+@@ -506,7 +506,7 @@ static void meson_uart_poll_put_char(struct uart_port *port, unsigned char c)
  		dev_err(port->dev, "Timeout waiting for UART TX EMPTY\n");
  
  out:
@@ -146,7 +148,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  #endif /* CONFIG_CONSOLE_POLL */
-@@ -563,9 +563,9 @@
+@@ -563,9 +563,9 @@ static void meson_serial_port_write(struct uart_port *port, const char *s,
  	if (port->sysrq) {
  		locked = 0;
  	} else if (oops_in_progress) {
@@ -158,7 +160,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		locked = 1;
  	}
  
-@@ -577,7 +577,7 @@
+@@ -577,7 +577,7 @@ static void meson_serial_port_write(struct uart_port *port, const char *s,
  	writel(val, port->membase + AML_UART_CONTROL);
  
  	if (locked)
@@ -167,3 +169,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	local_irq_restore(flags);
  }
  
+-- 
+2.45.0
+

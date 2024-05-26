@@ -1,8 +1,8 @@
-From 1ba17b189f3022419f0131e2569204081babade0 Mon Sep 17 00:00:00 2001
+From 384ac9ebc26a572bdda962d0af1985c53347421d Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:40 +0206
 Subject: [PATCH 049/196] serial: cpm_uart: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/cpm_uart.c | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/tty/serial/cpm_uart.c b/drivers/tty/serial/cpm_uart.c
+index 626423022d62..be4af6eda4c2 100644
 --- a/drivers/tty/serial/cpm_uart.c
 +++ b/drivers/tty/serial/cpm_uart.c
-@@ -569,7 +569,7 @@
+@@ -569,7 +569,7 @@ static void cpm_uart_set_termios(struct uart_port *port,
  	if ((termios->c_cflag & CREAD) == 0)
  		port->read_status_mask &= ~BD_SC_EMPTY;
  
@@ -48,7 +50,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (IS_SMC(pinfo)) {
  		unsigned int bits = tty_get_frame_size(termios->c_cflag);
-@@ -609,7 +609,7 @@
+@@ -609,7 +609,7 @@ static void cpm_uart_set_termios(struct uart_port *port,
  		clk_set_rate(pinfo->clk, baud);
  	else
  		cpm_setbrg(pinfo->brg - 1, baud);
@@ -57,7 +59,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static const char *cpm_uart_type(struct uart_port *port)
-@@ -1386,9 +1386,9 @@
+@@ -1386,9 +1386,9 @@ static void cpm_uart_console_write(struct console *co, const char *s,
  		cpm_uart_early_write(pinfo, s, count, true);
  		local_irq_restore(flags);
  	} else {
@@ -69,3 +71,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	}
  }
  
+-- 
+2.45.0
+

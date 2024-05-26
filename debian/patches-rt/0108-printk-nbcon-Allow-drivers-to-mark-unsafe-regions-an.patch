@@ -1,9 +1,9 @@
-From acab335e7339f1a8d8273e9e13e9129c613a78d4 Mon Sep 17 00:00:00 2001
+From 9defff2dd81271b1104890541c6fcf51ef4215e4 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sat, 16 Sep 2023 21:26:07 +0206
 Subject: [PATCH 108/196] printk: nbcon: Allow drivers to mark unsafe regions
  and check state
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 For the write_atomic callback, the console driver may have unsafe
 regions that need to be appropriately marked. Provide functions
@@ -25,9 +25,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/nbcon.c   | 75 +++++++++++++++++++++++++++++++++++++++++
  2 files changed, 85 insertions(+)
 
+diff --git a/include/linux/console.h b/include/linux/console.h
+index 14563dcb34b1..e4fc6f7c1496 100644
 --- a/include/linux/console.h
 +++ b/include/linux/console.h
-@@ -451,6 +451,16 @@
+@@ -451,6 +451,16 @@ static inline bool console_is_registered(const struct console *con)
  	lockdep_assert_console_list_lock_held();			\
  	hlist_for_each_entry(con, &console_list, node)
  
@@ -44,9 +46,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  extern int console_set_on_cmdline;
  extern struct console *early_console;
  
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index 6e05d263fd22..b96077152f49 100644
 --- a/kernel/printk/nbcon.c
 +++ b/kernel/printk/nbcon.c
-@@ -732,6 +732,41 @@
+@@ -732,6 +732,41 @@ static bool nbcon_context_can_proceed(struct nbcon_context *ctxt, struct nbcon_s
  	return false;
  }
  
@@ -88,10 +92,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  #define nbcon_context_enter_unsafe(c)	__nbcon_context_update_unsafe(c, true)
  #define nbcon_context_exit_unsafe(c)	__nbcon_context_update_unsafe(c, false)
  
-@@ -783,6 +818,46 @@
+@@ -782,6 +817,46 @@ static bool __nbcon_context_update_unsafe(struct nbcon_context *ctxt, bool unsaf
+ 	return nbcon_context_can_proceed(ctxt, &cur);
  }
  
- /**
++/**
 + * nbcon_enter_unsafe - Enter an unsafe region in the driver
 + * @wctxt:	The write context that was handed to the write function
 + *
@@ -131,7 +136,9 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 +}
 +EXPORT_SYMBOL_GPL(nbcon_exit_unsafe);
 +
-+/**
+ /**
   * nbcon_emit_next_record - Emit a record in the acquired context
   * @wctxt:	The write context that will be handed to the write function
-  *
+-- 
+2.45.0
+

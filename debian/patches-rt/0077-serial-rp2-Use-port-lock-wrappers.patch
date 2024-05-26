@@ -1,8 +1,8 @@
-From c90809f8e01126e54521d79e1dc45b9436d46eb8 Mon Sep 17 00:00:00 2001
+From b42f4aed52d39ddd409039eb423af82d2e0ed024 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:08 +0206
 Subject: [PATCH 077/196] serial: rp2: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/rp2.c | 20 ++++++++++----------
  1 file changed, 10 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/tty/serial/rp2.c b/drivers/tty/serial/rp2.c
+index de220ac8ca54..d46a81cddfcd 100644
 --- a/drivers/tty/serial/rp2.c
 +++ b/drivers/tty/serial/rp2.c
-@@ -276,9 +276,9 @@
+@@ -276,9 +276,9 @@ static unsigned int rp2_uart_tx_empty(struct uart_port *port)
  	 * But the TXEMPTY bit doesn't seem to work unless the TX IRQ is
  	 * enabled.
  	 */
@@ -51,7 +53,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return tx_fifo_bytes ? 0 : TIOCSER_TEMT;
  }
-@@ -323,10 +323,10 @@
+@@ -323,10 +323,10 @@ static void rp2_uart_break_ctl(struct uart_port *port, int break_state)
  {
  	unsigned long flags;
  
@@ -64,7 +66,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void rp2_uart_enable_ms(struct uart_port *port)
-@@ -383,7 +383,7 @@
+@@ -383,7 +383,7 @@ static void rp2_uart_set_termios(struct uart_port *port, struct ktermios *new,
  	if (tty_termios_baud_rate(new))
  		tty_termios_encode_baud_rate(new, baud, baud);
  
@@ -73,7 +75,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* ignore all characters if CREAD is not set */
  	port->ignore_status_mask = (new->c_cflag & CREAD) ? 0 : RP2_DUMMY_READ;
-@@ -391,7 +391,7 @@
+@@ -391,7 +391,7 @@ static void rp2_uart_set_termios(struct uart_port *port, struct ktermios *new,
  	__rp2_uart_set_termios(up, new->c_cflag, new->c_iflag, baud_div);
  	uart_update_timeout(port, new->c_cflag, baud);
  
@@ -82,7 +84,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void rp2_rx_chars(struct rp2_uart_port *up)
-@@ -440,7 +440,7 @@
+@@ -440,7 +440,7 @@ static void rp2_ch_interrupt(struct rp2_uart_port *up)
  {
  	u32 status;
  
@@ -91,7 +93,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * The IRQ status bits are clear-on-write.  Other status bits in
-@@ -456,7 +456,7 @@
+@@ -456,7 +456,7 @@ static void rp2_ch_interrupt(struct rp2_uart_port *up)
  	if (status & RP2_CHAN_STAT_MS_CHANGED_MASK)
  		wake_up_interruptible(&up->port.state->port.delta_msr_wait);
  
@@ -100,7 +102,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static int rp2_asic_interrupt(struct rp2_card *card, unsigned int asic_id)
-@@ -516,10 +516,10 @@
+@@ -516,10 +516,10 @@ static void rp2_uart_shutdown(struct uart_port *port)
  
  	rp2_uart_break_ctl(port, 0);
  
@@ -113,3 +115,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static const char *rp2_uart_type(struct uart_port *port)
+-- 
+2.45.0
+

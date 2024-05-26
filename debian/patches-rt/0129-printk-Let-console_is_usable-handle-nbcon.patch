@@ -1,8 +1,8 @@
-From 2d63ebc93fe9746fa35e713348ee016995716c30 Mon Sep 17 00:00:00 2001
+From dc9e02d2607d81b4c4e51024e6a544d6947b0808 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 12 Sep 2023 13:53:21 +0000
 Subject: [PATCH 129/196] printk: Let console_is_usable() handle nbcon
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 The nbcon consoles use a different printing callback. For nbcon
 consoles, check for the write_atomic() callback instead of
@@ -15,9 +15,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/internal.h | 11 +++++++++--
  1 file changed, 9 insertions(+), 2 deletions(-)
 
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index 378ccca007ca..d741d19bb9db 100644
 --- a/kernel/printk/internal.h
 +++ b/kernel/printk/internal.h
-@@ -80,6 +80,8 @@
+@@ -80,6 +80,8 @@ void nbcon_free(struct console *con);
  
  /*
   * Check if the given console is currently capable and allowed to print
@@ -26,7 +28,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   * records.
   *
   * Requires the console_srcu_read_lock.
-@@ -94,8 +96,13 @@
+@@ -94,8 +96,13 @@ static inline bool console_is_usable(struct console *con)
  	if ((flags & CON_SUSPENDED))
  		return false;
  
@@ -42,3 +44,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * Console drivers may assume that per-cpu resources have been
+-- 
+2.45.0
+

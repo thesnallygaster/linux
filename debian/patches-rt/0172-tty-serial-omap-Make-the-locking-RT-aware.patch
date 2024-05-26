@@ -1,8 +1,8 @@
-From 540ed95383d69c32428a1f9cfd3d473fe27e1ebc Mon Sep 17 00:00:00 2001
+From e948ed4be7f22cf0f0ac07c05e37abbd7a1f33b5 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 28 Jul 2011 13:32:57 +0200
 Subject: [PATCH 172/196] tty/serial/omap: Make the locking RT aware
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 The lock is a sleeping lock and local_irq_save() is not the
 optimsation we are looking for. Redo it to make it work on -RT and
@@ -13,9 +13,11 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  drivers/tty/serial/omap-serial.c | 12 ++++--------
  1 file changed, 4 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
+index f4c6ff806465..1097fca22307 100644
 --- a/drivers/tty/serial/omap-serial.c
 +++ b/drivers/tty/serial/omap-serial.c
-@@ -1212,13 +1212,10 @@
+@@ -1212,13 +1212,10 @@ serial_omap_console_write(struct console *co, const char *s,
  	unsigned int ier;
  	int locked = 1;
  
@@ -32,7 +34,7 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  
  	/*
  	 * First save the IER then disable the interrupts
-@@ -1245,8 +1242,7 @@
+@@ -1245,8 +1242,7 @@ serial_omap_console_write(struct console *co, const char *s,
  		check_modem_status(up);
  
  	if (locked)
@@ -42,3 +44,6 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  }
  
  static int __init
+-- 
+2.45.0
+

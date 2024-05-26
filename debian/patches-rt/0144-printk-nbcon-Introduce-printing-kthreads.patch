@@ -1,8 +1,8 @@
-From 4e433bade51bec9de1db5e63f286489d079b0ce5 Mon Sep 17 00:00:00 2001
+From 551c86675af130807553e31b92f4e7705e560637 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Fri, 22 Sep 2023 14:12:21 +0000
 Subject: [PATCH 144/196] printk: nbcon: Introduce printing kthreads
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Provide the main implementation for running a printer kthread
 per nbcon console that is takeover/handover aware.
@@ -22,6 +22,8 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/printk.c   |  31 +++++++
  4 files changed, 249 insertions(+), 3 deletions(-)
 
+diff --git a/include/linux/console.h b/include/linux/console.h
+index 2583f13c25ba..5b5333faac7a 100644
 --- a/include/linux/console.h
 +++ b/include/linux/console.h
 @@ -17,6 +17,7 @@
@@ -32,7 +34,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  #include <linux/types.h>
  
  struct vc_data;
-@@ -296,12 +297,15 @@
+@@ -296,12 +297,15 @@ struct nbcon_write_context {
   * @node:		hlist node for the console list
   *
   * @write_atomic:	Write callback for atomic context
@@ -48,7 +50,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   */
  struct console {
  	char			name[16];
-@@ -325,12 +329,16 @@
+@@ -325,12 +329,16 @@ struct console {
  	/* nbcon console specific members */
  	bool			(*write_atomic)(struct console *con,
  						struct nbcon_write_context *wctxt);
@@ -65,9 +67,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  };
  
  #ifdef CONFIG_LOCKDEP
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index e2675981dfc5..4de36691009b 100644
 --- a/kernel/printk/internal.h
 +++ b/kernel/printk/internal.h
-@@ -92,6 +92,7 @@
+@@ -92,6 +92,7 @@ void nbcon_free(struct console *con);
  enum nbcon_prio nbcon_get_default_prio(void);
  void nbcon_atomic_flush_all(void);
  bool nbcon_atomic_emit_next_record(struct console *con, bool *handover, int cookie);
@@ -75,7 +79,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  /*
   * Check if the given console is currently capable and allowed to print
-@@ -110,6 +111,8 @@
+@@ -110,6 +111,8 @@ static inline bool console_is_usable(struct console *con, short flags)
  	if (flags & CON_NBCON) {
  		if (!con->write_atomic)
  			return false;
@@ -84,7 +88,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	} else {
  		if (!con->write)
  			return false;
-@@ -126,12 +129,34 @@
+@@ -126,12 +129,34 @@ static inline bool console_is_usable(struct console *con, short flags)
  	return true;
  }
  
@@ -119,6 +123,8 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  #define printing_via_unlock (false)
  
  /*
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index c3ee245397f6..1becdfc7772c 100644
 --- a/kernel/printk/nbcon.c
 +++ b/kernel/printk/nbcon.c
 @@ -5,8 +5,10 @@
@@ -132,7 +138,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  #include "internal.h"
  /*
   * Printk console printing implementation for consoles which does not depend
-@@ -828,6 +830,7 @@
+@@ -828,6 +830,7 @@ EXPORT_SYMBOL_GPL(nbcon_exit_unsafe);
  /**
   * nbcon_emit_next_record - Emit a record in the acquired context
   * @wctxt:	The write context that will be handed to the write function
@@ -140,7 +146,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   *
   * Return:	True if this context still owns the console. False if
   *		ownership was handed over or taken.
-@@ -841,7 +844,7 @@
+@@ -841,7 +844,7 @@ EXPORT_SYMBOL_GPL(nbcon_exit_unsafe);
   * When true is returned, @wctxt->ctxt.backlog indicates whether there are
   * still records pending in the ringbuffer,
   */
@@ -149,7 +155,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  {
  	struct nbcon_context *ctxt = &ACCESS_PRIVATE(wctxt, ctxt);
  	struct console *con = ctxt->console;
-@@ -891,9 +894,17 @@
+@@ -891,9 +894,17 @@ static bool nbcon_emit_next_record(struct nbcon_write_context *wctxt)
  	nbcon_state_read(con, &cur);
  	wctxt->unsafe_takeover = cur.unsafe_takeover;
  
@@ -168,7 +174,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	if (!done) {
  		/*
  		 * The emit was aborted, probably due to a loss of ownership.
-@@ -929,6 +940,118 @@
+@@ -929,6 +940,118 @@ static bool nbcon_emit_next_record(struct nbcon_write_context *wctxt)
  	return nbcon_context_exit_unsafe(ctxt);
  }
  
@@ -287,7 +293,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  /* Track the nbcon emergency nesting per CPU. */
  static DEFINE_PER_CPU(unsigned int, nbcon_pcpu_emergency_nesting);
  static unsigned int early_nbcon_pcpu_emergency_nesting __initdata;
-@@ -976,7 +1099,7 @@
+@@ -976,7 +1099,7 @@ static bool nbcon_atomic_emit_one(struct nbcon_write_context *wctxt)
  	 * handed over or taken over. In both cases the context is no
  	 * longer valid.
  	 */
@@ -296,10 +302,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		return false;
  
  	nbcon_context_release(ctxt);
-@@ -1192,6 +1315,63 @@
+@@ -1191,6 +1314,63 @@ void nbcon_cpu_emergency_exit(void)
+ 		printk_trigger_flush();
  }
  
- /**
++/**
 + * nbcon_kthread_stop - Stop a printer thread
 + * @con:	Console to operate on
 + */
@@ -356,11 +363,10 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 +	sched_set_normal(con->kthread, -20);
 +}
 +
-+/**
+ /**
   * nbcon_alloc - Allocate buffers needed by the nbcon console
   * @con:	Console to allocate buffers for
-  *
-@@ -1237,6 +1417,7 @@
+@@ -1237,6 +1417,7 @@ void nbcon_init(struct console *con)
  	/* nbcon_alloc() must have been called and successful! */
  	BUG_ON(!con->pbufs);
  
@@ -368,7 +374,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	nbcon_seq_force(con, con->seq);
  	nbcon_state_set(con, &state);
  }
-@@ -1249,6 +1430,7 @@
+@@ -1249,6 +1430,7 @@ void nbcon_free(struct console *con)
  {
  	struct nbcon_state state = { };
  
@@ -376,9 +382,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	nbcon_state_set(con, &state);
  
  	/* Boot consoles share global printk buffers. */
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 4a0df41d32b8..3e307d475d23 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -2688,6 +2688,8 @@
+@@ -2688,6 +2688,8 @@ void suspend_console(void)
  void resume_console(void)
  {
  	struct console *con;
@@ -387,7 +395,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (!console_suspend_enabled)
  		return;
-@@ -2704,6 +2706,14 @@
+@@ -2704,6 +2706,14 @@ void resume_console(void)
  	 */
  	synchronize_srcu(&console_srcu);
  
@@ -402,7 +410,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	pr_flush(1000, true);
  }
  
-@@ -3024,6 +3034,13 @@
+@@ -3024,6 +3034,13 @@ static bool console_flush_all(bool do_cond_resched, u64 *next_seq, bool *handove
  			u64 printk_seq;
  			bool progress;
  
@@ -416,7 +424,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  			if (!console_is_usable(con, flags))
  				continue;
  			any_usable = true;
-@@ -3319,9 +3336,23 @@
+@@ -3319,9 +3336,23 @@ EXPORT_SYMBOL(console_stop);
  
  void console_start(struct console *console)
  {
@@ -440,3 +448,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	__pr_flush(console, 1000, true);
  }
  EXPORT_SYMBOL(console_start);
+-- 
+2.45.0
+

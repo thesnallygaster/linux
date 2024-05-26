@@ -1,8 +1,8 @@
-From fdf01efe9d043e74c79ab57061ed1ebb8405a762 Mon Sep 17 00:00:00 2001
+From 3017e1245542c4a0a2cfd2bfbbda836c1278b7d7 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:35 +0206
 Subject: [PATCH 044/196] serial: apb: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/apbuart.c | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/tty/serial/apbuart.c b/drivers/tty/serial/apbuart.c
+index d3cb341f2c55..364599f256db 100644
 --- a/drivers/tty/serial/apbuart.c
 +++ b/drivers/tty/serial/apbuart.c
-@@ -133,7 +133,7 @@
+@@ -133,7 +133,7 @@ static irqreturn_t apbuart_int(int irq, void *dev_id)
  	struct uart_port *port = dev_id;
  	unsigned int status;
  
@@ -48,7 +50,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	status = UART_GET_STATUS(port);
  	if (status & UART_STATUS_DR)
-@@ -141,7 +141,7 @@
+@@ -141,7 +141,7 @@ static irqreturn_t apbuart_int(int irq, void *dev_id)
  	if (status & UART_STATUS_THE)
  		apbuart_tx_chars(port);
  
@@ -57,7 +59,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return IRQ_HANDLED;
  }
-@@ -228,7 +228,7 @@
+@@ -228,7 +228,7 @@ static void apbuart_set_termios(struct uart_port *port,
  	if (termios->c_cflag & CRTSCTS)
  		cr |= UART_CTRL_FL;
  
@@ -66,7 +68,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* Update the per-port timeout. */
  	uart_update_timeout(port, termios->c_cflag, baud);
-@@ -251,7 +251,7 @@
+@@ -251,7 +251,7 @@ static void apbuart_set_termios(struct uart_port *port,
  	UART_PUT_SCAL(port, quot);
  	UART_PUT_CTRL(port, cr);
  
@@ -75,3 +77,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static const char *apbuart_type(struct uart_port *port)
+-- 
+2.45.0
+

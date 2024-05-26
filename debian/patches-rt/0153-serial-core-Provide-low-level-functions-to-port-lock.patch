@@ -1,9 +1,9 @@
-From 3b2c9b404015ccf3b82f494e34cd1ec1edf4a9f0 Mon Sep 17 00:00:00 2001
+From 12dca938cde1e89be88d3d9dc537127ef673e222 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Mon, 11 Dec 2023 09:19:18 +0000
 Subject: [PATCH 153/196] serial: core: Provide low-level functions to port
  lock
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 The nbcon console's driver_enter() and driver_exit() callbacks need
 to lock the port lock in order to synchronize against other hardware
@@ -21,9 +21,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  include/linux/serial_core.h | 12 ++++++++++++
  1 file changed, 12 insertions(+)
 
+diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+index 150dcf1ea332..e5947b13f2f1 100644
 --- a/include/linux/serial_core.h
 +++ b/include/linux/serial_core.h
-@@ -681,6 +681,18 @@
+@@ -681,6 +681,18 @@ static inline void uart_port_unlock_irqrestore(struct uart_port *up, unsigned lo
  	spin_unlock_irqrestore(&up->lock, flags);
  }
  
@@ -42,3 +44,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  static inline int serial_port_in(struct uart_port *up, int offset)
  {
  	return up->serial_in(up, offset);
+-- 
+2.45.0
+

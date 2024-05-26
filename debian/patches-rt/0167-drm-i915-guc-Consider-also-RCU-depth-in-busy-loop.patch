@@ -1,8 +1,8 @@
-From 1999fb80bf44b6c01933ffb239508f40ec2a5392 Mon Sep 17 00:00:00 2001
+From 6df1c739d7ac9a868a3484bf8d1cd42d82b3b64a Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Tue, 3 Oct 2023 21:37:21 +0200
 Subject: [PATCH 167/196] drm/i915/guc: Consider also RCU depth in busy loop.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 intel_guc_send_busy_loop() looks at in_atomic() and irqs_disabled() to
 decide if it should busy-spin while waiting or if it may sleep.
@@ -17,9 +17,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/gpu/drm/i915/gt/uc/intel_guc.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/gpu/drm/i915/gt/uc/intel_guc.h b/drivers/gpu/drm/i915/gt/uc/intel_guc.h
+index 8dc291ff0093..5b8d084c9c58 100644
 --- a/drivers/gpu/drm/i915/gt/uc/intel_guc.h
 +++ b/drivers/gpu/drm/i915/gt/uc/intel_guc.h
-@@ -317,7 +317,7 @@
+@@ -317,7 +317,7 @@ static inline int intel_guc_send_busy_loop(struct intel_guc *guc,
  {
  	int err;
  	unsigned int sleep_period_ms = 1;
@@ -28,3 +30,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * FIXME: Have caller pass in if we are in an atomic context to avoid
+-- 
+2.45.0
+

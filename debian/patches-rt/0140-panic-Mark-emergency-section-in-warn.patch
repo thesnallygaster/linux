@@ -1,8 +1,8 @@
-From 1d9c5870de7f8605e271d8cc0700d46dfa1546d6 Mon Sep 17 00:00:00 2001
+From 16f9e31514dd851a3d5c8edea5f9e029e5c963da Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Mon, 11 Sep 2023 15:53:04 +0000
 Subject: [PATCH 140/196] panic: Mark emergency section in warn
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Mark the full contents of __warn() as an emergency section. In
 this section, the CPU will not perform console output for the
@@ -17,9 +17,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/panic.c | 4 ++++
  1 file changed, 4 insertions(+)
 
+diff --git a/kernel/panic.c b/kernel/panic.c
+index f0e91a0c4001..147803c3a402 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
-@@ -663,6 +663,8 @@
+@@ -663,6 +663,8 @@ struct warn_args {
  void __warn(const char *file, int line, void *caller, unsigned taint,
  	    struct pt_regs *regs, struct warn_args *args)
  {
@@ -28,7 +30,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	disable_trace_on_warning();
  
  	if (file)
-@@ -693,6 +695,8 @@
+@@ -693,6 +695,8 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
  
  	/* Just a warning, don't kill lockdep. */
  	add_taint(taint, LOCKDEP_STILL_OK);
@@ -37,3 +39,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  #ifdef CONFIG_BUG
+-- 
+2.45.0
+

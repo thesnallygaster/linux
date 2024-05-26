@@ -1,8 +1,8 @@
-From b0c89563d52cc52548c7c3a1dbd50cdda700f266 Mon Sep 17 00:00:00 2001
+From f867a95d070f8821e468219d9ec05261165f0a8a Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Wed, 8 Jul 2015 17:14:48 +0200
 Subject: [PATCH 170/196] arm: Disable jump-label on PREEMPT_RT.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 jump-labels are used to efficiently switch between two possible code
 paths. To achieve this, stop_machine() is used to keep the CPU in a
@@ -24,9 +24,11 @@ Link: https://lkml.kernel.org/r/20220613182447.112191-2-bigeasy@linutronix.de
  arch/arm/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 57c0448d017a..dea47ba6576b 100644
 --- a/arch/arm/Kconfig
 +++ b/arch/arm/Kconfig
-@@ -73,7 +73,7 @@
+@@ -73,7 +73,7 @@ config ARM
  	select HAS_IOPORT
  	select HAVE_ARCH_AUDITSYSCALL if AEABI && !OABI_COMPAT
  	select HAVE_ARCH_BITREVERSE if (CPU_32v7M || CPU_32v7) && !CPU_32v6
@@ -35,3 +37,6 @@ Link: https://lkml.kernel.org/r/20220613182447.112191-2-bigeasy@linutronix.de
  	select HAVE_ARCH_KFENCE if MMU && !XIP_KERNEL
  	select HAVE_ARCH_KGDB if !CPU_ENDIAN_BE32 && MMU
  	select HAVE_ARCH_KASAN if MMU && !XIP_KERNEL
+-- 
+2.45.0
+

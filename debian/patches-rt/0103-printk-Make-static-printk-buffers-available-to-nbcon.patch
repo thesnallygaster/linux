@@ -1,8 +1,8 @@
-From 7d0179cb73da311dd798433e722d1be2daa8bd12 Mon Sep 17 00:00:00 2001
+From 3a51de13d832750415784411154951155afb3d11 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Sat, 16 Sep 2023 21:26:02 +0206
 Subject: [PATCH 103/196] printk: Make static printk buffers available to nbcon
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 The nbcon boot consoles also need printk buffers that are available
 very early. Since the nbcon boot consoles will also be serialized
@@ -22,9 +22,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/printk.c   | 13 +++++++++----
  2 files changed, 11 insertions(+), 4 deletions(-)
 
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index 2ca0ab78802c..7199d60bfc25 100644
 --- a/kernel/printk/internal.h
 +++ b/kernel/printk/internal.h
-@@ -86,6 +86,8 @@
+@@ -86,6 +86,8 @@ static inline void nbcon_cleanup(struct console *con) { }
  
  #endif /* CONFIG_PRINTK */
  
@@ -33,23 +35,25 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  /**
   * struct printk_buffers - Buffers to read/format/output printk messages.
   * @outbuf:	After formatting, contains text to output.
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index b2c65b991e1e..dd68135cb371 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -2881,6 +2881,13 @@
+@@ -2880,6 +2880,13 @@ static bool printk_get_next_message(struct printk_message *pmsg, u64 seq,
+ 	return true;
  }
  
- /*
++/*
 + * Used as the printk buffers for non-panic, serialized console printing.
 + * This is for legacy (!CON_NBCON) as well as all boot (CON_BOOT) consoles.
 + * Its usage requires the console_lock held.
 + */
 +struct printk_buffers printk_shared_pbufs;
 +
-+/*
+ /*
   * Print one record for the given console. The record printed is whatever
   * record is the next available record for the given console.
-  *
-@@ -2897,12 +2904,10 @@
+@@ -2897,12 +2904,10 @@ static bool printk_get_next_message(struct printk_message *pmsg, u64 seq,
   */
  static bool console_emit_next_record(struct console *con, bool *handover, int cookie)
  {
@@ -64,3 +68,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	};
  	unsigned long flags;
  
+-- 
+2.45.0
+

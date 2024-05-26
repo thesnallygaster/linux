@@ -1,9 +1,9 @@
-From 349c5f195066aa37b73de431f7b3cb6f4e8500fa Mon Sep 17 00:00:00 2001
+From 21a76f3ab70c24a09715f5df5052e35310be184c Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 8 Sep 2021 19:03:41 +0200
 Subject: [PATCH 164/196] drm/i915/gt: Use spin_lock_irq() instead of
  local_irq_disable() + spin_lock()
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 execlists_dequeue() is invoked from a function which uses
 local_irq_disable() to disable interrupts so the spin_lock() behaves
@@ -27,9 +27,11 @@ Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
  .../drm/i915/gt/intel_execlists_submission.c    | 17 +++++------------
  1 file changed, 5 insertions(+), 12 deletions(-)
 
+diff --git a/drivers/gpu/drm/i915/gt/intel_execlists_submission.c b/drivers/gpu/drm/i915/gt/intel_execlists_submission.c
+index 42e09f158920..ac80e229f1cc 100644
 --- a/drivers/gpu/drm/i915/gt/intel_execlists_submission.c
 +++ b/drivers/gpu/drm/i915/gt/intel_execlists_submission.c
-@@ -1303,7 +1303,7 @@
+@@ -1303,7 +1303,7 @@ static void execlists_dequeue(struct intel_engine_cs *engine)
  	 * and context switches) submission.
  	 */
  
@@ -38,7 +40,7 @@ Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
  
  	/*
  	 * If the queue is higher priority than the last
-@@ -1403,7 +1403,7 @@
+@@ -1403,7 +1403,7 @@ static void execlists_dequeue(struct intel_engine_cs *engine)
  				 * Even if ELSP[1] is occupied and not worthy
  				 * of timeslices, our queue might be.
  				 */
@@ -47,7 +49,7 @@ Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
  				return;
  			}
  		}
-@@ -1429,7 +1429,7 @@
+@@ -1429,7 +1429,7 @@ static void execlists_dequeue(struct intel_engine_cs *engine)
  
  		if (last && !can_merge_rq(last, rq)) {
  			spin_unlock(&ve->base.sched_engine->lock);
@@ -56,7 +58,7 @@ Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
  			return; /* leave this for another sibling */
  		}
  
-@@ -1591,7 +1591,7 @@
+@@ -1591,7 +1591,7 @@ static void execlists_dequeue(struct intel_engine_cs *engine)
  	 */
  	sched_engine->queue_priority_hint = queue_prio(sched_engine);
  	i915_sched_engine_reset_on_empty(sched_engine);
@@ -65,7 +67,7 @@ Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
  
  	/*
  	 * We can skip poking the HW if we ended up with exactly the same set
-@@ -1617,13 +1617,6 @@
+@@ -1617,13 +1617,6 @@ static void execlists_dequeue(struct intel_engine_cs *engine)
  	}
  }
  
@@ -79,7 +81,7 @@ Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
  static void clear_ports(struct i915_request **ports, int count)
  {
  	memset_p((void **)ports, NULL, count);
-@@ -2478,7 +2471,7 @@
+@@ -2478,7 +2471,7 @@ static void execlists_submission_tasklet(struct tasklet_struct *t)
  	}
  
  	if (!engine->execlists.pending[0]) {
@@ -88,3 +90,6 @@ Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
  		start_timeslice(engine);
  	}
  
+-- 
+2.45.0
+

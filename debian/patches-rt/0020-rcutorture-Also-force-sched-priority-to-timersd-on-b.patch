@@ -1,9 +1,9 @@
-From a3602dfd77fa95402bcf350520c4a4f5125b174e Mon Sep 17 00:00:00 2001
+From 43fa89ecb7ca7c6600ebd9e185e1985807259dfb Mon Sep 17 00:00:00 2001
 From: Frederic Weisbecker <frederic@kernel.org>
 Date: Tue, 5 Apr 2022 03:07:51 +0200
 Subject: [PATCH 020/196] rcutorture: Also force sched priority to timersd on
  boosting test.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 ksoftirqd is statically boosted to the priority level right above the
 one of rcu_torture_boost() so that timers, which torture readers rely on,
@@ -34,9 +34,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/softirq.c          | 2 +-
  3 files changed, 8 insertions(+), 1 deletion(-)
 
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 0efba74a835c..f459b0f27c94 100644
 --- a/include/linux/interrupt.h
 +++ b/include/linux/interrupt.h
-@@ -610,6 +610,7 @@
+@@ -610,6 +610,7 @@ extern void raise_softirq_irqoff(unsigned int nr);
  extern void raise_softirq(unsigned int nr);
  
  #ifdef CONFIG_PREEMPT_RT
@@ -44,9 +46,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  extern void raise_timer_softirq(void);
  extern void raise_hrtimer_softirq(void);
  
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index ade42d6a9d9b..eebb9b4548fb 100644
 --- a/kernel/rcu/rcutorture.c
 +++ b/kernel/rcu/rcutorture.c
-@@ -2408,6 +2408,12 @@
+@@ -2408,6 +2408,12 @@ static int rcutorture_booster_init(unsigned int cpu)
  		WARN_ON_ONCE(!t);
  		sp.sched_priority = 2;
  		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
@@ -59,9 +63,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	}
  
  	/* Don't allow time recalculation while creating a new task. */
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index c29c30106eb8..1277abc94228 100644
 --- a/kernel/softirq.c
 +++ b/kernel/softirq.c
-@@ -620,7 +620,7 @@
+@@ -620,7 +620,7 @@ static inline void tick_irq_exit(void)
  }
  
  #ifdef CONFIG_PREEMPT_RT
@@ -70,3 +76,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  static DEFINE_PER_CPU(unsigned long, pending_timer_softirq);
  
  static unsigned int local_pending_timers(void)
+-- 
+2.45.0
+

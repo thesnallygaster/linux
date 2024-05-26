@@ -1,8 +1,8 @@
-From bcee192cc2fa6c0e8267a6d86a4147fb71911450 Mon Sep 17 00:00:00 2001
+From 6c7bf59b7228082a48cd86715d0afed853fda305 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:09 +0206
 Subject: [PATCH 078/196] serial: sa1100: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/sa1100.c | 20 ++++++++++----------
  1 file changed, 10 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/tty/serial/sa1100.c b/drivers/tty/serial/sa1100.c
+index ad011f1e2f4d..be7bcd75d9f4 100644
 --- a/drivers/tty/serial/sa1100.c
 +++ b/drivers/tty/serial/sa1100.c
-@@ -115,9 +115,9 @@
+@@ -115,9 +115,9 @@ static void sa1100_timeout(struct timer_list *t)
  	unsigned long flags;
  
  	if (sport->port.state) {
@@ -51,7 +53,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  		mod_timer(&sport->timer, jiffies + MCTRL_TIMEOUT);
  	}
-@@ -247,7 +247,7 @@
+@@ -247,7 +247,7 @@ static irqreturn_t sa1100_int(int irq, void *dev_id)
  	struct sa1100_port *sport = dev_id;
  	unsigned int status, pass_counter = 0;
  
@@ -60,7 +62,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	status = UART_GET_UTSR0(sport);
  	status &= SM_TO_UTSR0(sport->port.read_status_mask) | ~UTSR0_TFS;
  	do {
-@@ -276,7 +276,7 @@
+@@ -276,7 +276,7 @@ static irqreturn_t sa1100_int(int irq, void *dev_id)
  		status &= SM_TO_UTSR0(sport->port.read_status_mask) |
  			  ~UTSR0_TFS;
  	} while (status & (UTSR0_TFS | UTSR0_RFS | UTSR0_RID));
@@ -69,7 +71,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return IRQ_HANDLED;
  }
-@@ -321,14 +321,14 @@
+@@ -321,14 +321,14 @@ static void sa1100_break_ctl(struct uart_port *port, int break_state)
  	unsigned long flags;
  	unsigned int utcr3;
  
@@ -86,7 +88,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static int sa1100_startup(struct uart_port *port)
-@@ -354,9 +354,9 @@
+@@ -354,9 +354,9 @@ static int sa1100_startup(struct uart_port *port)
  	/*
  	 * Enable modem status interrupts
  	 */
@@ -98,7 +100,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return 0;
  }
-@@ -423,7 +423,7 @@
+@@ -423,7 +423,7 @@ sa1100_set_termios(struct uart_port *port, struct ktermios *termios,
  
  	del_timer_sync(&sport->timer);
  
@@ -107,7 +109,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	sport->port.read_status_mask &= UTSR0_TO_SM(UTSR0_TFS);
  	sport->port.read_status_mask |= UTSR1_TO_SM(UTSR1_ROR);
-@@ -485,7 +485,7 @@
+@@ -485,7 +485,7 @@ sa1100_set_termios(struct uart_port *port, struct ktermios *termios,
  	if (UART_ENABLE_MS(&sport->port, termios->c_cflag))
  		sa1100_enable_ms(&sport->port);
  
@@ -116,3 +118,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static const char *sa1100_type(struct uart_port *port)
+-- 
+2.45.0
+

@@ -1,8 +1,8 @@
-From 7774fa341f71568724752459c8a3d832def0a84a Mon Sep 17 00:00:00 2001
+From 3385a9197ef232463018c8a7f59439fa9d99c6ba Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Wed, 13 Sep 2023 15:30:36 +0000
 Subject: [PATCH 154/196] serial: 8250: Switch to nbcon console
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Implement the necessary callbacks to switch the 8250 console driver
 to perform as an nbcon console.
@@ -21,9 +21,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  include/linux/serial_8250.h         |   6 ++
  3 files changed, 201 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index 904e319e6b4a..30434718fad8 100644
 --- a/drivers/tty/serial/8250/8250_core.c
 +++ b/drivers/tty/serial/8250/8250_core.c
-@@ -592,6 +592,7 @@
+@@ -592,6 +592,7 @@ serial8250_register_ports(struct uart_driver *drv, struct device *dev)
  
  #ifdef CONFIG_SERIAL_8250_CONSOLE
  
@@ -31,7 +33,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  static void univ8250_console_write(struct console *co, const char *s,
  				   unsigned int count)
  {
-@@ -599,6 +600,37 @@
+@@ -599,6 +600,37 @@ static void univ8250_console_write(struct console *co, const char *s,
  
  	serial8250_console_write(up, s, count);
  }
@@ -69,7 +71,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  static int univ8250_console_setup(struct console *co, char *options)
  {
-@@ -698,12 +730,20 @@
+@@ -698,12 +730,20 @@ static int univ8250_console_match(struct console *co, char *name, int idx,
  
  static struct console univ8250_console = {
  	.name		= "ttyS",
@@ -91,9 +93,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	.index		= -1,
  	.data		= &serial8250_reg,
  };
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index cba5a1b1030f..bc3ab612aec5 100644
 --- a/drivers/tty/serial/8250/8250_port.c
 +++ b/drivers/tty/serial/8250/8250_port.c
-@@ -557,6 +557,11 @@
+@@ -557,6 +557,11 @@ static int serial8250_em485_init(struct uart_8250_port *p)
  	if (!p->em485)
  		return -ENOMEM;
  
@@ -105,7 +109,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	hrtimer_init(&p->em485->stop_tx_timer, CLOCK_MONOTONIC,
  		     HRTIMER_MODE_REL);
  	hrtimer_init(&p->em485->start_tx_timer, CLOCK_MONOTONIC,
-@@ -709,7 +714,11 @@
+@@ -709,7 +714,11 @@ static void serial8250_set_sleep(struct uart_8250_port *p, int sleep)
  	serial8250_rpm_put(p);
  }
  
@@ -118,7 +122,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  {
  	if (up->capabilities & UART_CAP_UUE)
  		serial_out(up, UART_IER, UART_IER_UUE);
-@@ -717,6 +726,11 @@
+@@ -717,6 +726,11 @@ static void serial8250_clear_IER(struct uart_8250_port *up)
  		serial_out(up, UART_IER, 0);
  }
  
@@ -130,7 +134,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  #ifdef CONFIG_SERIAL_8250_RSA
  /*
   * Attempts to turn on the RSA FIFO.  Returns zero on failure.
-@@ -3322,6 +3336,11 @@
+@@ -3322,6 +3336,11 @@ static void serial8250_console_putchar(struct uart_port *port, unsigned char ch)
  
  	wait_for_xmitr(up, UART_LSR_THRE);
  	serial_port_out(port, UART_TX, ch);
@@ -142,7 +146,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  /*
-@@ -3350,6 +3369,7 @@
+@@ -3350,6 +3369,7 @@ static void serial8250_console_restore(struct uart_8250_port *up)
  	serial8250_out_MCR(up, up->mcr | UART_MCR_DTR | UART_MCR_RTS);
  }
  
@@ -150,7 +154,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  /*
   * Print a string to the serial port using the device FIFO
   *
-@@ -3408,7 +3428,7 @@
+@@ -3408,7 +3428,7 @@ void serial8250_console_write(struct uart_8250_port *up, const char *s,
  	 *	First save the IER then disable the interrupts
  	 */
  	ier = serial_port_in(port, UART_IER);
@@ -159,7 +163,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* check scratch reg to see if port powered off during system sleep */
  	if (up->canary && (up->canary != serial_port_in(port, UART_SCR))) {
-@@ -3474,6 +3494,135 @@
+@@ -3474,6 +3494,135 @@ void serial8250_console_write(struct uart_8250_port *up, const char *s,
  	if (locked)
  		uart_port_unlock_irqrestore(port, flags);
  }
@@ -295,7 +299,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  static unsigned int probe_baud(struct uart_port *port)
  {
-@@ -3492,6 +3641,7 @@
+@@ -3492,6 +3641,7 @@ static unsigned int probe_baud(struct uart_port *port)
  
  int serial8250_console_setup(struct uart_port *port, char *options, bool probe)
  {
@@ -303,7 +307,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	int baud = 9600;
  	int bits = 8;
  	int parity = 'n';
-@@ -3501,6 +3651,8 @@
+@@ -3501,6 +3651,8 @@ int serial8250_console_setup(struct uart_port *port, char *options, bool probe)
  	if (!port->iobase && !port->membase)
  		return -ENODEV;
  
@@ -312,9 +316,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	if (options)
  		uart_parse_options(options, &baud, &parity, &bits, &flow);
  	else if (probe)
+diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
+index be65de65fe61..ec46e3b49ee9 100644
 --- a/include/linux/serial_8250.h
 +++ b/include/linux/serial_8250.h
-@@ -153,6 +153,8 @@
+@@ -153,6 +153,8 @@ struct uart_8250_port {
  #define MSR_SAVE_FLAGS UART_MSR_ANY_DELTA
  	unsigned char		msr_saved_flags;
  
@@ -323,7 +329,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	struct uart_8250_dma	*dma;
  	const struct uart_8250_ops *ops;
  
-@@ -204,6 +206,10 @@
+@@ -204,6 +206,10 @@ void serial8250_init_port(struct uart_8250_port *up);
  void serial8250_set_defaults(struct uart_8250_port *up);
  void serial8250_console_write(struct uart_8250_port *up, const char *s,
  			      unsigned int count);
@@ -334,3 +340,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  int serial8250_console_setup(struct uart_port *port, char *options, bool probe);
  int serial8250_console_exit(struct uart_port *port);
  
+-- 
+2.45.0
+

@@ -1,8 +1,8 @@
-From 8cfb184fe5c51b5352de62a87f2d8be9c9b2e3d8 Mon Sep 17 00:00:00 2001
+From cf41c3286b534df7597a1e2addd004366d96d639 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:27 +0206
 Subject: [PATCH 036/196] serial: 8250_fsl: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/8250/8250_fsl.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/tty/serial/8250/8250_fsl.c b/drivers/tty/serial/8250/8250_fsl.c
+index 6af4e1c1210a..f522eb5026c9 100644
 --- a/drivers/tty/serial/8250/8250_fsl.c
 +++ b/drivers/tty/serial/8250/8250_fsl.c
-@@ -30,11 +30,11 @@
+@@ -30,11 +30,11 @@ int fsl8250_handle_irq(struct uart_port *port)
  	unsigned int iir;
  	struct uart_8250_port *up = up_to_u8250p(port);
  
@@ -53,7 +55,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		return 0;
  	}
  
-@@ -54,7 +54,7 @@
+@@ -54,7 +54,7 @@ int fsl8250_handle_irq(struct uart_port *port)
  	if (unlikely(up->lsr_saved_flags & UART_LSR_BI)) {
  		up->lsr_saved_flags &= ~UART_LSR_BI;
  		port->serial_in(port, UART_RX);
@@ -62,3 +64,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		return 1;
  	}
  
+-- 
+2.45.0
+

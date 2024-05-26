@@ -1,8 +1,8 @@
-From 0f26f519f2a9fd753ec73cd27ea5880201272134 Mon Sep 17 00:00:00 2001
+From 372a9baca8ed71df9e49db545e7d8399038607b3 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 26 Sep 2023 13:31:00 +0000
 Subject: [PATCH 150/196] proc: Add nbcon support for /proc/consoles
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Update /proc/consoles output to show 'W' if an nbcon write
 callback is implemented (write_atomic or write_thread).
@@ -16,9 +16,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  fs/proc/consoles.c | 14 +++++++++++---
  1 file changed, 11 insertions(+), 3 deletions(-)
 
+diff --git a/fs/proc/consoles.c b/fs/proc/consoles.c
+index e0758fe7936d..2703676549f5 100644
 --- a/fs/proc/consoles.c
 +++ b/fs/proc/consoles.c
-@@ -21,12 +21,14 @@
+@@ -21,12 +21,14 @@ static int show_console_dev(struct seq_file *m, void *v)
  		{ CON_ENABLED,		'E' },
  		{ CON_CONSDEV,		'C' },
  		{ CON_BOOT,		'B' },
@@ -33,7 +35,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	unsigned int a;
  	dev_t dev = 0;
  
-@@ -57,9 +59,15 @@
+@@ -57,9 +59,15 @@ static int show_console_dev(struct seq_file *m, void *v)
  	seq_setwidth(m, 21 - 1);
  	seq_printf(m, "%s%d", con->name, con->index);
  	seq_pad(m, ' ');
@@ -52,3 +54,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	if (dev)
  		seq_printf(m, " %4d:%d", MAJOR(dev), MINOR(dev));
  
+-- 
+2.45.0
+

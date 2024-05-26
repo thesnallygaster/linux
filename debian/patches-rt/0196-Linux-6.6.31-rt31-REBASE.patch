@@ -1,7 +1,7 @@
-From ba8975e64ed22023b1a978628599e6e1ec715be4 Mon Sep 17 00:00:00 2001
+From e9b3b54ee227f168e13f5ba6339a4b55ae4ad96c Mon Sep 17 00:00:00 2001
 From: Clark Williams <clark.williams@gmail.com>
-Date: Tue, 27 Feb 2024 17:13:28 -0600
-Subject: [PATCH 193/196] Linux 6.6.18-rt23 REBASE
+Date: Fri, 24 May 2024 09:59:31 -0500
+Subject: [PATCH 196/196] Linux 6.6.31-rt31 REBASE
 Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Signed-off-by: Clark Williams <clark.williams@gmail.com>
@@ -10,12 +10,12 @@ Signed-off-by: Clark Williams <clark.williams@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/localversion-rt b/localversion-rt
-index 483ad771f201..9a218ca23053 100644
+index 9a218ca23053..a68b4337d4ce 100644
 --- a/localversion-rt
 +++ b/localversion-rt
 @@ -1 +1 @@
---rt19
-+-rt23
+--rt23
++-rt31
 -- 
 2.45.0
 

@@ -1,8 +1,8 @@
-From d0d90518f73c55a53aa4e1bf05cb28faf5d02c1c Mon Sep 17 00:00:00 2001
+From 7650cd5745a05cc66cba9397a67b607abd0f1625 Mon Sep 17 00:00:00 2001
 From: Frederic Weisbecker <frederic@kernel.org>
 Date: Tue, 5 Apr 2022 03:07:52 +0200
 Subject: [PATCH 021/196] tick: Fix timer storm since introduction of timersd
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 If timers are pending while the tick is reprogrammed on nohz_mode, the
 next expiry is not armed to fire now, it is delayed one jiffy forward
@@ -47,9 +47,11 @@ Link: https://lkml.kernel.org/r/20220405010752.1347437-2-frederic@kernel.org
  kernel/time/tick-sched.c  |  2 +-
  3 files changed, 14 insertions(+), 7 deletions(-)
 
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index f459b0f27c94..a5091ac97fc6 100644
 --- a/include/linux/interrupt.h
 +++ b/include/linux/interrupt.h
-@@ -611,9 +611,16 @@
+@@ -611,9 +611,16 @@ extern void raise_softirq(unsigned int nr);
  
  #ifdef CONFIG_PREEMPT_RT
  DECLARE_PER_CPU(struct task_struct *, timersd);
@@ -66,7 +68,7 @@ Link: https://lkml.kernel.org/r/20220405010752.1347437-2-frederic@kernel.org
  #else
  static inline void raise_timer_softirq(void)
  {
-@@ -624,6 +631,11 @@
+@@ -624,6 +631,11 @@ static inline void raise_hrtimer_softirq(void)
  {
  	raise_softirq_irqoff(HRTIMER_SOFTIRQ);
  }
@@ -78,9 +80,11 @@ Link: https://lkml.kernel.org/r/20220405010752.1347437-2-frederic@kernel.org
  #endif
  
  DECLARE_PER_CPU(struct task_struct *, ksoftirqd);
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index 1277abc94228..a4d359e2c2b5 100644
 --- a/kernel/softirq.c
 +++ b/kernel/softirq.c
-@@ -621,12 +621,7 @@
+@@ -621,12 +621,7 @@ static inline void tick_irq_exit(void)
  
  #ifdef CONFIG_PREEMPT_RT
  DEFINE_PER_CPU(struct task_struct *, timersd);
@@ -94,9 +98,11 @@ Link: https://lkml.kernel.org/r/20220405010752.1347437-2-frederic@kernel.org
  
  static void wake_timersd(void)
  {
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 55cbc49f70d1..1a0ed106b192 100644
 --- a/kernel/time/tick-sched.c
 +++ b/kernel/time/tick-sched.c
-@@ -795,7 +795,7 @@
+@@ -795,7 +795,7 @@ static void tick_nohz_restart(struct tick_sched *ts, ktime_t now)
  
  static inline bool local_timer_softirq_pending(void)
  {
@@ -105,3 +111,6 @@ Link: https://lkml.kernel.org/r/20220405010752.1347437-2-frederic@kernel.org
  }
  
  static ktime_t tick_nohz_next_event(struct tick_sched *ts, int cpu)
+-- 
+2.45.0
+

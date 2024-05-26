@@ -1,8 +1,8 @@
-From 35c9af7efcfc01832b36650921780226f6c0f12b Mon Sep 17 00:00:00 2001
+From a24531bee52085bd6df85b41196746819419f2c8 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:55 +0206
 Subject: [PATCH 064/196] serial: milbeaut_usio: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/milbeaut_usio.c | 16 ++++++++--------
  1 file changed, 8 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/tty/serial/milbeaut_usio.c b/drivers/tty/serial/milbeaut_usio.c
+index 70a910085e93..db3b81f2aa57 100644
 --- a/drivers/tty/serial/milbeaut_usio.c
 +++ b/drivers/tty/serial/milbeaut_usio.c
-@@ -207,9 +207,9 @@
+@@ -207,9 +207,9 @@ static irqreturn_t mlb_usio_rx_irq(int irq, void *dev_id)
  {
  	struct uart_port *port = dev_id;
  
@@ -51,7 +53,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return IRQ_HANDLED;
  }
-@@ -218,10 +218,10 @@
+@@ -218,10 +218,10 @@ static irqreturn_t mlb_usio_tx_irq(int irq, void *dev_id)
  {
  	struct uart_port *port = dev_id;
  
@@ -64,7 +66,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return IRQ_HANDLED;
  }
-@@ -267,7 +267,7 @@
+@@ -267,7 +267,7 @@ static int mlb_usio_startup(struct uart_port *port)
  	escr = readb(port->membase + MLB_USIO_REG_ESCR);
  	if (of_property_read_bool(port->dev->of_node, "auto-flow-control"))
  		escr |= MLB_USIO_ESCR_FLWEN;
@@ -73,7 +75,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	writeb(0, port->membase + MLB_USIO_REG_SCR);
  	writeb(escr, port->membase + MLB_USIO_REG_ESCR);
  	writeb(MLB_USIO_SCR_UPCL, port->membase + MLB_USIO_REG_SCR);
-@@ -282,7 +282,7 @@
+@@ -282,7 +282,7 @@ static int mlb_usio_startup(struct uart_port *port)
  
  	writeb(MLB_USIO_SCR_TXE  | MLB_USIO_SCR_RIE | MLB_USIO_SCR_TBIE |
  	       MLB_USIO_SCR_RXE, port->membase + MLB_USIO_REG_SCR);
@@ -82,7 +84,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return 0;
  }
-@@ -337,7 +337,7 @@
+@@ -337,7 +337,7 @@ static void mlb_usio_set_termios(struct uart_port *port,
  	else
  		quot = 0;
  
@@ -91,7 +93,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	uart_update_timeout(port, termios->c_cflag, baud);
  	port->read_status_mask = MLB_USIO_SSR_ORE | MLB_USIO_SSR_RDRF |
  				 MLB_USIO_SSR_TDRE;
-@@ -367,7 +367,7 @@
+@@ -367,7 +367,7 @@ static void mlb_usio_set_termios(struct uart_port *port,
  	writew(BIT(12), port->membase + MLB_USIO_REG_FBYTE);
  	writeb(MLB_USIO_SCR_RIE | MLB_USIO_SCR_RXE | MLB_USIO_SCR_TBIE |
  	       MLB_USIO_SCR_TXE, port->membase + MLB_USIO_REG_SCR);
@@ -100,3 +102,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static const char *mlb_usio_type(struct uart_port *port)
+-- 
+2.45.0
+

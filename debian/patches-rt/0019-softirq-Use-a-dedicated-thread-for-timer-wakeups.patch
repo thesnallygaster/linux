@@ -1,8 +1,8 @@
-From 818b11cc06b149f0f7ce92e7d4f66fe93b95e131 Mon Sep 17 00:00:00 2001
+From 8ebbfc4bd6f8a33c7754f906db405e37191e3b52 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 1 Dec 2021 17:41:09 +0100
 Subject: [PATCH 019/196] softirq: Use a dedicated thread for timer wakeups.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 A timer/hrtimer softirq is raised in-IRQ context. With threaded
 interrupts enabled or on PREEMPT_RT this leads to waking the ksoftirqd
@@ -45,9 +45,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/time/timer.c       |  2 +-
  4 files changed, 108 insertions(+), 6 deletions(-)
 
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 4a1dc88ddbff..0efba74a835c 100644
 --- a/include/linux/interrupt.h
 +++ b/include/linux/interrupt.h
-@@ -609,6 +609,22 @@
+@@ -609,6 +609,22 @@ extern void __raise_softirq_irqoff(unsigned int nr);
  extern void raise_softirq_irqoff(unsigned int nr);
  extern void raise_softirq(unsigned int nr);
  
@@ -70,9 +72,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  DECLARE_PER_CPU(struct task_struct *, ksoftirqd);
  
  static inline struct task_struct *this_cpu_ksoftirqd(void)
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index 210cf5f8d92c..c29c30106eb8 100644
 --- a/kernel/softirq.c
 +++ b/kernel/softirq.c
-@@ -619,6 +619,29 @@
+@@ -619,6 +619,29 @@ static inline void tick_irq_exit(void)
  #endif
  }
  
@@ -102,7 +106,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  static inline void __irq_exit_rcu(void)
  {
  #ifndef __ARCH_IRQ_EXIT_IRQS_DISABLED
-@@ -628,8 +651,13 @@
+@@ -628,8 +651,13 @@ static inline void __irq_exit_rcu(void)
  #endif
  	account_hardirq_exit(current);
  	preempt_count_sub(HARDIRQ_OFFSET);
@@ -118,7 +122,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	tick_irq_exit();
  }
-@@ -963,12 +991,70 @@
+@@ -963,12 +991,70 @@ static struct smp_hotplug_thread softirq_threads = {
  	.thread_comm		= "ksoftirqd/%u",
  };
  
@@ -190,9 +194,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	return 0;
  }
  early_initcall(spawn_ksoftirqd);
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index edb0f821dcea..a7290012179a 100644
 --- a/kernel/time/hrtimer.c
 +++ b/kernel/time/hrtimer.c
-@@ -1809,7 +1809,7 @@
+@@ -1809,7 +1809,7 @@ void hrtimer_interrupt(struct clock_event_device *dev)
  	if (!ktime_before(now, cpu_base->softirq_expires_next)) {
  		cpu_base->softirq_expires_next = KTIME_MAX;
  		cpu_base->softirq_activated = 1;
@@ -201,7 +207,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	}
  
  	__hrtimer_run_queues(cpu_base, now, flags, HRTIMER_ACTIVE_HARD);
-@@ -1922,7 +1922,7 @@
+@@ -1922,7 +1922,7 @@ void hrtimer_run_queues(void)
  	if (!ktime_before(now, cpu_base->softirq_expires_next)) {
  		cpu_base->softirq_expires_next = KTIME_MAX;
  		cpu_base->softirq_activated = 1;
@@ -210,9 +216,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	}
  
  	__hrtimer_run_queues(cpu_base, now, flags, HRTIMER_ACTIVE_HARD);
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 63a8ce7177dd..7cad6fe3c035 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -2054,7 +2054,7 @@
+@@ -2054,7 +2054,7 @@ static void run_local_timers(void)
  		if (time_before(jiffies, base->next_expiry))
  			return;
  	}
@@ -221,3 +229,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  /*
+-- 
+2.45.0
+

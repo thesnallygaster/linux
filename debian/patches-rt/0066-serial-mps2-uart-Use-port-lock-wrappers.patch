@@ -1,8 +1,8 @@
-From 6938b2105d856ffe45509dc92191cf211abea906 Mon Sep 17 00:00:00 2001
+From 011b795ed226df0620e0a8137b3da911e671cb38 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:57 +0206
 Subject: [PATCH 066/196] serial: mps2-uart: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/mps2-uart.c | 16 ++++++++--------
  1 file changed, 8 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/tty/serial/mps2-uart.c b/drivers/tty/serial/mps2-uart.c
+index ea5a7911cb15..2a4c09f3a834 100644
 --- a/drivers/tty/serial/mps2-uart.c
 +++ b/drivers/tty/serial/mps2-uart.c
-@@ -188,12 +188,12 @@
+@@ -188,12 +188,12 @@ static irqreturn_t mps2_uart_rxirq(int irq, void *data)
  	if (unlikely(!(irqflag & UARTn_INT_RX)))
  		return IRQ_NONE;
  
@@ -54,7 +56,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return IRQ_HANDLED;
  }
-@@ -206,12 +206,12 @@
+@@ -206,12 +206,12 @@ static irqreturn_t mps2_uart_txirq(int irq, void *data)
  	if (unlikely(!(irqflag & UARTn_INT_TX)))
  		return IRQ_NONE;
  
@@ -69,7 +71,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return IRQ_HANDLED;
  }
-@@ -222,7 +222,7 @@
+@@ -222,7 +222,7 @@ static irqreturn_t mps2_uart_oerrirq(int irq, void *data)
  	struct uart_port *port = data;
  	u8 irqflag = mps2_uart_read8(port, UARTn_INT);
  
@@ -78,7 +80,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (irqflag & UARTn_INT_RX_OVERRUN) {
  		struct tty_port *tport = &port->state->port;
-@@ -244,7 +244,7 @@
+@@ -244,7 +244,7 @@ static irqreturn_t mps2_uart_oerrirq(int irq, void *data)
  		handled = IRQ_HANDLED;
  	}
  
@@ -87,7 +89,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return handled;
  }
-@@ -356,12 +356,12 @@
+@@ -356,12 +356,12 @@ mps2_uart_set_termios(struct uart_port *port, struct ktermios *termios,
  
  	bauddiv = DIV_ROUND_CLOSEST(port->uartclk, baud);
  
@@ -102,3 +104,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (tty_termios_baud_rate(termios))
  		tty_termios_encode_baud_rate(termios, baud, baud);
+-- 
+2.45.0
+

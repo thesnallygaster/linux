@@ -1,8 +1,8 @@
-From 8eb5144b4decfd46a5c06aafa2ec73f8ec4e0d31 Mon Sep 17 00:00:00 2001
+From 0722aa45b4bff345eadcac01a7d668dfeb2c9c3c Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:13 +0206
 Subject: [PATCH 082/196] serial: tegra: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/serial-tegra.c | 32 +++++++++++++++----------------
  1 file changed, 16 insertions(+), 16 deletions(-)
 
+diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/serial-tegra.c
+index d4ec943cb8e9..6d4006b41975 100644
 --- a/drivers/tty/serial/serial-tegra.c
 +++ b/drivers/tty/serial/serial-tegra.c
-@@ -411,7 +411,7 @@
+@@ -411,7 +411,7 @@ static int tegra_set_baudrate(struct tegra_uart_port *tup, unsigned int baud)
  		divisor = DIV_ROUND_CLOSEST(rate, baud * 16);
  	}
  
@@ -48,7 +50,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	lcr = tup->lcr_shadow;
  	lcr |= UART_LCR_DLAB;
  	tegra_uart_write(tup, lcr, UART_LCR);
-@@ -424,7 +424,7 @@
+@@ -424,7 +424,7 @@ static int tegra_set_baudrate(struct tegra_uart_port *tup, unsigned int baud)
  
  	/* Dummy read to ensure the write is posted */
  	tegra_uart_read(tup, UART_SCR);
@@ -57,7 +59,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	tup->current_baud = baud;
  
-@@ -522,13 +522,13 @@
+@@ -522,13 +522,13 @@ static void tegra_uart_tx_dma_complete(void *args)
  	dmaengine_tx_status(tup->tx_dma_chan, tup->tx_cookie, &state);
  	count = tup->tx_bytes_requested - state.residue;
  	async_tx_ack(tup->tx_dma_desc);
@@ -73,7 +75,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static int tegra_uart_start_tx_dma(struct tegra_uart_port *tup,
-@@ -598,13 +598,13 @@
+@@ -598,13 +598,13 @@ static unsigned int tegra_uart_tx_empty(struct uart_port *u)
  	unsigned int ret = 0;
  	unsigned long flags;
  
@@ -89,7 +91,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	return ret;
  }
  
-@@ -727,7 +727,7 @@
+@@ -727,7 +727,7 @@ static void tegra_uart_rx_dma_complete(void *args)
  	struct dma_tx_state state;
  	enum dma_status status;
  
@@ -98,7 +100,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	status = dmaengine_tx_status(tup->rx_dma_chan, tup->rx_cookie, &state);
  
-@@ -749,7 +749,7 @@
+@@ -749,7 +749,7 @@ static void tegra_uart_rx_dma_complete(void *args)
  		set_rts(tup, true);
  
  done:
@@ -107,7 +109,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void tegra_uart_terminate_rx_dma(struct tegra_uart_port *tup)
-@@ -836,7 +836,7 @@
+@@ -836,7 +836,7 @@ static irqreturn_t tegra_uart_isr(int irq, void *data)
  	bool is_rx_int = false;
  	unsigned long flags;
  
@@ -116,7 +118,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	while (1) {
  		iir = tegra_uart_read(tup, UART_IIR);
  		if (iir & UART_IIR_NO_INT) {
-@@ -852,7 +852,7 @@
+@@ -852,7 +852,7 @@ static irqreturn_t tegra_uart_isr(int irq, void *data)
  			} else if (is_rx_start) {
  				tegra_uart_start_rx_dma(tup);
  			}
@@ -125,7 +127,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  			return IRQ_HANDLED;
  		}
  
-@@ -969,11 +969,11 @@
+@@ -969,11 +969,11 @@ static void tegra_uart_hw_deinit(struct tegra_uart_port *tup)
  		}
  	}
  
@@ -139,7 +141,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	tup->rx_in_progress = 0;
  	tup->tx_in_progress = 0;
-@@ -1292,7 +1292,7 @@
+@@ -1292,7 +1292,7 @@ static void tegra_uart_set_termios(struct uart_port *u,
  	int ret;
  
  	max_divider *= 16;
@@ -148,7 +150,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* Changing configuration, it is safe to stop any rx now */
  	if (tup->rts_active)
-@@ -1341,7 +1341,7 @@
+@@ -1341,7 +1341,7 @@ static void tegra_uart_set_termios(struct uart_port *u,
  	baud = uart_get_baud_rate(u, termios, oldtermios,
  			parent_clk_rate/max_divider,
  			parent_clk_rate/16);
@@ -157,7 +159,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	ret = tegra_set_baudrate(tup, baud);
  	if (ret < 0) {
  		dev_err(tup->uport.dev, "Failed to set baud rate\n");
-@@ -1349,7 +1349,7 @@
+@@ -1349,7 +1349,7 @@ static void tegra_uart_set_termios(struct uart_port *u,
  	}
  	if (tty_termios_baud_rate(termios))
  		tty_termios_encode_baud_rate(termios, baud, baud);
@@ -166,7 +168,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* Flow control */
  	if (termios->c_cflag & CRTSCTS)	{
-@@ -1382,7 +1382,7 @@
+@@ -1382,7 +1382,7 @@ static void tegra_uart_set_termios(struct uart_port *u,
  	if (termios->c_iflag & IGNBRK)
  		tup->uport.ignore_status_mask |= UART_LSR_BI;
  
@@ -175,3 +177,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static const char *tegra_uart_type(struct uart_port *u)
+-- 
+2.45.0
+

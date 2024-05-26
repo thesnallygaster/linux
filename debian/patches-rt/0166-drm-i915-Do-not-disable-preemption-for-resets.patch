@@ -1,8 +1,8 @@
-From 09f4a685d461cf0bf9823ae39560cab86a665982 Mon Sep 17 00:00:00 2001
+From e3a7b9fd5a0ea46fd30bfab1596fe2d63f11c3fa Mon Sep 17 00:00:00 2001
 From: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
 Date: Wed, 5 Jul 2023 10:30:25 +0100
 Subject: [PATCH 166/196] drm/i915: Do not disable preemption for resets
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Commit ade8a0f59844 ("drm/i915: Make all GPU resets atomic") added a
 preempt disable section over the hardware reset callback to prepare the
@@ -43,9 +43,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/gpu/drm/i915/gt/intel_reset.c | 12 +++++-------
  1 file changed, 5 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/gpu/drm/i915/gt/intel_reset.c b/drivers/gpu/drm/i915/gt/intel_reset.c
+index 13fb8e5042c5..b51fb0c97772 100644
 --- a/drivers/gpu/drm/i915/gt/intel_reset.c
 +++ b/drivers/gpu/drm/i915/gt/intel_reset.c
-@@ -164,13 +164,13 @@
+@@ -164,13 +164,13 @@ static int i915_do_reset(struct intel_gt *gt,
  	/* Assert reset for at least 20 usec, and wait for acknowledgement. */
  	pci_write_config_byte(pdev, I915_GDRST, GRDOM_RESET_ENABLE);
  	udelay(50);
@@ -61,7 +63,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return err;
  }
-@@ -190,7 +190,7 @@
+@@ -190,7 +190,7 @@ static int g33_do_reset(struct intel_gt *gt,
  	struct pci_dev *pdev = to_pci_dev(gt->i915->drm.dev);
  
  	pci_write_config_byte(pdev, I915_GDRST, GRDOM_RESET_ENABLE);
@@ -70,7 +72,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static int g4x_do_reset(struct intel_gt *gt,
-@@ -207,7 +207,7 @@
+@@ -207,7 +207,7 @@ static int g4x_do_reset(struct intel_gt *gt,
  
  	pci_write_config_byte(pdev, I915_GDRST,
  			      GRDOM_MEDIA | GRDOM_RESET_ENABLE);
@@ -79,7 +81,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	if (ret) {
  		GT_TRACE(gt, "Wait for media reset failed\n");
  		goto out;
-@@ -215,7 +215,7 @@
+@@ -215,7 +215,7 @@ static int g4x_do_reset(struct intel_gt *gt,
  
  	pci_write_config_byte(pdev, I915_GDRST,
  			      GRDOM_RENDER | GRDOM_RESET_ENABLE);
@@ -88,7 +90,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	if (ret) {
  		GT_TRACE(gt, "Wait for render reset failed\n");
  		goto out;
-@@ -785,9 +785,7 @@
+@@ -785,9 +785,7 @@ int __intel_gt_reset(struct intel_gt *gt, intel_engine_mask_t engine_mask)
  		reset_mask = wa_14015076503_start(gt, engine_mask, !retry);
  
  		GT_TRACE(gt, "engine_mask=%x\n", reset_mask);
@@ -98,3 +100,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  		wa_14015076503_end(gt, reset_mask);
  	}
+-- 
+2.45.0
+

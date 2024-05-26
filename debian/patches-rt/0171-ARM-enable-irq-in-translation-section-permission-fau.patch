@@ -1,4 +1,4 @@
-From 2c74f48d2a8be2df7783bfebd878e8ca71e560bc Mon Sep 17 00:00:00 2001
+From 4abf3a9efb19c0a745d0d5d16bd8c3dcf217eda1 Mon Sep 17 00:00:00 2001
 From: "Yadi.hu" <yadi.hu@windriver.com>
 Date: Wed, 10 Dec 2014 10:32:09 +0800
 Subject: [PATCH 171/196] ARM: enable irq in translation/section permission
@@ -6,7 +6,7 @@ Subject: [PATCH 171/196] ARM: enable irq in translation/section permission
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Probably happens on all ARM, with
 CONFIG_PREEMPT_RT
@@ -68,9 +68,11 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  arch/arm/mm/fault.c | 6 ++++++
  1 file changed, 6 insertions(+)
 
+diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+index fef62e4a9edd..622a30243f4a 100644
 --- a/arch/arm/mm/fault.c
 +++ b/arch/arm/mm/fault.c
-@@ -404,6 +404,9 @@
+@@ -404,6 +404,9 @@ do_translation_fault(unsigned long addr, unsigned int fsr,
  	if (addr < TASK_SIZE)
  		return do_page_fault(addr, fsr, regs);
  
@@ -80,7 +82,7 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  	if (user_mode(regs))
  		goto bad_area;
  
-@@ -474,6 +477,9 @@
+@@ -474,6 +477,9 @@ do_translation_fault(unsigned long addr, unsigned int fsr,
  static int
  do_sect_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
  {
@@ -90,3 +92,6 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  	do_bad_area(addr, fsr, regs);
  	return 0;
  }
+-- 
+2.45.0
+

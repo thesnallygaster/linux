@@ -1,8 +1,8 @@
-From 50ae739f7d9080479dddd7e24c8764a46f918bae Mon Sep 17 00:00:00 2001
+From 08d3e88cb0f94636d988af783028eb0c0e977581 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 4 Aug 2023 13:30:38 +0200
 Subject: [PATCH 026/196] softirq: Add function to preempt serving softirqs.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Add a functionality for the softirq handler to preempt its current work
 if needed. The softirq core has no particular state. It reads and resets
@@ -24,9 +24,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/softirq.c            | 13 +++++++++++++
  2 files changed, 15 insertions(+)
 
+diff --git a/include/linux/bottom_half.h b/include/linux/bottom_half.h
+index fc53e0ad56d9..448bbef47456 100644
 --- a/include/linux/bottom_half.h
 +++ b/include/linux/bottom_half.h
-@@ -35,8 +35,10 @@
+@@ -35,8 +35,10 @@ static inline void local_bh_enable(void)
  
  #ifdef CONFIG_PREEMPT_RT
  extern bool local_bh_blocked(void);
@@ -37,9 +39,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  #endif
  
  #endif /* _LINUX_BH_H */
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index c2474cc4fa51..cae0ae2e2b0b 100644
 --- a/kernel/softirq.c
 +++ b/kernel/softirq.c
-@@ -247,6 +247,19 @@
+@@ -247,6 +247,19 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
  }
  EXPORT_SYMBOL(__local_bh_enable_ip);
  
@@ -59,3 +63,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  /*
   * Invoked from ksoftirqd_run() outside of the interrupt disabled section
   * to acquire the per CPU local lock for reentrancy protection.
+-- 
+2.45.0
+

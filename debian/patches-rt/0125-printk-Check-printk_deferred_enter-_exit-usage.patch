@@ -1,8 +1,8 @@
-From d2cc6c8ea160106a59677f8129cfd1f028e95681 Mon Sep 17 00:00:00 2001
+From 84b512d5ac38d3683cca58db0ef0c045cbb847cc Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 22 Sep 2023 14:58:18 +0000
 Subject: [PATCH 125/196] printk: Check printk_deferred_enter()/_exit() usage
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Add validation that printk_deferred_enter()/_exit() are called in
 non-migration contexts.
@@ -15,9 +15,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/printk_safe.c | 12 ++++++++++++
  2 files changed, 17 insertions(+), 2 deletions(-)
 
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 8ef499ab3c1e..f4502b036e48 100644
 --- a/include/linux/printk.h
 +++ b/include/linux/printk.h
-@@ -159,13 +159,16 @@
+@@ -159,13 +159,16 @@ __printf(1, 2) __cold int _printk_deferred(const char *fmt, ...);
  
  extern void __printk_safe_enter(void);
  extern void __printk_safe_exit(void);
@@ -36,9 +38,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  /*
   * Please don't use printk_ratelimit(), because it shares ratelimiting state
+diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
+index 6d10927a07d8..8d9408d653de 100644
 --- a/kernel/printk/printk_safe.c
 +++ b/kernel/printk/printk_safe.c
-@@ -26,6 +26,18 @@
+@@ -26,6 +26,18 @@ void __printk_safe_exit(void)
  	this_cpu_dec(printk_context);
  }
  
@@ -57,3 +61,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  asmlinkage int vprintk(const char *fmt, va_list args)
  {
  #ifdef CONFIG_KGDB_KDB
+-- 
+2.45.0
+

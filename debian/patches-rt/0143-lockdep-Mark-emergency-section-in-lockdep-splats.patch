@@ -1,8 +1,8 @@
-From 0308b6420a2bd82377dfaf489cb106b4afd3a102 Mon Sep 17 00:00:00 2001
+From b5738ec6462c3835a4688f5e50b36366e7ead6e7 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Mon, 18 Sep 2023 20:27:41 +0000
 Subject: [PATCH 143/196] lockdep: Mark emergency section in lockdep splats
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Mark an emergency section within print_usage_bug(), where
 lockdep bugs are printed. In this section, the CPU will not
@@ -16,6 +16,8 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/locking/lockdep.c | 5 +++++
  1 file changed, 5 insertions(+)
 
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 151bd3de5936..5c21ba41e308 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -56,6 +56,7 @@
@@ -26,7 +28,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  #include <asm/sections.h>
  
-@@ -3971,6 +3972,8 @@
+@@ -3971,6 +3972,8 @@ print_usage_bug(struct task_struct *curr, struct held_lock *this,
  	if (!debug_locks_off() || debug_locks_silent)
  		return;
  
@@ -35,7 +37,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	pr_warn("\n");
  	pr_warn("================================\n");
  	pr_warn("WARNING: inconsistent lock state\n");
-@@ -3999,6 +4002,8 @@
+@@ -3999,6 +4002,8 @@ print_usage_bug(struct task_struct *curr, struct held_lock *this,
  
  	pr_warn("\nstack backtrace:\n");
  	dump_stack();
@@ -44,3 +46,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  /*
+-- 
+2.45.0
+

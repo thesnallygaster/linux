@@ -1,8 +1,8 @@
-From 93267e39ed7819c5c37a39696aee96332743c0e6 Mon Sep 17 00:00:00 2001
+From 589b443d65d1902e3b4f67959babe7cd99fa653b Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 11 Oct 2019 13:14:41 +0200
 Subject: [PATCH 185/196] POWERPC: Allow to enable RT
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Allow to select RT.
 
@@ -12,9 +12,11 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  arch/powerpc/Kconfig | 2 ++
  1 file changed, 2 insertions(+)
 
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 2fe51e0ad637..116444551038 100644
 --- a/arch/powerpc/Kconfig
 +++ b/arch/powerpc/Kconfig
-@@ -166,6 +166,7 @@
+@@ -166,6 +166,7 @@ config PPC
  	select ARCH_STACKWALK
  	select ARCH_SUPPORTS_ATOMIC_RMW
  	select ARCH_SUPPORTS_DEBUG_PAGEALLOC	if PPC_BOOK3S || PPC_8xx || 40x
@@ -22,7 +24,7 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  	select ARCH_USE_BUILTIN_BSWAP
  	select ARCH_USE_CMPXCHG_LOCKREF		if PPC64
  	select ARCH_USE_MEMTEST
-@@ -268,6 +269,7 @@
+@@ -268,6 +269,7 @@ config PPC
  	select HAVE_PERF_USER_STACK_DUMP
  	select HAVE_REGS_AND_STACK_ACCESS_API
  	select HAVE_RELIABLE_STACKTRACE
@@ -30,3 +32,6 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  	select HAVE_RSEQ
  	select HAVE_SETUP_PER_CPU_AREA		if PPC64
  	select HAVE_SOFTIRQ_ON_OWN_STACK
+-- 
+2.45.0
+

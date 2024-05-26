@@ -1,8 +1,8 @@
-From bf2228627d8425725ea56b652e25cbe642ff01f4 Mon Sep 17 00:00:00 2001
+From c9cb8502c91380b0a8906a2a9fcf94c08bc39549 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 7 Nov 2019 17:49:20 +0100
 Subject: [PATCH 017/196] x86: Enable RT also on 32bit
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
@@ -10,9 +10,11 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  arch/x86/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 0b9640069679..282313172756 100644
 --- a/arch/x86/Kconfig
 +++ b/arch/x86/Kconfig
-@@ -28,7 +28,6 @@
+@@ -28,7 +28,6 @@ config X86_64
  	select ARCH_HAS_GIGANTIC_PAGE
  	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
  	select ARCH_SUPPORTS_PER_VMA_LOCK
@@ -20,7 +22,7 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  	select ARCH_USE_CMPXCHG_LOCKREF
  	select HAVE_ARCH_SOFT_DIRTY
  	select MODULES_USE_ELF_RELA
-@@ -119,6 +118,7 @@
+@@ -119,6 +118,7 @@ config X86
  	select ARCH_USES_CFI_TRAPS		if X86_64 && CFI_CLANG
  	select ARCH_SUPPORTS_LTO_CLANG
  	select ARCH_SUPPORTS_LTO_CLANG_THIN
@@ -28,3 +30,6 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  	select ARCH_USE_BUILTIN_BSWAP
  	select ARCH_USE_MEMTEST
  	select ARCH_USE_QUEUED_RWLOCKS
+-- 
+2.45.0
+

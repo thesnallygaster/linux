@@ -1,8 +1,8 @@
-From 32ac6c716cb9133bd45d54d5094f00dc8c03d953 Mon Sep 17 00:00:00 2001
+From 5a92094b06883a3526e885dece2fbbfd53116190 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:11 +0206
 Subject: [PATCH 080/196] serial: sb1250-duart: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/sb1250-duart.c | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/tty/serial/sb1250-duart.c b/drivers/tty/serial/sb1250-duart.c
+index f3cd69346482..dbec29d9a6c3 100644
 --- a/drivers/tty/serial/sb1250-duart.c
 +++ b/drivers/tty/serial/sb1250-duart.c
-@@ -610,7 +610,7 @@
+@@ -610,7 +610,7 @@ static void sbd_set_termios(struct uart_port *uport, struct ktermios *termios,
  	else
  		aux &= ~M_DUART_CTS_CHNG_ENA;
  
@@ -48,7 +50,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (sport->tx_stopped)
  		command |= M_DUART_TX_DIS;
-@@ -632,7 +632,7 @@
+@@ -632,7 +632,7 @@ static void sbd_set_termios(struct uart_port *uport, struct ktermios *termios,
  
  	write_sbdchn(sport, R_DUART_CMD, command);
  
@@ -57,7 +59,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  
-@@ -839,22 +839,22 @@
+@@ -839,22 +839,22 @@ static void sbd_console_write(struct console *co, const char *s,
  	unsigned int mask;
  
  	/* Disable transmit interrupts and enable the transmitter. */
@@ -84,3 +86,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static int __init sbd_console_setup(struct console *co, char *options)
+-- 
+2.45.0
+

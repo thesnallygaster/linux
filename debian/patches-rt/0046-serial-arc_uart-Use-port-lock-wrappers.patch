@@ -1,8 +1,8 @@
-From 4360e225003e56045db6687f497e259bfd1c8e62 Mon Sep 17 00:00:00 2001
+From 15c33b180b77d01dfcd3a301f88f0c07378e0714 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:37 +0206
 Subject: [PATCH 046/196] serial: arc_uart: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/arc_uart.c | 16 ++++++++--------
  1 file changed, 8 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/tty/serial/arc_uart.c b/drivers/tty/serial/arc_uart.c
+index ad4ae19b6ce3..1aa5b2b49c26 100644
 --- a/drivers/tty/serial/arc_uart.c
 +++ b/drivers/tty/serial/arc_uart.c
-@@ -279,9 +279,9 @@
+@@ -279,9 +279,9 @@ static irqreturn_t arc_serial_isr(int irq, void *dev_id)
  	if (status & RXIENB) {
  
  		/* already in ISR, no need of xx_irqsave */
@@ -51,7 +53,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	}
  
  	if ((status & TXIENB) && (status & TXEMPTY)) {
-@@ -291,12 +291,12 @@
+@@ -291,12 +291,12 @@ static irqreturn_t arc_serial_isr(int irq, void *dev_id)
  		 */
  		UART_TX_IRQ_DISABLE(port);
  
@@ -66,7 +68,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	}
  
  	return IRQ_HANDLED;
-@@ -366,7 +366,7 @@
+@@ -366,7 +366,7 @@ arc_serial_set_termios(struct uart_port *port, struct ktermios *new,
  	uartl = hw_val & 0xFF;
  	uarth = (hw_val >> 8) & 0xFF;
  
@@ -75,7 +77,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	UART_ALL_IRQ_DISABLE(port);
  
-@@ -391,7 +391,7 @@
+@@ -391,7 +391,7 @@ arc_serial_set_termios(struct uart_port *port, struct ktermios *new,
  
  	uart_update_timeout(port, new->c_cflag, baud);
  
@@ -84,7 +86,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static const char *arc_serial_type(struct uart_port *port)
-@@ -521,9 +521,9 @@
+@@ -521,9 +521,9 @@ static void arc_serial_console_write(struct console *co, const char *s,
  	struct uart_port *port = &arc_uart_ports[co->index].port;
  	unsigned long flags;
  
@@ -96,3 +98,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static struct console arc_console = {
+-- 
+2.45.0
+

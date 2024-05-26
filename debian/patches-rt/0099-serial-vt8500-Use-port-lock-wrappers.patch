@@ -1,8 +1,8 @@
-From b093871cef58eac09eb15d83005d4297c4ab940a Mon Sep 17 00:00:00 2001
+From 7dd505e1a9052b09d82e83073aa7310a531c7df5 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:30 +0206
 Subject: [PATCH 099/196] serial: vt8500: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/vt8500_serial.c | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/tty/serial/vt8500_serial.c b/drivers/tty/serial/vt8500_serial.c
+index c5d5c2765119..78a1c1eea11b 100644
 --- a/drivers/tty/serial/vt8500_serial.c
 +++ b/drivers/tty/serial/vt8500_serial.c
-@@ -227,7 +227,7 @@
+@@ -227,7 +227,7 @@ static irqreturn_t vt8500_irq(int irq, void *dev_id)
  	struct uart_port *port = dev_id;
  	unsigned long isr;
  
@@ -48,7 +50,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	isr = vt8500_read(port, VT8500_URISR);
  
  	/* Acknowledge active status bits */
-@@ -240,7 +240,7 @@
+@@ -240,7 +240,7 @@ static irqreturn_t vt8500_irq(int irq, void *dev_id)
  	if (isr & TCTS)
  		handle_delta_cts(port);
  
@@ -57,7 +59,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return IRQ_HANDLED;
  }
-@@ -342,7 +342,7 @@
+@@ -342,7 +342,7 @@ static void vt8500_set_termios(struct uart_port *port,
  	unsigned int baud, lcr;
  	unsigned int loops = 1000;
  
@@ -66,7 +68,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* calculate and set baud rate */
  	baud = uart_get_baud_rate(port, termios, old, 900, 921600);
-@@ -410,7 +410,7 @@
+@@ -410,7 +410,7 @@ static void vt8500_set_termios(struct uart_port *port,
  	vt8500_write(&vt8500_port->uart, 0x881, VT8500_URFCR);
  	vt8500_write(&vt8500_port->uart, vt8500_port->ier, VT8500_URIER);
  
@@ -75,3 +77,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static const char *vt8500_type(struct uart_port *port)
+-- 
+2.45.0
+

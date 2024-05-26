@@ -1,8 +1,8 @@
-From 7875a7aeb014ce718930d0a5971c223996eccf3e Mon Sep 17 00:00:00 2001
+From 0933d8027193246b3007fcf338030833bf3c2e14 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:41 +0206
 Subject: [PATCH 050/196] serial: digicolor: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -38,9 +38,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/digicolor-usart.c | 18 +++++++++---------
  1 file changed, 9 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/tty/serial/digicolor-usart.c b/drivers/tty/serial/digicolor-usart.c
+index 128b5479e813..5004125f3045 100644
 --- a/drivers/tty/serial/digicolor-usart.c
 +++ b/drivers/tty/serial/digicolor-usart.c
-@@ -133,7 +133,7 @@
+@@ -133,7 +133,7 @@ static void digicolor_uart_rx(struct uart_port *port)
  {
  	unsigned long flags;
  
@@ -49,7 +51,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	while (1) {
  		u8 status, ch, ch_flag;
-@@ -172,7 +172,7 @@
+@@ -172,7 +172,7 @@ static void digicolor_uart_rx(struct uart_port *port)
  				 ch_flag);
  	}
  
@@ -58,7 +60,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	tty_flip_buffer_push(&port->state->port);
  }
-@@ -185,7 +185,7 @@
+@@ -185,7 +185,7 @@ static void digicolor_uart_tx(struct uart_port *port)
  	if (digicolor_uart_tx_full(port))
  		return;
  
@@ -67,7 +69,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (port->x_char) {
  		writeb_relaxed(port->x_char, port->membase + UA_EMI_REC);
-@@ -211,7 +211,7 @@
+@@ -211,7 +211,7 @@ static void digicolor_uart_tx(struct uart_port *port)
  		uart_write_wakeup(port);
  
  out:
@@ -76,7 +78,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static irqreturn_t digicolor_uart_int(int irq, void *dev_id)
-@@ -333,7 +333,7 @@
+@@ -333,7 +333,7 @@ static void digicolor_uart_set_termios(struct uart_port *port,
  		port->ignore_status_mask |= UA_STATUS_OVERRUN_ERR
  			| UA_STATUS_PARITY_ERR | UA_STATUS_FRAME_ERR;
  
@@ -85,7 +87,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	uart_update_timeout(port, termios->c_cflag, baud);
  
-@@ -341,7 +341,7 @@
+@@ -341,7 +341,7 @@ static void digicolor_uart_set_termios(struct uart_port *port,
  	writeb_relaxed(divisor & 0xff, port->membase + UA_HBAUD_LO);
  	writeb_relaxed(divisor >> 8, port->membase + UA_HBAUD_HI);
  
@@ -94,7 +96,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static const char *digicolor_uart_type(struct uart_port *port)
-@@ -398,14 +398,14 @@
+@@ -398,14 +398,14 @@ static void digicolor_uart_console_write(struct console *co, const char *c,
  	int locked = 1;
  
  	if (oops_in_progress)
@@ -112,3 +114,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* Wait for transmitter to become empty */
  	do {
+-- 
+2.45.0
+

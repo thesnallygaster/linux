@@ -1,8 +1,8 @@
-From 979bd91ba1de9e2eb871d6d62a777edbbc24c913 Mon Sep 17 00:00:00 2001
+From cbf220730c8a967ac6872f6321aeaf9d6113e2c4 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sat, 16 Sep 2023 21:26:04 +0206
 Subject: [PATCH 105/196] printk: nbcon: Add ownership state functions
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Provide functions that are related to the safe handover mechanism
 and allow console drivers to dynamically specify unsafe regions:
@@ -39,9 +39,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/nbcon.c | 123 +++++++++++++++++++++++++++++++++++++++++-
  1 file changed, 122 insertions(+), 1 deletion(-)
 
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index ba1febf15db6..98e4be5429f0 100644
 --- a/kernel/printk/nbcon.c
 +++ b/kernel/printk/nbcon.c
-@@ -537,7 +537,6 @@
+@@ -537,7 +537,6 @@ static bool nbcon_owner_matches(struct nbcon_state *cur, int expected_cpu,
   * nbcon_context_release - Release the console
   * @ctxt:	The nbcon context from nbcon_context_try_acquire()
   */
@@ -49,10 +51,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  static void nbcon_context_release(struct nbcon_context *ctxt)
  {
  	unsigned int cpu = smp_processor_id();
-@@ -566,6 +565,128 @@
+@@ -565,6 +564,128 @@ static void nbcon_context_release(struct nbcon_context *ctxt)
+ 	ctxt->pbufs = NULL;
  }
  
- /**
++/**
 + * nbcon_context_can_proceed - Check whether ownership can proceed
 + * @ctxt:	The nbcon context from nbcon_context_try_acquire()
 + * @cur:	The current console state
@@ -174,7 +177,9 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 +	return nbcon_context_can_proceed(ctxt, &cur);
 +}
 +
-+/**
+ /**
   * nbcon_alloc - Allocate buffers needed by the nbcon console
   * @con:	Console to allocate buffers for
-  *
+-- 
+2.45.0
+

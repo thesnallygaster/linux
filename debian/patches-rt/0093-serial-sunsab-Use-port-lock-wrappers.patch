@@ -1,8 +1,8 @@
-From 9d659bf098eddf3b1d3645c043371dd569dd5012 Mon Sep 17 00:00:00 2001
+From ad762a6ac8cd8e912f5c1421e5954133ee91a2c5 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:24 +0206
 Subject: [PATCH 093/196] serial: sunsab: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/sunsab.c | 34 +++++++++++++++++-----------------
  1 file changed, 17 insertions(+), 17 deletions(-)
 
+diff --git a/drivers/tty/serial/sunsab.c b/drivers/tty/serial/sunsab.c
+index 40eeaf835bba..6aa51a6f8063 100644
 --- a/drivers/tty/serial/sunsab.c
 +++ b/drivers/tty/serial/sunsab.c
-@@ -310,7 +310,7 @@
+@@ -310,7 +310,7 @@ static irqreturn_t sunsab_interrupt(int irq, void *dev_id)
  	unsigned long flags;
  	unsigned char gis;
  
@@ -48,7 +50,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	status.stat = 0;
  	gis = readb(&up->regs->r.gis) >> up->gis_shift;
-@@ -331,7 +331,7 @@
+@@ -331,7 +331,7 @@ static irqreturn_t sunsab_interrupt(int irq, void *dev_id)
  			transmit_chars(up, &status);
  	}
  
@@ -57,7 +59,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (port)
  		tty_flip_buffer_push(port);
-@@ -473,12 +473,12 @@
+@@ -473,12 +473,12 @@ static void sunsab_send_xchar(struct uart_port *port, char ch)
  	if (ch == __DISABLED_CHAR)
  		return;
  
@@ -72,7 +74,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  /* port->lock held by caller.  */
-@@ -499,7 +499,7 @@
+@@ -499,7 +499,7 @@ static void sunsab_break_ctl(struct uart_port *port, int break_state)
  	unsigned long flags;
  	unsigned char val;
  
@@ -81,7 +83,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	val = up->cached_dafo;
  	if (break_state)
-@@ -512,7 +512,7 @@
+@@ -512,7 +512,7 @@ static void sunsab_break_ctl(struct uart_port *port, int break_state)
  	if (test_bit(SAB82532_XPR, &up->irqflags))
  		sunsab_tx_idle(up);
  
@@ -90,7 +92,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  /* port->lock is not held.  */
-@@ -527,7 +527,7 @@
+@@ -527,7 +527,7 @@ static int sunsab_startup(struct uart_port *port)
  	if (err)
  		return err;
  
@@ -99,7 +101,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * Wait for any commands or immediate characters
-@@ -582,7 +582,7 @@
+@@ -582,7 +582,7 @@ static int sunsab_startup(struct uart_port *port)
  	set_bit(SAB82532_ALLS, &up->irqflags);
  	set_bit(SAB82532_XPR, &up->irqflags);
  
@@ -108,7 +110,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return 0;
  }
-@@ -594,7 +594,7 @@
+@@ -594,7 +594,7 @@ static void sunsab_shutdown(struct uart_port *port)
  		container_of(port, struct uart_sunsab_port, port);
  	unsigned long flags;
  
@@ -117,7 +119,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/* Disable Interrupts */
  	up->interrupt_mask0 = 0xff;
-@@ -628,7 +628,7 @@
+@@ -628,7 +628,7 @@ static void sunsab_shutdown(struct uart_port *port)
  	writeb(tmp, &up->regs->rw.ccr0);
  #endif
  
@@ -126,7 +128,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	free_irq(up->port.irq, up);
  }
  
-@@ -779,9 +779,9 @@
+@@ -779,9 +779,9 @@ static void sunsab_set_termios(struct uart_port *port, struct ktermios *termios,
  	unsigned int baud = uart_get_baud_rate(port, termios, old, 0, 4000000);
  	unsigned int quot = uart_get_divisor(port, baud);
  
@@ -138,7 +140,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static const char *sunsab_type(struct uart_port *port)
-@@ -857,15 +857,15 @@
+@@ -857,15 +857,15 @@ static void sunsab_console_write(struct console *con, const char *s, unsigned n)
  	int locked = 1;
  
  	if (up->port.sysrq || oops_in_progress)
@@ -157,7 +159,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static int sunsab_console_setup(struct console *con, char *options)
-@@ -914,7 +914,7 @@
+@@ -914,7 +914,7 @@ static int sunsab_console_setup(struct console *con, char *options)
  	 */
  	sunsab_startup(&up->port);
  
@@ -166,7 +168,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * Finally, enable interrupts
-@@ -932,7 +932,7 @@
+@@ -932,7 +932,7 @@ static int sunsab_console_setup(struct console *con, char *options)
  	sunsab_convert_to_sab(up, con->cflag, 0, baud, quot);
  	sunsab_set_mctrl(&up->port, TIOCM_DTR | TIOCM_RTS);
  
@@ -175,3 +177,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	
  	return 0;
  }
+-- 
+2.45.0
+

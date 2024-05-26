@@ -1,9 +1,9 @@
-From 379dd4728f1a411bd33a9a7e49fb42c237455b0a Mon Sep 17 00:00:00 2001
+From 67ce75f601397e679b436c5b23ae064f74823bf3 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sat, 16 Sep 2023 21:26:00 +0206
 Subject: [PATCH 101/196] printk: Add non-BKL (nbcon) console basic
  infrastructure
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 The current console/printk subsystem is protected by a Big Kernel Lock,
 (aka console_lock) which has ill defined semantics and is more or less
@@ -46,9 +46,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  5 files changed, 120 insertions(+), 4 deletions(-)
  create mode 100644 kernel/printk/nbcon.c
 
+diff --git a/include/linux/console.h b/include/linux/console.h
+index 7de11c763eb3..a2d37a7a98a8 100644
 --- a/include/linux/console.h
 +++ b/include/linux/console.h
-@@ -156,6 +156,8 @@
+@@ -156,6 +156,8 @@ static inline int con_debug_leave(void)
   *			/dev/kmesg which requires a larger output buffer.
   * @CON_SUSPENDED:	Indicates if a console is suspended. If true, the
   *			printing callbacks must not be called.
@@ -57,14 +59,14 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   */
  enum cons_flags {
  	CON_PRINTBUFFER		= BIT(0),
-@@ -166,9 +168,33 @@
+@@ -166,8 +168,32 @@ enum cons_flags {
  	CON_BRL			= BIT(5),
  	CON_EXTENDED		= BIT(6),
  	CON_SUSPENDED		= BIT(7),
 +	CON_NBCON		= BIT(8),
  };
  
- /**
++/**
 + * struct nbcon_state - console state for nbcon consoles
 + * @atom:	Compound of the state fields for atomic operations
 + *
@@ -87,11 +89,10 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 + */
 +static_assert(sizeof(struct nbcon_state) <= sizeof(int));
 +
-+/**
+ /**
   * struct console - The console descriptor structure
   * @name:		The name of the console driver
-  * @write:		Write callback to output messages (Optional)
-@@ -187,6 +213,8 @@
+@@ -187,6 +213,8 @@ enum cons_flags {
   * @dropped:		Number of unreported dropped ringbuffer records
   * @data:		Driver private data
   * @node:		hlist node for the console list
@@ -100,7 +101,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   */
  struct console {
  	char			name[16];
-@@ -206,6 +234,9 @@
+@@ -206,6 +234,9 @@ struct console {
  	unsigned long		dropped;
  	void			*data;
  	struct hlist_node	node;
@@ -110,6 +111,8 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  };
  
  #ifdef CONFIG_LOCKDEP
+diff --git a/kernel/printk/Makefile b/kernel/printk/Makefile
+index f5b388e810b9..39a2b61c7232 100644
 --- a/kernel/printk/Makefile
 +++ b/kernel/printk/Makefile
 @@ -1,6 +1,6 @@
@@ -120,6 +123,8 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  obj-$(CONFIG_A11Y_BRAILLE_CONSOLE)	+= braille.o
  obj-$(CONFIG_PRINTK_INDEX)	+= index.o
  
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index 7d4979d5c3ce..2ca0ab78802c 100644
 --- a/kernel/printk/internal.h
 +++ b/kernel/printk/internal.h
 @@ -3,6 +3,7 @@
@@ -130,7 +135,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  #if defined(CONFIG_PRINTK) && defined(CONFIG_SYSCTL)
  void __init printk_sysctl_init(void);
-@@ -61,6 +62,10 @@
+@@ -61,6 +62,10 @@ void defer_console_output(void);
  
  u16 printk_parse_prefix(const char *text, int *level,
  			enum printk_info_flags *flags);
@@ -141,7 +146,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  #else
  
  #define PRINTK_PREFIX_MAX	0
-@@ -76,6 +81,9 @@
+@@ -76,6 +81,9 @@ u16 printk_parse_prefix(const char *text, int *level,
  #define printk_safe_exit_irqrestore(flags) local_irq_restore(flags)
  
  static inline bool printk_percpu_data_ready(void) { return false; }
@@ -151,6 +156,9 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  #endif /* CONFIG_PRINTK */
  
  /**
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+new file mode 100644
+index 000000000000..63d24ca62ac5
 --- /dev/null
 +++ b/kernel/printk/nbcon.c
 @@ -0,0 +1,70 @@
@@ -224,9 +232,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 +
 +	nbcon_state_set(con, &state);
 +}
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 0fca282c0a25..b2c65b991e1e 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -3375,9 +3375,10 @@
+@@ -3375,9 +3375,10 @@ static void try_enable_default_console(struct console *newcon)
  		newcon->flags |= CON_CONSDEV;
  }
  
@@ -240,7 +250,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	       con->name, con->index, ##__VA_ARGS__)
  
  static void console_init_seq(struct console *newcon, bool bootcon_registered)
-@@ -3537,6 +3538,9 @@
+@@ -3537,6 +3538,9 @@ void register_console(struct console *newcon)
  	newcon->dropped = 0;
  	console_init_seq(newcon, bootcon_registered);
  
@@ -250,7 +260,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	/*
  	 * Put this console in the list - keep the
  	 * preferred driver at the head of the list.
-@@ -3628,6 +3632,9 @@
+@@ -3628,6 +3632,9 @@ static int unregister_console_locked(struct console *console)
  	 */
  	synchronize_srcu(&console_srcu);
  
@@ -260,3 +270,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	console_sysfs_notify();
  
  	if (console->exit)
+-- 
+2.45.0
+

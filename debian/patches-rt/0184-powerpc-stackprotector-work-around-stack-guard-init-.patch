@@ -1,9 +1,9 @@
-From d8d7706ecbc553d797b438bfdd2df4cff0b9f01e Mon Sep 17 00:00:00 2001
+From f8fbb91620dec6c23816a7eabe628d7aa7ce4e93 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Tue, 26 Mar 2019 18:31:29 +0100
 Subject: [PATCH 184/196] powerpc/stackprotector: work around stack-guard init
  from atomic
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 This is invoked from the secondary CPU in atomic context. On x86 we use
 tsc instead. On Power we XOR it against mftb() so lets use stack address
@@ -16,6 +16,8 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  arch/powerpc/include/asm/stackprotector.h | 7 ++++++-
  1 file changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/arch/powerpc/include/asm/stackprotector.h b/arch/powerpc/include/asm/stackprotector.h
+index 283c34647856..4727f40052dd 100644
 --- a/arch/powerpc/include/asm/stackprotector.h
 +++ b/arch/powerpc/include/asm/stackprotector.h
 @@ -19,8 +19,13 @@
@@ -33,3 +35,6 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  	current->stack_canary = canary;
  #ifdef CONFIG_PPC64
  	get_paca()->canary = canary;
+-- 
+2.45.0
+

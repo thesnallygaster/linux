@@ -1,8 +1,8 @@
-From ee6a52ff754d78ca8baaf9cee995792c11ca1ae2 Mon Sep 17 00:00:00 2001
+From 11e1ffaf008792de005927bfdd9838ff7f1548f7 Mon Sep 17 00:00:00 2001
 From: Peter Zijlstra <peterz@infradead.org>
 Date: Fri, 8 Sep 2023 18:22:51 +0200
 Subject: [PATCH 004/196] sched: Provide rt_mutex specific scheduler helpers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 With PREEMPT_RT there is a rt_mutex recursion problem where
 sched_submit_work() can use an rtlock (aka spinlock_t). More
@@ -43,9 +43,11 @@ Link: https://lkml.kernel.org/r/20230908162254.999499-5-bigeasy@linutronix.de
  kernel/sched/core.c      | 36 ++++++++++++++++++++++++++++++++----
  3 files changed, 39 insertions(+), 4 deletions(-)
 
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 77f01ac385f7..67623ffd4a8e 100644
 --- a/include/linux/sched.h
 +++ b/include/linux/sched.h
-@@ -911,6 +911,9 @@
+@@ -911,6 +911,9 @@ struct task_struct {
  	 * ->sched_remote_wakeup gets used, so it can be in this word.
  	 */
  	unsigned			sched_remote_wakeup:1;
@@ -55,9 +57,11 @@ Link: https://lkml.kernel.org/r/20230908162254.999499-5-bigeasy@linutronix.de
  
  	/* Bit to tell LSMs we're in execve(): */
  	unsigned			in_execve:1;
+diff --git a/include/linux/sched/rt.h b/include/linux/sched/rt.h
+index 994c25640e15..b2b9e6eb9683 100644
 --- a/include/linux/sched/rt.h
 +++ b/include/linux/sched/rt.h
-@@ -30,6 +30,10 @@
+@@ -30,6 +30,10 @@ static inline bool task_is_realtime(struct task_struct *tsk)
  }
  
  #ifdef CONFIG_RT_MUTEXES
@@ -68,9 +72,11 @@ Link: https://lkml.kernel.org/r/20230908162254.999499-5-bigeasy@linutronix.de
  /*
   * Must hold either p->pi_lock or task_rq(p)->lock.
   */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 4498af52cf47..d703c5427cf2 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -6724,9 +6724,6 @@
+@@ -6724,9 +6724,6 @@ static inline void sched_submit_work(struct task_struct *tsk)
  	static DEFINE_WAIT_OVERRIDE_MAP(sched_map, LD_WAIT_CONFIG);
  	unsigned int task_flags;
  
@@ -80,7 +86,7 @@ Link: https://lkml.kernel.org/r/20230908162254.999499-5-bigeasy@linutronix.de
  	/*
  	 * Establish LD_WAIT_CONFIG context to ensure none of the code called
  	 * will use a blocking primitive -- which would lead to recursion.
-@@ -6784,7 +6781,12 @@
+@@ -6784,7 +6781,12 @@ asmlinkage __visible void __sched schedule(void)
  {
  	struct task_struct *tsk = current;
  
@@ -94,7 +100,7 @@ Link: https://lkml.kernel.org/r/20230908162254.999499-5-bigeasy@linutronix.de
  	__schedule_loop(SM_NONE);
  	sched_update_worker(tsk);
  }
-@@ -7045,6 +7047,32 @@
+@@ -7045,6 +7047,32 @@ static void __setscheduler_prio(struct task_struct *p, int prio)
  
  #ifdef CONFIG_RT_MUTEXES
  
@@ -127,3 +133,6 @@ Link: https://lkml.kernel.org/r/20230908162254.999499-5-bigeasy@linutronix.de
  static inline int __rt_effective_prio(struct task_struct *pi_task, int prio)
  {
  	if (pi_task)
+-- 
+2.45.0
+

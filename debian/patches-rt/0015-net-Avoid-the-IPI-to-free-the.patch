@@ -1,8 +1,8 @@
-From fcb10f36294560a9972919270775bc464bde9ac0 Mon Sep 17 00:00:00 2001
+From 5fcd4f165a1f32e7430c8737955dbac84ed3ad98 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Mon, 15 Aug 2022 17:29:50 +0200
 Subject: [PATCH 015/196] net: Avoid the IPI to free the
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 skb_attempt_defer_free() collects a skbs, which was allocated on a
 remote CPU, on a per-CPU list. These skbs are either freed on that
@@ -24,9 +24,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  net/core/skbuff.c         |  7 ++++++-
  3 files changed, 40 insertions(+), 10 deletions(-)
 
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index b8e60a20416b..ffa5248a90e2 100644
 --- a/include/linux/netdevice.h
 +++ b/include/linux/netdevice.h
-@@ -3258,7 +3258,11 @@
+@@ -3258,7 +3258,11 @@ struct softnet_data {
  	int			defer_count;
  	int			defer_ipi_scheduled;
  	struct sk_buff		*defer_list;
@@ -38,9 +40,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  };
  
  static inline void input_queue_head_incr(struct softnet_data *sd)
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 1f6c8945f2ec..1e8928cd3c75 100644
 --- a/net/core/dev.c
 +++ b/net/core/dev.c
-@@ -4705,15 +4705,6 @@
+@@ -4705,15 +4705,6 @@ static void rps_trigger_softirq(void *data)
  
  #endif /* CONFIG_RPS */
  
@@ -56,7 +60,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  /*
   * After we queued a packet into sd->input_pkt_queue,
   * we need to make sure this queue is serviced soon.
-@@ -6682,6 +6673,32 @@
+@@ -6682,6 +6673,32 @@ static void skb_defer_free_flush(struct softnet_data *sd)
  	}
  }
  
@@ -89,7 +93,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  static int napi_threaded_poll(void *data)
  {
  	struct napi_struct *napi = data;
-@@ -11618,7 +11635,11 @@
+@@ -11618,7 +11635,11 @@ static int __init net_dev_init(void)
  		INIT_CSD(&sd->csd, rps_trigger_softirq, sd);
  		sd->cpu = i;
  #endif
@@ -101,9 +105,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		spin_lock_init(&sd->defer_lock);
  
  		init_gro_hash(&sd->backlog);
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index f0a9ef1aeaa2..682175af439d 100644
 --- a/net/core/skbuff.c
 +++ b/net/core/skbuff.c
-@@ -6852,8 +6852,13 @@
+@@ -6863,8 +6863,13 @@ nodefer:	__kfree_skb(skb);
  	/* Make sure to trigger NET_RX_SOFTIRQ on the remote CPU
  	 * if we are unlucky enough (this seems very unlikely).
  	 */
@@ -118,3 +124,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void skb_splice_csum_page(struct sk_buff *skb, struct page *page,
+-- 
+2.45.0
+

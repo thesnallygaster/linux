@@ -1,8 +1,8 @@
-From 64f0b5971fbf2986bb375d151905c8a3bf475dd8 Mon Sep 17 00:00:00 2001
+From 708ac464fefc64e2470b8d2d1b36a9fdc4ccb45b Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Thu, 14 Dec 2023 14:38:42 +0000
 Subject: [PATCH 134/196] printk: nbcon: Assign priority based on CPU state
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Use the current state of the CPU to determine which priority to
 assign to the printing context.
@@ -17,9 +17,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/nbcon.c    | 30 ++++++++++++++++++++++++++++--
  2 files changed, 30 insertions(+), 2 deletions(-)
 
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index e7cdea097cec..c4417fc48b7e 100644
 --- a/kernel/printk/internal.h
 +++ b/kernel/printk/internal.h
-@@ -79,6 +79,7 @@
+@@ -79,6 +79,7 @@ void nbcon_seq_force(struct console *con, u64 seq);
  bool nbcon_alloc(struct console *con);
  void nbcon_init(struct console *con);
  void nbcon_free(struct console *con);
@@ -27,7 +29,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  void nbcon_atomic_flush_all(void);
  bool nbcon_atomic_emit_next_record(struct console *con, bool *handover, int cookie);
  
-@@ -135,6 +136,7 @@
+@@ -135,6 +136,7 @@ static inline void nbcon_seq_force(struct console *con, u64 seq) { }
  static inline bool nbcon_alloc(struct console *con) { return false; }
  static inline void nbcon_init(struct console *con) { }
  static inline void nbcon_free(struct console *con) { }
@@ -35,12 +37,15 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  static inline void nbcon_atomic_flush_all(void) { }
  static inline bool nbcon_atomic_emit_next_record(struct console *con, bool *handover,
  						 int cookie) { return false; }
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index c17cf3ea6153..3e999784ba5c 100644
 --- a/kernel/printk/nbcon.c
 +++ b/kernel/printk/nbcon.c
-@@ -962,6 +962,22 @@
+@@ -961,6 +961,22 @@ static bool nbcon_atomic_emit_one(struct nbcon_write_context *wctxt)
+ 	return ctxt->backlog;
  }
  
- /**
++/**
 + * nbcon_get_default_prio - The appropriate nbcon priority to use for nbcon
 + *				printing on the current CPU
 + *
@@ -56,11 +61,10 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 +	return NBCON_PRIO_NORMAL;
 +}
 +
-+/**
+ /**
   * nbcon_atomic_emit_next_record - Print one record for an nbcon console
   *					using the write_atomic() callback
-  * @con:	The console to print on
-@@ -997,7 +1013,7 @@
+@@ -997,7 +1013,7 @@ bool nbcon_atomic_emit_next_record(struct console *con, bool *handover, int cook
  	cant_migrate();
  
  	ctxt->console	= con;
@@ -69,7 +73,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	progress = nbcon_atomic_emit_one(&wctxt);
  
-@@ -1043,7 +1059,6 @@
+@@ -1043,7 +1059,6 @@ static void __nbcon_atomic_flush_all(u64 stop_seq)
  			memset(ctxt, 0, sizeof(*ctxt));
  			ctxt->console			= con;
  			ctxt->spinwait_max_us		= 2000;
@@ -77,7 +81,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  			/*
  			 * Atomic flushing does not use console driver
-@@ -1052,9 +1067,14 @@
+@@ -1052,9 +1067,14 @@ static void __nbcon_atomic_flush_all(u64 stop_seq)
  			 * disabled to avoid being interrupted and then
  			 * calling into a driver that will deadlock trying
  			 * acquire console ownership.
@@ -92,7 +96,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  			any_progress |= nbcon_atomic_emit_one(&wctxt);
  
  			local_irq_restore(irq_flags);
-@@ -1166,6 +1186,9 @@
+@@ -1166,6 +1186,9 @@ static inline bool uart_is_nbcon(struct uart_port *up)
   *
   * If @up is an nbcon console, this console will be acquired and marked as
   * unsafe. Otherwise this function does nothing.
@@ -102,7 +106,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   */
  void nbcon_acquire(struct uart_port *up)
  {
-@@ -1200,6 +1223,9 @@
+@@ -1200,6 +1223,9 @@ EXPORT_SYMBOL_GPL(nbcon_acquire);
   *
   * If @up is an nbcon console, the console will be marked as safe and
   * released. Otherwise this function does nothing.
@@ -112,3 +116,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   */
  void nbcon_release(struct uart_port *up)
  {
+-- 
+2.45.0
+

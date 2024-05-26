@@ -1,8 +1,8 @@
-From e620792f2f9999dc2b3b608c9e343daddee9a91d Mon Sep 17 00:00:00 2001
+From ea6fde88b5869f27ff325553af612779b0327403 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 11 Oct 2019 13:14:29 +0200
 Subject: [PATCH 178/196] ARM: Allow to enable RT
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Allow to select RT.
 
@@ -12,9 +12,11 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  arch/arm/Kconfig | 2 ++
  1 file changed, 2 insertions(+)
 
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index dea47ba6576b..a154ecd2d3c3 100644
 --- a/arch/arm/Kconfig
 +++ b/arch/arm/Kconfig
-@@ -34,6 +34,7 @@
+@@ -34,6 +34,7 @@ config ARM
  	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT if CPU_V7
  	select ARCH_SUPPORTS_ATOMIC_RMW
  	select ARCH_SUPPORTS_HUGETLBFS if ARM_LPAE
@@ -22,7 +24,7 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  	select ARCH_USE_BUILTIN_BSWAP
  	select ARCH_USE_CMPXCHG_LOCKREF
  	select ARCH_USE_MEMTEST
-@@ -118,6 +119,7 @@
+@@ -118,6 +119,7 @@ config ARM
  	select HAVE_PERF_EVENTS
  	select HAVE_PERF_REGS
  	select HAVE_PERF_USER_STACK_DUMP
@@ -30,3 +32,6 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
  	select MMU_GATHER_RCU_TABLE_FREE if SMP && ARM_LPAE
  	select HAVE_REGS_AND_STACK_ACCESS_API
  	select HAVE_RSEQ
+-- 
+2.45.0
+

@@ -1,8 +1,8 @@
-From 5f0314e03aee87776f136821e036e3d64ba87af9 Mon Sep 17 00:00:00 2001
+From 1e42e046acfbfa6eff8c7046c82f54eaaaa98896 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 21 Sep 2023 16:15:13 +0200
 Subject: [PATCH 011/196] drm/amd/display: Simplify the per-CPU usage.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 The fpu_recursion_depth counter is used to ensure that dc_fpu_begin()
 can be invoked multiple times while the FPU-disable function itself is
@@ -29,9 +29,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  .../gpu/drm/amd/display/amdgpu_dm/dc_fpu.c    | 50 ++++++++-----------
  1 file changed, 20 insertions(+), 30 deletions(-)
 
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
+index 86f4c0e04654..8bd5926b47e0 100644
 --- a/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
 +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
-@@ -60,11 +60,9 @@
+@@ -60,11 +60,9 @@ static DEFINE_PER_CPU(int, fpu_recursion_depth);
   */
  inline void dc_assert_fp_enabled(void)
  {
@@ -45,7 +47,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	ASSERT(depth >= 1);
  }
-@@ -84,32 +82,27 @@
+@@ -84,32 +82,27 @@ inline void dc_assert_fp_enabled(void)
   */
  void dc_fpu_begin(const char *function_name, const int line)
  {
@@ -86,7 +88,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  /**
-@@ -124,29 +117,26 @@
+@@ -124,29 +117,26 @@ void dc_fpu_begin(const char *function_name, const int line)
   */
  void dc_fpu_end(const char *function_name, const int line)
  {
@@ -126,3 +128,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 +	TRACE_DCN_FPU(false, function_name, line, depth);
 +	preempt_enable();
  }
+-- 
+2.45.0
+

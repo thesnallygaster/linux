@@ -1,8 +1,8 @@
-From eded118e2741f3423b6d3fa368fb46966fe02399 Mon Sep 17 00:00:00 2001
+From c4447081d2e7f586fba188bf9ba209750708256d Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:21 +0206
 Subject: [PATCH 030/196] serial: 8250_aspeed_vuart: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/8250/8250_aspeed_vuart.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/tty/serial/8250/8250_aspeed_vuart.c b/drivers/tty/serial/8250/8250_aspeed_vuart.c
+index 4a9e71b2dbbc..021949f252f8 100644
 --- a/drivers/tty/serial/8250/8250_aspeed_vuart.c
 +++ b/drivers/tty/serial/8250/8250_aspeed_vuart.c
-@@ -288,9 +288,9 @@
+@@ -288,9 +288,9 @@ static void aspeed_vuart_set_throttle(struct uart_port *port, bool throttle)
  	struct uart_8250_port *up = up_to_u8250p(port);
  	unsigned long flags;
  
@@ -51,7 +53,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void aspeed_vuart_throttle(struct uart_port *port)
-@@ -340,7 +340,7 @@
+@@ -340,7 +340,7 @@ static int aspeed_vuart_handle_irq(struct uart_port *port)
  	if (iir & UART_IIR_NO_INT)
  		return 0;
  
@@ -60,3 +62,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	lsr = serial_port_in(port, UART_LSR);
  
+-- 
+2.45.0
+

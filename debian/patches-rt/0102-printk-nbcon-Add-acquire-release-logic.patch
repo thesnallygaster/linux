@@ -1,8 +1,8 @@
-From 187f2831cf652ca16ecbc554c27abaa8019cde25 Mon Sep 17 00:00:00 2001
+From 0b615961e0aeaf95f58dc670049bf59ec531573d Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sat, 16 Sep 2023 21:26:01 +0206
 Subject: [PATCH 102/196] printk: nbcon: Add acquire/release logic
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 Add per console acquire/release functionality.
 
@@ -108,9 +108,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  kernel/printk/nbcon.c   | 497 ++++++++++++++++++++++++++++++++++++++++
  2 files changed, 553 insertions(+)
 
+diff --git a/include/linux/console.h b/include/linux/console.h
+index a2d37a7a98a8..98210fd01f18 100644
 --- a/include/linux/console.h
 +++ b/include/linux/console.h
-@@ -175,13 +175,29 @@
+@@ -175,13 +175,29 @@ enum cons_flags {
   * struct nbcon_state - console state for nbcon consoles
   * @atom:	Compound of the state fields for atomic operations
   *
@@ -140,10 +142,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		};
  	};
  };
-@@ -195,6 +211,46 @@
+@@ -194,6 +210,46 @@ struct nbcon_state {
+  */
  static_assert(sizeof(struct nbcon_state) <= sizeof(int));
  
- /**
++/**
 + * nbcon_prio - console owner priority for nbcon consoles
 + * @NBCON_PRIO_NONE:		Unused
 + * @NBCON_PRIO_NORMAL:		Normal (non-emergency) usage
@@ -183,10 +186,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 +	unsigned int		allow_unsafe_takeover	: 1;
 +};
 +
-+/**
+ /**
   * struct console - The console descriptor structure
   * @name:		The name of the console driver
-  * @write:		Write callback to output messages (Optional)
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index 63d24ca62ac5..a2a354f859f9 100644
 --- a/kernel/printk/nbcon.c
 +++ b/kernel/printk/nbcon.c
 @@ -4,10 +4,98 @@
@@ -288,10 +292,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
   */
  
  /**
-@@ -48,6 +136,415 @@
+@@ -47,6 +135,415 @@ static inline bool nbcon_state_try_cmpxchg(struct console *con, struct nbcon_sta
+ 	return atomic_try_cmpxchg(&ACCESS_PRIVATE(con, nbcon_state), &cur->atom, new->atom);
  }
  
- /**
++/**
 + * nbcon_context_try_acquire_direct - Try to acquire directly
 + * @ctxt:	The context of the caller
 + * @cur:	The current console state
@@ -700,7 +705,9 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 +	} while (!nbcon_state_try_cmpxchg(con, &cur, &new));
 +}
 +
-+/**
+ /**
   * nbcon_init - Initialize the nbcon console specific data
   * @con:	Console to initialize
-  */
+-- 
+2.45.0
+

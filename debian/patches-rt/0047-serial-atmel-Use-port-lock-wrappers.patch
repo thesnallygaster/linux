@@ -1,8 +1,8 @@
-From 831a4ed593c859768beebdfa8a659a5eb41f4032 Mon Sep 17 00:00:00 2001
+From 0dea8980cab61b00dc748cd85949ecd404a9da14 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:38 +0206
 Subject: [PATCH 047/196] serial: atmel: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/atmel_serial.c | 24 ++++++++++++------------
  1 file changed, 12 insertions(+), 12 deletions(-)
 
+diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+index 88cdafa5ac54..1946fafc3f3e 100644
 --- a/drivers/tty/serial/atmel_serial.c
 +++ b/drivers/tty/serial/atmel_serial.c
-@@ -861,7 +861,7 @@
+@@ -861,7 +861,7 @@ static void atmel_complete_tx_dma(void *arg)
  	struct dma_chan *chan = atmel_port->chan_tx;
  	unsigned long flags;
  
@@ -48,7 +50,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (chan)
  		dmaengine_terminate_all(chan);
-@@ -893,7 +893,7 @@
+@@ -893,7 +893,7 @@ static void atmel_complete_tx_dma(void *arg)
  				  atmel_port->tx_done_mask);
  	}
  
@@ -57,7 +59,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void atmel_release_tx_dma(struct uart_port *port)
-@@ -1711,9 +1711,9 @@
+@@ -1711,9 +1711,9 @@ static void atmel_tasklet_rx_func(struct tasklet_struct *t)
  	struct uart_port *port = &atmel_port->uart;
  
  	/* The interrupt handler does not take the lock */
@@ -69,7 +71,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void atmel_tasklet_tx_func(struct tasklet_struct *t)
-@@ -1723,9 +1723,9 @@
+@@ -1723,9 +1723,9 @@ static void atmel_tasklet_tx_func(struct tasklet_struct *t)
  	struct uart_port *port = &atmel_port->uart;
  
  	/* The interrupt handler does not take the lock */
@@ -81,7 +83,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void atmel_init_property(struct atmel_uart_port *atmel_port,
-@@ -2175,7 +2175,7 @@
+@@ -2175,7 +2175,7 @@ static void atmel_set_termios(struct uart_port *port,
  	} else
  		mode |= ATMEL_US_PAR_NONE;
  
@@ -90,7 +92,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	port->read_status_mask = ATMEL_US_OVRE;
  	if (termios->c_iflag & INPCK)
-@@ -2377,22 +2377,22 @@
+@@ -2377,22 +2377,22 @@ static void atmel_set_termios(struct uart_port *port,
  	else
  		atmel_disable_ms(port);
  
@@ -118,3 +120,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		}
  	}
  }
+-- 
+2.45.0
+

@@ -1,8 +1,8 @@
-From ffdff2fdc2d0a611beb43dddd15f1e129587419f Mon Sep 17 00:00:00 2001
+From b0141872d1a7c02c5566113fa6e1192c646dcbcc Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:26 +0206
 Subject: [PATCH 095/196] serial: sunzilog: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/sunzilog.c | 42 +++++++++++++++++------------------
  1 file changed, 21 insertions(+), 21 deletions(-)
 
+diff --git a/drivers/tty/serial/sunzilog.c b/drivers/tty/serial/sunzilog.c
+index c8c71c56264c..d3b5e864b727 100644
 --- a/drivers/tty/serial/sunzilog.c
 +++ b/drivers/tty/serial/sunzilog.c
-@@ -531,7 +531,7 @@
+@@ -531,7 +531,7 @@ static irqreturn_t sunzilog_interrupt(int irq, void *dev_id)
  		struct tty_port *port;
  		unsigned char r3;
  
@@ -48,7 +50,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		r3 = read_zsreg(channel, R3);
  
  		/* Channel A */
-@@ -548,7 +548,7 @@
+@@ -548,7 +548,7 @@ static irqreturn_t sunzilog_interrupt(int irq, void *dev_id)
  			if (r3 & CHATxIP)
  				sunzilog_transmit_chars(up, channel);
  		}
@@ -57,7 +59,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  		if (port)
  			tty_flip_buffer_push(port);
-@@ -557,7 +557,7 @@
+@@ -557,7 +557,7 @@ static irqreturn_t sunzilog_interrupt(int irq, void *dev_id)
  		up = up->next;
  		channel = ZILOG_CHANNEL_FROM_PORT(&up->port);
  
@@ -66,7 +68,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		port = NULL;
  		if (r3 & (CHBEXT | CHBTxIP | CHBRxIP)) {
  			writeb(RES_H_IUS, &channel->control);
-@@ -571,7 +571,7 @@
+@@ -571,7 +571,7 @@ static irqreturn_t sunzilog_interrupt(int irq, void *dev_id)
  			if (r3 & CHBTxIP)
  				sunzilog_transmit_chars(up, channel);
  		}
@@ -75,7 +77,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  		if (port)
  			tty_flip_buffer_push(port);
-@@ -604,11 +604,11 @@
+@@ -604,11 +604,11 @@ static unsigned int sunzilog_tx_empty(struct uart_port *port)
  	unsigned char status;
  	unsigned int ret;
  
@@ -89,7 +91,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (status & Tx_BUF_EMP)
  		ret = TIOCSER_TEMT;
-@@ -764,7 +764,7 @@
+@@ -764,7 +764,7 @@ static void sunzilog_break_ctl(struct uart_port *port, int break_state)
  	else
  		clear_bits |= SND_BRK;
  
@@ -98,7 +100,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	new_reg = (up->curregs[R5] | set_bits) & ~clear_bits;
  	if (new_reg != up->curregs[R5]) {
-@@ -774,7 +774,7 @@
+@@ -774,7 +774,7 @@ static void sunzilog_break_ctl(struct uart_port *port, int break_state)
  		write_zsreg(channel, R5, up->curregs[R5]);
  	}
  
@@ -107,7 +109,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void __sunzilog_startup(struct uart_sunzilog_port *up)
-@@ -800,9 +800,9 @@
+@@ -800,9 +800,9 @@ static int sunzilog_startup(struct uart_port *port)
  	if (ZS_IS_CONS(up))
  		return 0;
  
@@ -119,7 +121,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	return 0;
  }
  
-@@ -840,7 +840,7 @@
+@@ -840,7 +840,7 @@ static void sunzilog_shutdown(struct uart_port *port)
  	if (ZS_IS_CONS(up))
  		return;
  
@@ -128,7 +130,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	channel = ZILOG_CHANNEL_FROM_PORT(port);
  
-@@ -853,7 +853,7 @@
+@@ -853,7 +853,7 @@ static void sunzilog_shutdown(struct uart_port *port)
  	up->curregs[R5] &= ~SND_BRK;
  	sunzilog_maybe_update_regs(up, channel);
  
@@ -137,7 +139,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  /* Shared by TTY driver and serial console setup.  The port lock is held
-@@ -945,7 +945,7 @@
+@@ -945,7 +945,7 @@ sunzilog_set_termios(struct uart_port *port, struct ktermios *termios,
  
  	baud = uart_get_baud_rate(port, termios, old, 1200, 76800);
  
@@ -146,7 +148,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	brg = BPS_TO_BRG(baud, ZS_CLOCK / ZS_CLOCK_DIVISOR);
  
-@@ -962,7 +962,7 @@
+@@ -962,7 +962,7 @@ sunzilog_set_termios(struct uart_port *port, struct ktermios *termios,
  
  	uart_update_timeout(port, termios->c_cflag, baud);
  
@@ -155,7 +157,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static const char *sunzilog_type(struct uart_port *port)
-@@ -1201,15 +1201,15 @@
+@@ -1201,15 +1201,15 @@ sunzilog_console_write(struct console *con, const char *s, unsigned int count)
  	int locked = 1;
  
  	if (up->port.sysrq || oops_in_progress)
@@ -174,7 +176,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static int __init sunzilog_console_setup(struct console *con, char *options)
-@@ -1244,7 +1244,7 @@
+@@ -1244,7 +1244,7 @@ static int __init sunzilog_console_setup(struct console *con, char *options)
  
  	brg = BPS_TO_BRG(baud, ZS_CLOCK / ZS_CLOCK_DIVISOR);
  
@@ -183,7 +185,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	up->curregs[R15] |= BRKIE;
  	sunzilog_convert_to_zs(up, con->cflag, 0, brg);
-@@ -1252,7 +1252,7 @@
+@@ -1252,7 +1252,7 @@ static int __init sunzilog_console_setup(struct console *con, char *options)
  	sunzilog_set_mctrl(&up->port, TIOCM_DTR | TIOCM_RTS);
  	__sunzilog_startup(up);
  
@@ -192,7 +194,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return 0;
  }
-@@ -1333,7 +1333,7 @@
+@@ -1333,7 +1333,7 @@ static void sunzilog_init_hw(struct uart_sunzilog_port *up)
  
  	channel = ZILOG_CHANNEL_FROM_PORT(&up->port);
  
@@ -201,7 +203,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	if (ZS_IS_CHANNEL_A(up)) {
  		write_zsreg(channel, R9, FHWRES);
  		ZSDELAY_LONG();
-@@ -1383,7 +1383,7 @@
+@@ -1383,7 +1383,7 @@ static void sunzilog_init_hw(struct uart_sunzilog_port *up)
  		write_zsreg(channel, R9, up->curregs[R9]);
  	}
  
@@ -210,3 +212,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  #ifdef CONFIG_SERIO
  	if (up->flags & (SUNZILOG_FLAG_CONS_KEYB |
+-- 
+2.45.0
+

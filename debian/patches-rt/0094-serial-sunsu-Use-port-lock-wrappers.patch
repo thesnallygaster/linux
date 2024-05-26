@@ -1,8 +1,8 @@
-From 3bd26d6b9f15aab8754f884f7e369448c489059a Mon Sep 17 00:00:00 2001
+From ff5477ebbe84fcae8796daee6fad1d7a03ebab79 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:25 +0206
 Subject: [PATCH 094/196] serial: sunsu: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.30-rt30.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -37,9 +37,11 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  drivers/tty/serial/sunsu.c | 46 +++++++++++++++++++-------------------
  1 file changed, 23 insertions(+), 23 deletions(-)
 
+diff --git a/drivers/tty/serial/sunsu.c b/drivers/tty/serial/sunsu.c
+index 58a4342ad0f9..1e051cc2591c 100644
 --- a/drivers/tty/serial/sunsu.c
 +++ b/drivers/tty/serial/sunsu.c
-@@ -212,9 +212,9 @@
+@@ -212,9 +212,9 @@ static void enable_rsa(struct uart_sunsu_port *up)
  {
  	if (up->port.type == PORT_RSA) {
  		if (up->port.uartclk != SERIAL_RSA_BAUD_BASE * 16) {
@@ -51,7 +53,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  		}
  		if (up->port.uartclk == SERIAL_RSA_BAUD_BASE * 16)
  			serial_outp(up, UART_RSA_FRR, 0);
-@@ -234,7 +234,7 @@
+@@ -234,7 +234,7 @@ static void disable_rsa(struct uart_sunsu_port *up)
  
  	if (up->port.type == PORT_RSA &&
  	    up->port.uartclk == SERIAL_RSA_BAUD_BASE * 16) {
@@ -60,7 +62,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  		mode = serial_inp(up, UART_RSA_MSR);
  		result = !(mode & UART_RSA_MSR_FIFO);
-@@ -247,7 +247,7 @@
+@@ -247,7 +247,7 @@ static void disable_rsa(struct uart_sunsu_port *up)
  
  		if (result)
  			up->port.uartclk = SERIAL_RSA_BAUD_BASE_LO * 16;
@@ -69,7 +71,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	}
  }
  #endif /* CONFIG_SERIAL_8250_RSA */
-@@ -311,10 +311,10 @@
+@@ -311,10 +311,10 @@ static void sunsu_enable_ms(struct uart_port *port)
  		container_of(port, struct uart_sunsu_port, port);
  	unsigned long flags;
  
@@ -82,7 +84,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void
-@@ -456,7 +456,7 @@
+@@ -456,7 +456,7 @@ static irqreturn_t sunsu_serial_interrupt(int irq, void *dev_id)
  	unsigned long flags;
  	unsigned char status;
  
@@ -91,7 +93,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	do {
  		status = serial_inp(up, UART_LSR);
-@@ -470,7 +470,7 @@
+@@ -470,7 +470,7 @@ static irqreturn_t sunsu_serial_interrupt(int irq, void *dev_id)
  
  	} while (!(serial_in(up, UART_IIR) & UART_IIR_NO_INT));
  
@@ -100,7 +102,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return IRQ_HANDLED;
  }
-@@ -545,9 +545,9 @@
+@@ -545,9 +545,9 @@ static unsigned int sunsu_tx_empty(struct uart_port *port)
  	unsigned long flags;
  	unsigned int ret;
  
@@ -112,7 +114,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	return ret;
  }
-@@ -599,13 +599,13 @@
+@@ -599,13 +599,13 @@ static void sunsu_break_ctl(struct uart_port *port, int break_state)
  		container_of(port, struct uart_sunsu_port, port);
  	unsigned long flags;
  
@@ -128,7 +130,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static int sunsu_startup(struct uart_port *port)
-@@ -683,12 +683,12 @@
+@@ -683,12 +683,12 @@ static int sunsu_startup(struct uart_port *port)
  	 */
  	serial_outp(up, UART_LCR, UART_LCR_WLEN8);
  
@@ -143,7 +145,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * Finally, enable interrupts.  Note: Modem status interrupts
-@@ -731,7 +731,7 @@
+@@ -731,7 +731,7 @@ static void sunsu_shutdown(struct uart_port *port)
  	up->ier = 0;
  	serial_outp(up, UART_IER, 0);
  
@@ -152,7 +154,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  	if (up->port.flags & UPF_FOURPORT) {
  		/* reset interrupts on the AST Fourport board */
  		inb((up->port.iobase & 0xfe0) | 0x1f);
-@@ -740,7 +740,7 @@
+@@ -740,7 +740,7 @@ static void sunsu_shutdown(struct uart_port *port)
  		up->port.mctrl &= ~TIOCM_OUT2;
  
  	sunsu_set_mctrl(&up->port, up->port.mctrl);
@@ -161,7 +163,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * Disable break condition and FIFOs
-@@ -826,7 +826,7 @@
+@@ -826,7 +826,7 @@ sunsu_change_speed(struct uart_port *port, unsigned int cflag,
  	 * Ok, we're now changing the port state.  Do it with
  	 * interrupts disabled.
  	 */
@@ -170,7 +172,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 * Update the per-port timeout.
-@@ -891,7 +891,7 @@
+@@ -891,7 +891,7 @@ sunsu_change_speed(struct uart_port *port, unsigned int cflag,
  
  	up->cflag = cflag;
  
@@ -179,7 +181,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static void
-@@ -1038,7 +1038,7 @@
+@@ -1038,7 +1038,7 @@ static void sunsu_autoconfig(struct uart_sunsu_port *up)
  	up->type_probed = PORT_UNKNOWN;
  	up->port.iotype = UPIO_MEM;
  
@@ -188,7 +190,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	if (!(up->port.flags & UPF_BUGGY_UART)) {
  		/*
-@@ -1173,7 +1173,7 @@
+@@ -1173,7 +1173,7 @@ static void sunsu_autoconfig(struct uart_sunsu_port *up)
  	serial_outp(up, UART_IER, 0);
  
  out:
@@ -197,7 +199,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  static struct uart_driver sunsu_reg = {
-@@ -1298,9 +1298,9 @@
+@@ -1298,9 +1298,9 @@ static void sunsu_console_write(struct console *co, const char *s,
  	int locked = 1;
  
  	if (up->port.sysrq || oops_in_progress)
@@ -209,7 +211,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  
  	/*
  	 *	First save the UER then disable the interrupts
-@@ -1318,7 +1318,7 @@
+@@ -1318,7 +1318,7 @@ static void sunsu_console_write(struct console *co, const char *s,
  	serial_out(up, UART_IER, ier);
  
  	if (locked)
@@ -218,3 +220,6 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  }
  
  /*
+-- 
+2.45.0
+
