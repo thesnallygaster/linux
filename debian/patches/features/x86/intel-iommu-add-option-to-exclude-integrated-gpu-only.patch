@@ -22,7 +22,7 @@ Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2135,6 +2135,8 @@
+@@ -2129,6 +2129,8 @@
  			bypassed by not enabling DMAR with this option. In
  			this case, gfx device will use physical address for
  			DMA.

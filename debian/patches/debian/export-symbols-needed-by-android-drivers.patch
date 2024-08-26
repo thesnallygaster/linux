@@ -72,7 +72,7 @@ Export the currently un-exported symbols they depend on.
   * zap_vma_ptes - remove ptes mapping the vma
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
-@@ -4882,6 +4882,7 @@
+@@ -4893,6 +4893,7 @@
  
  	return 0;
  }

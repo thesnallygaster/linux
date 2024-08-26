@@ -22,7 +22,7 @@ Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 
 --- a/include/linux/perf_event.h
 +++ b/include/linux/perf_event.h
-@@ -1585,6 +1585,11 @@
+@@ -1586,6 +1586,11 @@
  int perf_event_max_stack_handler(struct ctl_table *table, int write,
  		void *buffer, size_t *lenp, loff_t *ppos);
  
@@ -50,7 +50,7 @@ Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
  
  /* Minimum for 512 kiB + 1 user control page */
  int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024); /* 'free' kiB per user */
-@@ -12424,6 +12429,9 @@
+@@ -12464,6 +12469,9 @@
  	if (err)
  		return err;
  
