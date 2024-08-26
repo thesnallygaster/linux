@@ -1,8 +1,8 @@
-From 57d1cbccd5c6ea99fbc93a9edb87eeee3fe7dad8 Mon Sep 17 00:00:00 2001
+From 43af883ddf1b35861838614356ad67bfb44ba70c Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 5 Dec 2023 14:09:31 +0000
-Subject: [PATCH 149/196] printk: nbcon: Start printing threads
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 149/200] printk: nbcon: Start printing threads
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 If there are no boot consoles, the printing threads are started
 in early_initcall.
@@ -141,5 +141,5 @@ index 3cdda6dd8941..3722f1a66357 100644
  }
  
 -- 
-2.45.0
+2.45.2
 

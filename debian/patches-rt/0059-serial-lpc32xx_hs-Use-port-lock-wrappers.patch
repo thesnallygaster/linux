@@ -1,8 +1,8 @@
-From 1962f8e1398dddc6e46ddbde5cd53964b1174f16 Mon Sep 17 00:00:00 2001
+From e71a29106098d034f72fbfd9f305b39d1061656c Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:50 +0206
-Subject: [PATCH 059/196] serial: lpc32xx_hs: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 059/200] serial: lpc32xx_hs: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -150,5 +150,5 @@ index b38fe4728c26..5149a947b7fe 100644
  	/* Don't rewrite B0 */
  	if (tty_termios_baud_rate(termios))
 -- 
-2.45.0
+2.45.2
 

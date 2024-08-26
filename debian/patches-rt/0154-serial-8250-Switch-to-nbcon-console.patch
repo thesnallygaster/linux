@@ -1,8 +1,8 @@
-From 3385a9197ef232463018c8a7f59439fa9d99c6ba Mon Sep 17 00:00:00 2001
+From f8bc4464b5e38f029a55b891309bd6ac36453cc7 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Wed, 13 Sep 2023 15:30:36 +0000
-Subject: [PATCH 154/196] serial: 8250: Switch to nbcon console
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 154/200] serial: 8250: Switch to nbcon console
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Implement the necessary callbacks to switch the 8250 console driver
 to perform as an nbcon console.
@@ -341,5 +341,5 @@ index be65de65fe61..ec46e3b49ee9 100644
  int serial8250_console_exit(struct uart_port *port);
  
 -- 
-2.45.0
+2.45.2
 

@@ -1,8 +1,8 @@
-From 5f049aa49da6454816dcd2e959fb474825d606fc Mon Sep 17 00:00:00 2001
+From 4e3621466bc8ff5008683c3092f986d12c2e4830 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Fri, 22 Sep 2023 14:31:09 +0000
-Subject: [PATCH 151/196] tty: sysfs: Add nbcon support for 'active'
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 151/200] tty: sysfs: Add nbcon support for 'active'
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Allow the 'active' attribute to list nbcon consoles.
 
@@ -35,5 +35,5 @@ index 493fc4742895..afa52883c498 100644
  			continue;
  		cs[i++] = c;
 -- 
-2.45.0
+2.45.2
 

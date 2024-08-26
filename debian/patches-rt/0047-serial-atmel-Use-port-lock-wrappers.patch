@@ -1,8 +1,8 @@
-From 0dea8980cab61b00dc748cd85949ecd404a9da14 Mon Sep 17 00:00:00 2001
+From ac45992a88e13249acde64b0ac9de187761a0d01 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:38 +0206
-Subject: [PATCH 047/196] serial: atmel: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 047/200] serial: atmel: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -121,5 +121,5 @@ index 88cdafa5ac54..1946fafc3f3e 100644
  	}
  }
 -- 
-2.45.0
+2.45.2
 

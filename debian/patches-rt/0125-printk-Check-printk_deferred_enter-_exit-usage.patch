@@ -1,8 +1,8 @@
-From 84b512d5ac38d3683cca58db0ef0c045cbb847cc Mon Sep 17 00:00:00 2001
+From 16b4c119770c1a318c76b0304519dae00799dae6 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 22 Sep 2023 14:58:18 +0000
-Subject: [PATCH 125/196] printk: Check printk_deferred_enter()/_exit() usage
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 125/200] printk: Check printk_deferred_enter()/_exit() usage
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Add validation that printk_deferred_enter()/_exit() are called in
 non-migration contexts.
@@ -16,7 +16,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  2 files changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/printk.h b/include/linux/printk.h
-index 8ef499ab3c1e..f4502b036e48 100644
+index e4878bb58f66..d2ffe2b00e00 100644
 --- a/include/linux/printk.h
 +++ b/include/linux/printk.h
 @@ -159,13 +159,16 @@ __printf(1, 2) __cold int _printk_deferred(const char *fmt, ...);
@@ -62,5 +62,5 @@ index 6d10927a07d8..8d9408d653de 100644
  {
  #ifdef CONFIG_KGDB_KDB
 -- 
-2.45.0
+2.45.2
 

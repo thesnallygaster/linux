@@ -1,9 +1,9 @@
-From 8c4819ec63ec6e16891378c48fa193e7b7ab7606 Mon Sep 17 00:00:00 2001
+From 72f3810ae4e509f7480e115e674d04fa960710b8 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 8 Sep 2023 18:22:49 +0200
-Subject: [PATCH 002/196] locking/rtmutex: Avoid unconditional slowpath for
+Subject: [PATCH 002/200] locking/rtmutex: Avoid unconditional slowpath for
  DEBUG_RT_MUTEXES
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 With DEBUG_RT_MUTEXES enabled the fast-path rt_mutex_cmpxchg_acquire()
 always fails and all lock operations take the slow path.
@@ -83,5 +83,5 @@ index d1473c624105..c7196de838ed 100644
  			ww_mutex_set_context_fastpath(lock, ww_ctx);
  		return 0;
 -- 
-2.45.0
+2.45.2
 

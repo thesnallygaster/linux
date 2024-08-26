@@ -1,8 +1,8 @@
-From 5fcd4f165a1f32e7430c8737955dbac84ed3ad98 Mon Sep 17 00:00:00 2001
+From c3924b6f37744b4af19ce3819279c0b6b42890b3 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Mon, 15 Aug 2022 17:29:50 +0200
-Subject: [PATCH 015/196] net: Avoid the IPI to free the
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 015/200] net: Avoid the IPI to free the
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 skb_attempt_defer_free() collects a skbs, which was allocated on a
 remote CPU, on a per-CPU list. These skbs are either freed on that
@@ -41,7 +41,7 @@ index b8e60a20416b..ffa5248a90e2 100644
  
  static inline void input_queue_head_incr(struct softnet_data *sd)
 diff --git a/net/core/dev.c b/net/core/dev.c
-index 1f6c8945f2ec..1e8928cd3c75 100644
+index 5a5bd339f11e..8f193d7b8b41 100644
 --- a/net/core/dev.c
 +++ b/net/core/dev.c
 @@ -4705,15 +4705,6 @@ static void rps_trigger_softirq(void *data)
@@ -93,7 +93,7 @@ index 1f6c8945f2ec..1e8928cd3c75 100644
  static int napi_threaded_poll(void *data)
  {
  	struct napi_struct *napi = data;
-@@ -11618,7 +11635,11 @@ static int __init net_dev_init(void)
+@@ -11619,7 +11636,11 @@ static int __init net_dev_init(void)
  		INIT_CSD(&sd->csd, rps_trigger_softirq, sd);
  		sd->cpu = i;
  #endif
@@ -125,5 +125,5 @@ index f0a9ef1aeaa2..682175af439d 100644
  
  static void skb_splice_csum_page(struct sk_buff *skb, struct page *page,
 -- 
-2.45.0
+2.45.2
 

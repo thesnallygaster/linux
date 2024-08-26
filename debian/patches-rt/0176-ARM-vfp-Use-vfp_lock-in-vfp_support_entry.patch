@@ -1,8 +1,8 @@
-From 7ceca3e8cd039f96b3b5680c86af78e6afea4123 Mon Sep 17 00:00:00 2001
+From 3baa84fe6cb61bda3caff48bfdf6184d268ebfbc Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 28 Jun 2023 09:36:10 +0200
-Subject: [PATCH 176/196] ARM: vfp: Use vfp_lock() in vfp_support_entry().
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 176/200] ARM: vfp: Use vfp_lock() in vfp_support_entry().
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 vfp_entry() is invoked from exception handler and is fully preemptible.
 It uses local_bh_disable() to remain uninterrupted while checking the
@@ -50,5 +50,5 @@ index 3b9360bfc508..9543f011d0ed 100644
  }
  
 -- 
-2.45.0
+2.45.2
 

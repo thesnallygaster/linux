@@ -1,9 +1,9 @@
-From e307bbe01300ce3cee12e65f2c5b581e017c2ff0 Mon Sep 17 00:00:00 2001
+From 1dc3486d1b55b454cf36b8ebf8c53ebfcea9f936 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 26 Sep 2023 12:44:07 +0000
-Subject: [PATCH 136/196] printk: Avoid console_lock dance if no legacy or boot
+Subject: [PATCH 136/200] printk: Avoid console_lock dance if no legacy or boot
  consoles
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Currently the console lock is used to attempt legacy-type
 printing even if there are no legacy or boot consoles registered.
@@ -215,5 +215,5 @@ index d6173575ea03..e92da55b8e9f 100644
  
  void printk_trigger_flush(void)
 -- 
-2.45.0
+2.45.2
 

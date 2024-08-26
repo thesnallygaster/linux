@@ -1,8 +1,8 @@
-From d5027af2dbb2e580709167539c04eccff09b2bb5 Mon Sep 17 00:00:00 2001
+From e051b53809f795682c5608dccbfa7b41b8313fdc Mon Sep 17 00:00:00 2001
 From: Jisheng Zhang <jszhang@kernel.org>
 Date: Tue, 31 Oct 2023 22:35:20 +0800
-Subject: [PATCH 187/196] riscv: add PREEMPT_AUTO support
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 187/200] riscv: add PREEMPT_AUTO support
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 riscv has switched to GENERIC_ENTRY, so adding PREEMPT_AUTO is as simple
 as adding TIF_ARCH_RESCHED_LAZY related definitions and enabling
@@ -48,5 +48,5 @@ index d18ce0113ca1..e18710fe51f0 100644
  #define _TIF_WORK_MASK \
  	(_TIF_NOTIFY_RESUME | _TIF_SIGPENDING | _TIF_NEED_RESCHED | \
 -- 
-2.45.0
+2.45.2
 

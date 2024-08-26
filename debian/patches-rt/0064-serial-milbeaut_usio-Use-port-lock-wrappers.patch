@@ -1,8 +1,8 @@
-From a24531bee52085bd6df85b41196746819419f2c8 Mon Sep 17 00:00:00 2001
+From ba7be5d2c8fd68ef39507d76b4075875c944f0cf Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:55 +0206
-Subject: [PATCH 064/196] serial: milbeaut_usio: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 064/200] serial: milbeaut_usio: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -103,5 +103,5 @@ index 70a910085e93..db3b81f2aa57 100644
  
  static const char *mlb_usio_type(struct uart_port *port)
 -- 
-2.45.0
+2.45.2
 

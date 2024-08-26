@@ -1,7 +1,7 @@
-From a879175afc8b430c8456afedbe47e3689bb9febc Mon Sep 17 00:00:00 2001
+From 7e85381d11952023d44d5fbd03b96f4c0b33c5d2 Mon Sep 17 00:00:00 2001
 From: Clark Williams <clark.williams@gmail.com>
-Date: Tue, 27 Feb 2024 17:13:28 -0600
-Subject: [PATCH 193/200] Linux 6.6.18-rt23 REBASE
+Date: Tue, 25 Jun 2024 17:08:39 -0500
+Subject: [PATCH 196/200] Linux 6.6.35-rt34 REBASE
 Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Signed-off-by: Clark Williams <clark.williams@gmail.com>
@@ -10,12 +10,12 @@ Signed-off-by: Clark Williams <clark.williams@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/localversion-rt b/localversion-rt
-index 483ad771f201..9a218ca23053 100644
+index 9a218ca23053..21988f9ad53f 100644
 --- a/localversion-rt
 +++ b/localversion-rt
 @@ -1 +1 @@
---rt19
-+-rt23
+--rt23
++-rt34
 -- 
 2.45.2
 

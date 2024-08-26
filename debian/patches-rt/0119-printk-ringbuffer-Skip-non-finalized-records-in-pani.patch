@@ -1,9 +1,9 @@
-From cdf50f4beec1215ec0b022c9fd714c1f91fb369a Mon Sep 17 00:00:00 2001
+From ab28207bf8cca851de3071c2ef5986d7dacd6dae Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Fri, 13 Oct 2023 10:23:11 +0000
-Subject: [PATCH 119/196] printk: ringbuffer: Skip non-finalized records in
+Subject: [PATCH 119/200] printk: ringbuffer: Skip non-finalized records in
  panic
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Normally a reader will stop once reaching a non-finalized
 record. However, when a panic happens, writers from other CPUs
@@ -70,5 +70,5 @@ index b7748d7c44c1..d6ed33683b8b 100644
  	}
  
 -- 
-2.45.0
+2.45.2
 

@@ -1,9 +1,9 @@
-From 43fa89ecb7ca7c6600ebd9e185e1985807259dfb Mon Sep 17 00:00:00 2001
+From 0a0992d76d7462ceebfafc9d57215aa3f62060d6 Mon Sep 17 00:00:00 2001
 From: Frederic Weisbecker <frederic@kernel.org>
 Date: Tue, 5 Apr 2022 03:07:51 +0200
-Subject: [PATCH 020/196] rcutorture: Also force sched priority to timersd on
+Subject: [PATCH 020/200] rcutorture: Also force sched priority to timersd on
  boosting test.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 ksoftirqd is statically boosted to the priority level right above the
 one of rcu_torture_boost() so that timers, which torture readers rely on,
@@ -47,10 +47,10 @@ index 0efba74a835c..f459b0f27c94 100644
  extern void raise_hrtimer_softirq(void);
  
 diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index ade42d6a9d9b..eebb9b4548fb 100644
+index 781146600aa4..7ee1c84b52ee 100644
 --- a/kernel/rcu/rcutorture.c
 +++ b/kernel/rcu/rcutorture.c
-@@ -2408,6 +2408,12 @@ static int rcutorture_booster_init(unsigned int cpu)
+@@ -2409,6 +2409,12 @@ static int rcutorture_booster_init(unsigned int cpu)
  		WARN_ON_ONCE(!t);
  		sp.sched_priority = 2;
  		sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
@@ -64,10 +64,10 @@ index ade42d6a9d9b..eebb9b4548fb 100644
  
  	/* Don't allow time recalculation while creating a new task. */
 diff --git a/kernel/softirq.c b/kernel/softirq.c
-index c29c30106eb8..1277abc94228 100644
+index 0e43058c2e58..63e8b9ad2727 100644
 --- a/kernel/softirq.c
 +++ b/kernel/softirq.c
-@@ -620,7 +620,7 @@ static inline void tick_irq_exit(void)
+@@ -624,7 +624,7 @@ static inline void tick_irq_exit(void)
  }
  
  #ifdef CONFIG_PREEMPT_RT
@@ -77,5 +77,5 @@ index c29c30106eb8..1277abc94228 100644
  
  static unsigned int local_pending_timers(void)
 -- 
-2.45.0
+2.45.2
 

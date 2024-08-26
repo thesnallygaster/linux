@@ -1,9 +1,9 @@
-From be1da17403025511d2213571bdc6a7a3525cae70 Mon Sep 17 00:00:00 2001
+From 7d4540446deab8fbe3db82b11920b40f6e35948b Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Tue, 23 Jan 2024 12:56:21 +0100
-Subject: [PATCH 194/196] arm: Disable FAST_GUP on PREEMPT_RT if HIGHPTE is
+Subject: [PATCH 194/200] arm: Disable FAST_GUP on PREEMPT_RT if HIGHPTE is
  also enabled.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 gup_pgd_range() is invoked with disabled interrupts and invokes
 __kmap_local_page_prot() via pte_offset_map(), gup_p4d_range().
@@ -39,5 +39,5 @@ index a154ecd2d3c3..e5a283851c02 100644
  	select HAVE_FUNCTION_ERROR_INJECTION
  	select HAVE_FUNCTION_GRAPH_TRACER
 -- 
-2.45.0
+2.45.2
 

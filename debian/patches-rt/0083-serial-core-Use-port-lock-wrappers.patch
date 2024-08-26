@@ -1,8 +1,8 @@
-From 272000ecc89b320eb726c1e4e6b10b9fd4477aa5 Mon Sep 17 00:00:00 2001
+From ffc8ac5c464f07c9a1a84ce2a116b051c0cdc88f Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:14 +0206
-Subject: [PATCH 083/196] serial: core: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 083/200] serial: core: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -353,10 +353,10 @@ index 2eceef54e0b3..6cd64ccc2035 100644
  		uart_rs485_config(port);
  
 diff --git a/drivers/tty/serial/serial_port.c b/drivers/tty/serial/serial_port.c
-index d622a9297f65..7d51e66ec88b 100644
+index 469ad26cde48..66fd117d8aea 100644
 --- a/drivers/tty/serial/serial_port.c
 +++ b/drivers/tty/serial/serial_port.c
-@@ -35,14 +35,14 @@ static int serial_port_runtime_resume(struct device *dev)
+@@ -38,14 +38,14 @@ static int serial_port_runtime_resume(struct device *dev)
  		goto out;
  
  	/* Flush any pending TX for the port */
@@ -374,5 +374,5 @@ index d622a9297f65..7d51e66ec88b 100644
  out:
  	pm_runtime_mark_last_busy(dev);
 -- 
-2.45.0
+2.45.2
 

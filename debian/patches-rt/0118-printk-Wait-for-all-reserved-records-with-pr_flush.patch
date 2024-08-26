@@ -1,8 +1,8 @@
-From 192e3bb01863ce0a33fad07e22674081f3ea93b8 Mon Sep 17 00:00:00 2001
+From 861fd9d2154564fb9772045af0b3ca2ba629e7e7 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Mon, 6 Nov 2023 14:59:55 +0000
-Subject: [PATCH 118/196] printk: Wait for all reserved records with pr_flush()
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 118/200] printk: Wait for all reserved records with pr_flush()
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Currently pr_flush() will only wait for records that were
 available to readers at the time of the call (using
@@ -176,5 +176,5 @@ index d49460f7578e..52626d0f1fa3 100644
  #ifdef CONFIG_64BIT
  
 -- 
-2.45.0
+2.45.2
 

@@ -1,8 +1,8 @@
-From 149045a5d4dc6cf47389b51e9814680482365f9a Mon Sep 17 00:00:00 2001
+From b0271319d6f5dbc9d3eeafc4d4024aa621b34a94 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sat, 23 Sep 2023 03:11:05 +0200
-Subject: [PATCH 169/196] sched: define TIF_ALLOW_RESCHED
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 169/200] sched: define TIF_ALLOW_RESCHED
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 On Fri, Sep 22 2023 at 00:55, Thomas Gleixner wrote:
 > On Thu, Sep 21 2023 at 09:00, Linus Torvalds wrote:
@@ -122,7 +122,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  20 files changed, 171 insertions(+), 56 deletions(-)
 
 diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 282313172756..c8bdb181469a 100644
+index fe340c07ddbf..7bbf835fe725 100644
 --- a/arch/x86/Kconfig
 +++ b/arch/x86/Kconfig
 @@ -273,6 +273,7 @@ config X86
@@ -158,10 +158,10 @@ index d63b02940747..1ff38ebbd588 100644
  #define _TIF_SSBD		(1 << TIF_SSBD)
  #define _TIF_SPEC_IB		(1 << TIF_SPEC_IB)
 diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-index bd6a7857ce05..d45dfd10b636 100644
+index 831fa4a12159..5af3ebec0f74 100644
 --- a/drivers/acpi/processor_idle.c
 +++ b/drivers/acpi/processor_idle.c
-@@ -108,7 +108,7 @@ static const struct dmi_system_id processor_power_dmi_table[] = {
+@@ -107,7 +107,7 @@ static const struct dmi_system_id processor_power_dmi_table[] = {
   */
  static void __cpuidle acpi_safe_halt(void)
  {
@@ -438,10 +438,10 @@ index 2e0f75bcb7fd..d952fa5ee880 100644
  
  		if (ti_work & _TIF_NOTIFY_RESUME)
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index c731c53d6bfd..89bf86d3351d 100644
+index fb30aad3c1b6..f8ae421b2fed 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -898,14 +898,15 @@ static inline void hrtick_rq_init(struct rq *rq)
+@@ -897,14 +897,15 @@ static inline void hrtick_rq_init(struct rq *rq)
  
  #if defined(CONFIG_SMP) && defined(TIF_POLLING_NRFLAG)
  /*
@@ -460,7 +460,7 @@ index c731c53d6bfd..89bf86d3351d 100644
  }
  
  /*
-@@ -922,7 +923,7 @@ static bool set_nr_if_polling(struct task_struct *p)
+@@ -921,7 +922,7 @@ static bool set_nr_if_polling(struct task_struct *p)
  	for (;;) {
  		if (!(val & _TIF_POLLING_NRFLAG))
  			return false;
@@ -469,7 +469,7 @@ index c731c53d6bfd..89bf86d3351d 100644
  			return true;
  		if (try_cmpxchg(&ti->flags, &val, val | _TIF_NEED_RESCHED))
  			break;
-@@ -931,9 +932,9 @@ static bool set_nr_if_polling(struct task_struct *p)
+@@ -930,9 +931,9 @@ static bool set_nr_if_polling(struct task_struct *p)
  }
  
  #else
@@ -481,7 +481,7 @@ index c731c53d6bfd..89bf86d3351d 100644
  	return true;
  }
  
-@@ -1038,28 +1039,47 @@ void wake_up_q(struct wake_q_head *head)
+@@ -1037,28 +1038,47 @@ void wake_up_q(struct wake_q_head *head)
   * might also involve a cross-CPU call to trigger the scheduler on
   * the target CPU.
   */
@@ -537,7 +537,7 @@ index c731c53d6bfd..89bf86d3351d 100644
  }
  
  void resched_cpu(int cpu)
-@@ -1132,7 +1152,7 @@ static void wake_up_idle_cpu(int cpu)
+@@ -1131,7 +1151,7 @@ static void wake_up_idle_cpu(int cpu)
  	if (cpu == smp_processor_id())
  		return;
  
@@ -584,7 +584,7 @@ index 4c3d0d9f3db6..63e19b89c8c3 100644
  }
  late_initcall(sched_init_debug);
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 397ef27c9bdb..ed7894d27621 100644
+index b2e1009e5706..e7e5569fd505 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
 @@ -1022,8 +1022,10 @@ static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se);
@@ -652,7 +652,7 @@ index 397ef27c9bdb..ed7894d27621 100644
  static void update_curr_fair(struct rq *rq)
  {
  	update_curr(cfs_rq_of(&rq->curr->se));
-@@ -5404,7 +5420,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
+@@ -5403,7 +5419,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
  	/*
  	 * Update run-time statistics of the 'current'.
  	 */
@@ -661,7 +661,7 @@ index 397ef27c9bdb..ed7894d27621 100644
  
  	/*
  	 * Ensure that runnable average is periodically updated.
-@@ -5418,7 +5434,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
+@@ -5417,7 +5433,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
  	 * validating it and just reschedule.
  	 */
  	if (queued) {
@@ -670,7 +670,7 @@ index 397ef27c9bdb..ed7894d27621 100644
  		return;
  	}
  	/*
-@@ -5564,7 +5580,7 @@ static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
+@@ -5563,7 +5579,7 @@ static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
  	 * hierarchy can be throttled
  	 */
  	if (!assign_cfs_rq_runtime(cfs_rq) && likely(cfs_rq->curr))
@@ -679,7 +679,7 @@ index 397ef27c9bdb..ed7894d27621 100644
  }
  
  static __always_inline
-@@ -5824,7 +5840,7 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+@@ -5823,7 +5839,7 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
  
  	/* Determine whether we need to wake up potentially idle CPU: */
  	if (rq->curr == rq->idle && rq->cfs.nr_running)
@@ -688,7 +688,7 @@ index 397ef27c9bdb..ed7894d27621 100644
  }
  
  #ifdef CONFIG_SMP
-@@ -6529,7 +6545,7 @@ static void hrtick_start_fair(struct rq *rq, struct task_struct *p)
+@@ -6528,7 +6544,7 @@ static void hrtick_start_fair(struct rq *rq, struct task_struct *p)
  
  		if (delta < 0) {
  			if (task_current(rq, p))
@@ -697,7 +697,7 @@ index 397ef27c9bdb..ed7894d27621 100644
  			return;
  		}
  		hrtick_start(rq, delta);
-@@ -8187,7 +8203,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
+@@ -8206,7 +8222,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
  	 * prevents us from potentially nominating it as a false LAST_BUDDY
  	 * below.
  	 */
@@ -706,7 +706,7 @@ index 397ef27c9bdb..ed7894d27621 100644
  		return;
  
  	/* Idle tasks are by definition preempted by non-idle tasks. */
-@@ -8229,7 +8245,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
+@@ -8248,7 +8264,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
  	return;
  
  preempt:
@@ -715,7 +715,7 @@ index 397ef27c9bdb..ed7894d27621 100644
  }
  
  #ifdef CONFIG_SMP
-@@ -12386,7 +12402,7 @@ static inline void task_tick_core(struct rq *rq, struct task_struct *curr)
+@@ -12394,7 +12410,7 @@ static inline void task_tick_core(struct rq *rq, struct task_struct *curr)
  	 */
  	if (rq->core->core_forceidle_count && rq->cfs.nr_running == 1 &&
  	    __entity_slice_used(&curr->se, MIN_NR_TASKS_DURING_FORCEIDLE))
@@ -724,7 +724,7 @@ index 397ef27c9bdb..ed7894d27621 100644
  }
  
  /*
-@@ -12551,7 +12567,7 @@ prio_changed_fair(struct rq *rq, struct task_struct *p, int oldprio)
+@@ -12559,7 +12575,7 @@ prio_changed_fair(struct rq *rq, struct task_struct *p, int oldprio)
  	 */
  	if (task_current(rq, p)) {
  		if (p->prio > oldprio)
@@ -758,11 +758,11 @@ index 5007b25c5bc6..95e1b3df1400 100644
  	raw_local_irq_disable();
  
 diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 35c38daa2d3e..5c976c7dcc91 100644
+index 8cbbbea7fdbb..00cdf0db8732 100644
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
-@@ -2437,6 +2437,7 @@ extern void init_sched_fair_class(void);
- extern void reweight_task(struct task_struct *p, int prio);
+@@ -2438,6 +2438,7 @@ extern void init_sched_fair_class(void);
+ extern void reweight_task(struct task_struct *p, const struct load_weight *lw);
  
  extern void resched_curr(struct rq *rq);
 +extern void resched_curr_lazy(struct rq *rq);
@@ -819,5 +819,5 @@ index 3b7d3e9eb6ea..5a4fefbc0856 100644
  		need_resched = 'p';
  		break;
 -- 
-2.45.0
+2.45.2
 

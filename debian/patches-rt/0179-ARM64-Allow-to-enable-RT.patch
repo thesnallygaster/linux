@@ -1,8 +1,8 @@
-From 2d83d8ad9b1034dc0a9f4fe322332c238c09acf4 Mon Sep 17 00:00:00 2001
+From a7b8f883a99ec7c07816571b125001eae98495f8 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 11 Oct 2019 13:14:35 +0200
-Subject: [PATCH 179/196] ARM64: Allow to enable RT
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 179/200] ARM64: Allow to enable RT
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Allow to select RT.
 
@@ -25,5 +25,5 @@ index f9777ce2ccb2..9717c564daac 100644
  	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION if COMPAT
  	select ARCH_WANT_DEFAULT_BPF_JIT
 -- 
-2.45.0
+2.45.2
 

@@ -1,8 +1,8 @@
-From b2c063a2f54bef75a62919b1cfb97a83cd507cc6 Mon Sep 17 00:00:00 2001
+From 19e7a91c43af31661bd8a489bdf4afebf3f32b3a Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:04 +0206
-Subject: [PATCH 073/196] serial: pmac_zilog: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 073/200] serial: pmac_zilog: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -234,5 +234,5 @@ index 29bc80d39e8b..77691fbbf779 100644
  
  /*
 -- 
-2.45.0
+2.45.2
 

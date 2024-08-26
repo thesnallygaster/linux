@@ -1,8 +1,8 @@
-From ea6fde88b5869f27ff325553af612779b0327403 Mon Sep 17 00:00:00 2001
+From fc0a49e37055effd8a80d99ca51fb9e91ac53b82 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 11 Oct 2019 13:14:29 +0200
-Subject: [PATCH 178/196] ARM: Allow to enable RT
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 178/200] ARM: Allow to enable RT
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Allow to select RT.
 
@@ -33,5 +33,5 @@ index dea47ba6576b..a154ecd2d3c3 100644
  	select HAVE_REGS_AND_STACK_ACCESS_API
  	select HAVE_RSEQ
 -- 
-2.45.0
+2.45.2
 

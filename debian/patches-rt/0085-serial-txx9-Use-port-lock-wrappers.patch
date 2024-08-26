@@ -1,8 +1,8 @@
-From d38b50669829c0504ef4ca4d87d949e86dd135d8 Mon Sep 17 00:00:00 2001
+From b5642ee52fdd93a6e173a0dabfcf97d9a8ba4dde Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:16 +0206
-Subject: [PATCH 085/196] serial: txx9: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 085/200] serial: txx9: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -136,5 +136,5 @@ index be08fb6f749c..eaa980722455 100644
  
  static void
 -- 
-2.45.0
+2.45.2
 

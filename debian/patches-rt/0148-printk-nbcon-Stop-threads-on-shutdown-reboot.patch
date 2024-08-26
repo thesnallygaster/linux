@@ -1,8 +1,8 @@
-From aaaf9f93ce213a1549d8389b512cd0f4e4360bef Mon Sep 17 00:00:00 2001
+From 378fb0e72ecd67cbc6a7ec311422bdb82b3cf04b Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 26 Sep 2023 13:04:15 +0000
-Subject: [PATCH 148/196] printk: nbcon: Stop threads on shutdown/reboot
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 148/200] printk: nbcon: Stop threads on shutdown/reboot
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Register a syscore_ops shutdown function to stop all threaded
 printers on shutdown/reboot. This allows printk to transition back
@@ -62,5 +62,5 @@ index 337ec7a10095..57ed4968a653 100644
 +}
 +device_initcall(printk_init_ops);
 -- 
-2.45.0
+2.45.2
 

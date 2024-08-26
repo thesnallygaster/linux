@@ -1,8 +1,8 @@
-From 457672c74ae2301402413dc445c04cd88c99ec2c Mon Sep 17 00:00:00 2001
+From d4f04d84765da040038e860c3a96e1bdfe6ca8fa Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:20 +0206
-Subject: [PATCH 089/196] serial: st-asc: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 089/200] serial: st-asc: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -112,5 +112,5 @@ index 92b9f6894006..a821f5d76a26 100644
  
  static int asc_console_setup(struct console *co, char *options)
 -- 
-2.45.0
+2.45.2
 

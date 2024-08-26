@@ -1,8 +1,8 @@
-From cf41c3286b534df7597a1e2addd004366d96d639 Mon Sep 17 00:00:00 2001
+From c1c6f640c501e1c7edff13e70dec543da53b619f Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:27 +0206
-Subject: [PATCH 036/196] serial: 8250_fsl: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 036/200] serial: 8250_fsl: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -65,5 +65,5 @@ index 6af4e1c1210a..f522eb5026c9 100644
  	}
  
 -- 
-2.45.0
+2.45.2
 

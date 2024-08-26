@@ -1,8 +1,8 @@
-From 4f59b476557da1d8146e4e6933683fded73a51fc Mon Sep 17 00:00:00 2001
+From 585420a814687313a96fe2f48820d53b6c0810a5 Mon Sep 17 00:00:00 2001
 From: Jisheng Zhang <jszhang@kernel.org>
 Date: Tue, 31 Oct 2023 22:35:21 +0800
-Subject: [PATCH 188/196] riscv: allow to enable RT
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 188/200] riscv: allow to enable RT
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Now, it's ready to enable RT on riscv.
 
@@ -25,5 +25,5 @@ index ea01aa411e2c..e05c170781c6 100644
  	select ARCH_USE_QUEUED_RWLOCKS
  	select ARCH_USES_CFI_TRAPS if CFI_CLANG
 -- 
-2.45.0
+2.45.2
 

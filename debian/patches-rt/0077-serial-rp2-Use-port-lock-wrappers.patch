@@ -1,8 +1,8 @@
-From b42f4aed52d39ddd409039eb423af82d2e0ed024 Mon Sep 17 00:00:00 2001
+From 9207d4797a8d766b4b58e0b569fd9f948528ee1b Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:08 +0206
-Subject: [PATCH 077/196] serial: rp2: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 077/200] serial: rp2: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -116,5 +116,5 @@ index de220ac8ca54..d46a81cddfcd 100644
  
  static const char *rp2_uart_type(struct uart_port *port)
 -- 
-2.45.0
+2.45.2
 

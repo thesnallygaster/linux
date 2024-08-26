@@ -193,4 +193,8 @@
 0193-Linux-6.6.18-rt23-REBASE.patch
 0194-arm-Disable-FAST_GUP-on-PREEMPT_RT-if-HIGHPTE-is-als.patch
 0195-printk-nbcon-move-locked_port-flag-to-struct-uart_po.patch
-0196-Linux-6.6.31-rt31-REBASE.patch
+0196-Linux-6.6.35-rt34-REBASE.patch
+0197-prinkt-nbcon-Add-a-scheduling-point-to-nbcon_kthread.patch
+0198-Linux-6.6.43-rt38-REBASE.patch
+0199-riscv-Add-return-value-to-check_unaligned_access.patch
+0200-Linux-6.6.44-rt39-REBASE.patch

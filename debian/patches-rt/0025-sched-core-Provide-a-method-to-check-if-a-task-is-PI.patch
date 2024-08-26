@@ -1,9 +1,9 @@
-From a2b8b2f49e429d0338a182715a413d647e161c50 Mon Sep 17 00:00:00 2001
+From cb6aa9b55149e7c01ef15c45c09a3873376a0d2b Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 4 Aug 2023 13:30:37 +0200
-Subject: [PATCH 025/196] sched/core: Provide a method to check if a task is
+Subject: [PATCH 025/200] sched/core: Provide a method to check if a task is
  PI-boosted.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Provide a method to check if a task inherited the priority from another
 task. This happens if a task owns a lock which is requested by a task
@@ -32,7 +32,7 @@ index 67623ffd4a8e..eab173e5d09b 100644
  extern void set_user_nice(struct task_struct *p, long nice);
  extern int task_prio(const struct task_struct *p);
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index d703c5427cf2..c731c53d6bfd 100644
+index c3dc0103e2f3..fb30aad3c1b6 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
 @@ -8923,6 +8923,21 @@ static inline void preempt_dynamic_init(void) { }
@@ -58,5 +58,5 @@ index d703c5427cf2..c731c53d6bfd 100644
   * yield - yield the current processor to other threads.
   *
 -- 
-2.45.0
+2.45.2
 

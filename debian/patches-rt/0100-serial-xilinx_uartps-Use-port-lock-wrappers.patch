@@ -1,8 +1,8 @@
-From 9738f729359a2c8308b9bd327827d5e4074bb3f2 Mon Sep 17 00:00:00 2001
+From e7ba1177c632219975da0c8a2acd26008ad93158 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:31 +0206
-Subject: [PATCH 100/196] serial: xilinx_uartps: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 100/200] serial: xilinx_uartps: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -278,5 +278,5 @@ index 2e5e86a00a77..9c13dac1d4d1 100644
  
  	return uart_resume_port(cdns_uart->cdns_uart_driver, port);
 -- 
-2.45.0
+2.45.2
 

@@ -1,9 +1,9 @@
-From 1bea380cb1900c93a5a2a34afc5cecf02f662709 Mon Sep 17 00:00:00 2001
+From 4ab189a9e35edbb3d87000a96f48c81934cf790f Mon Sep 17 00:00:00 2001
 From: Clark Williams <clark.williams@gmail.com>
 Date: Mon, 5 Feb 2024 14:04:38 -0600
-Subject: [PATCH 190/196] arch/riscv: check_unaligned_acces(): don't alloc page
+Subject: [PATCH 190/200] arch/riscv: check_unaligned_acces(): don't alloc page
  for check
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Drop the alloc_pages() call since the page is passed in as
 a parameter and the alloced page will not be freed.
@@ -32,5 +32,5 @@ index 9d8b6b463592..dd118773e717 100644
  	dst = (void *)((unsigned long)page_address(page) | 0x1);
  	/* Unalign src as well, but differently (off by 1 + 2 = 3). */
 -- 
-2.45.0
+2.45.2
 

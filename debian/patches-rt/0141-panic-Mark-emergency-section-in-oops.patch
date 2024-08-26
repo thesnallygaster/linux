@@ -1,8 +1,8 @@
-From 95f8cc4dc575ae586bfacb9ef0af5c8f20b046f2 Mon Sep 17 00:00:00 2001
+From c50afd6369a6c7bdf39cfb5caaac8a0ebcc25fdf Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 19 Sep 2023 17:07:34 +0000
-Subject: [PATCH 141/196] panic: Mark emergency section in oops
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 141/200] panic: Mark emergency section in oops
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Mark an emergency section beginning with oops_enter() until the
 end of oops_exit(). In this section, the CPU will not perform
@@ -41,5 +41,5 @@ index 147803c3a402..9215df21d8c2 100644
  }
  
 -- 
-2.45.0
+2.45.2
 

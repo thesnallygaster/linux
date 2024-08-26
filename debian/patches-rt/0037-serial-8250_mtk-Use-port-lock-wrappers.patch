@@ -1,8 +1,8 @@
-From 3123bdedf1bf0c792df08a5db4be3812c5dc39cb Mon Sep 17 00:00:00 2001
+From 697e639468793562ed658f3c79eb26662178e439 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:28 +0206
-Subject: [PATCH 037/196] serial: 8250_mtk: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 037/200] serial: 8250_mtk: Use port lock wrappers
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -39,7 +39,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-index 74da5676ce67..23457daae8a1 100644
+index 28f9a2679a20..33699e86eb52 100644
 --- a/drivers/tty/serial/8250/8250_mtk.c
 +++ b/drivers/tty/serial/8250/8250_mtk.c
 @@ -102,7 +102,7 @@ static void mtk8250_dma_rx_complete(void *param)
@@ -60,7 +60,7 @@ index 74da5676ce67..23457daae8a1 100644
  }
  
  static void mtk8250_rx_dma(struct uart_8250_port *up)
-@@ -368,7 +368,7 @@ mtk8250_set_termios(struct uart_port *port, struct ktermios *termios,
+@@ -372,7 +372,7 @@ mtk8250_set_termios(struct uart_port *port, struct ktermios *termios,
  	 * Ok, we're now changing the port state.  Do it with
  	 * interrupts disabled.
  	 */
@@ -69,7 +69,7 @@ index 74da5676ce67..23457daae8a1 100644
  
  	/*
  	 * Update the per-port timeout.
-@@ -416,7 +416,7 @@ mtk8250_set_termios(struct uart_port *port, struct ktermios *termios,
+@@ -420,7 +420,7 @@ mtk8250_set_termios(struct uart_port *port, struct ktermios *termios,
  	if (uart_console(port))
  		up->port.cons->cflag = termios->c_cflag;
  
@@ -79,5 +79,5 @@ index 74da5676ce67..23457daae8a1 100644
  	if (tty_termios_baud_rate(termios))
  		tty_termios_encode_baud_rate(termios, baud, baud);
 -- 
-2.45.0
+2.45.2
 

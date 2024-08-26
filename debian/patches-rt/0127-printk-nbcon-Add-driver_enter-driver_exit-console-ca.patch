@@ -1,9 +1,9 @@
-From d6a5fde48c7cff234b1203266138861a5d01a820 Mon Sep 17 00:00:00 2001
+From 11acea9573254934d45de1e71d2e69494cc1f30d Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Fri, 8 Dec 2023 15:54:27 +0000
-Subject: [PATCH 127/196] printk: nbcon: Add driver_enter/driver_exit console
+Subject: [PATCH 127/200] printk: nbcon: Add driver_enter/driver_exit console
  callbacks
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Console drivers need some mechanism to synchronize between "normal
 driver activity" and console printing. For uart serial drivers it
@@ -44,5 +44,5 @@ index c27bd5189660..73515c324347 100644
  	atomic_long_t		__private nbcon_seq;
  	struct printk_buffers	*pbufs;
 -- 
-2.45.0
+2.45.2
 

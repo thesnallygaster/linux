@@ -1,8 +1,8 @@
-From 8ebbfc4bd6f8a33c7754f906db405e37191e3b52 Mon Sep 17 00:00:00 2001
+From 1b21c110976b90f6168e86e7bc760194bc4a7737 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 1 Dec 2021 17:41:09 +0100
-Subject: [PATCH 019/196] softirq: Use a dedicated thread for timer wakeups.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 019/200] softirq: Use a dedicated thread for timer wakeups.
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 A timer/hrtimer softirq is raised in-IRQ context. With threaded
 interrupts enabled or on PREEMPT_RT this leads to waking the ksoftirqd
@@ -73,10 +73,10 @@ index 4a1dc88ddbff..0efba74a835c 100644
  
  static inline struct task_struct *this_cpu_ksoftirqd(void)
 diff --git a/kernel/softirq.c b/kernel/softirq.c
-index 210cf5f8d92c..c29c30106eb8 100644
+index bd9716d7bb63..0e43058c2e58 100644
 --- a/kernel/softirq.c
 +++ b/kernel/softirq.c
-@@ -619,6 +619,29 @@ static inline void tick_irq_exit(void)
+@@ -623,6 +623,29 @@ static inline void tick_irq_exit(void)
  #endif
  }
  
@@ -106,7 +106,7 @@ index 210cf5f8d92c..c29c30106eb8 100644
  static inline void __irq_exit_rcu(void)
  {
  #ifndef __ARCH_IRQ_EXIT_IRQS_DISABLED
-@@ -628,8 +651,13 @@ static inline void __irq_exit_rcu(void)
+@@ -632,8 +655,13 @@ static inline void __irq_exit_rcu(void)
  #endif
  	account_hardirq_exit(current);
  	preempt_count_sub(HARDIRQ_OFFSET);
@@ -122,7 +122,7 @@ index 210cf5f8d92c..c29c30106eb8 100644
  
  	tick_irq_exit();
  }
-@@ -963,12 +991,70 @@ static struct smp_hotplug_thread softirq_threads = {
+@@ -967,12 +995,70 @@ static struct smp_hotplug_thread softirq_threads = {
  	.thread_comm		= "ksoftirqd/%u",
  };
  
@@ -230,5 +230,5 @@ index 63a8ce7177dd..7cad6fe3c035 100644
  
  /*
 -- 
-2.45.0
+2.45.2
 

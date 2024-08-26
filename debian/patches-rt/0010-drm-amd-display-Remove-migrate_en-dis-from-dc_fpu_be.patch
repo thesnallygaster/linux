@@ -1,9 +1,9 @@
-From 0028ab573d25c6cfb521d8a87f95b6235c4804b4 Mon Sep 17 00:00:00 2001
+From 7205a8cde8bd8e87f1c02d4f38ca4b91f40506a9 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 21 Sep 2023 16:15:12 +0200
-Subject: [PATCH 010/196] drm/amd/display: Remove migrate_en/dis from
+Subject: [PATCH 010/200] drm/amd/display: Remove migrate_en/dis from
  dc_fpu_begin().
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 This is a revert of the commit mentioned below while it is not wrong, as
 in the kernel will explode, having migrate_disable() here it is
@@ -88,5 +88,5 @@ index 172aa10a8800..86f4c0e04654 100644
  		if (cpu_has_feature(CPU_FTR_VSX_COMP)) {
  			disable_kernel_vsx();
 -- 
-2.45.0
+2.45.2
 

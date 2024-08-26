@@ -1,9 +1,9 @@
-From ddc59e94eb63ba12c5cd2894c4e34e767d3a6ad7 Mon Sep 17 00:00:00 2001
+From 48560f34bf90e00b03fc707cf39754c8c8dbaf77 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Fri, 20 Oct 2023 09:52:59 +0000
-Subject: [PATCH 124/196] printk: nbcon: Ensure ownership release on failed
+Subject: [PATCH 124/200] printk: nbcon: Ensure ownership release on failed
  emit
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Until now it was assumed that ownership has been lost when the
 write_atomic() callback fails. nbcon_emit_next_record() only
@@ -60,5 +60,5 @@ index c8093bcc01fe..8ecd76aa22e6 100644
  	/*
  	 * Since any dropped message was successfully output, reset the
 -- 
-2.45.0
+2.45.2
 

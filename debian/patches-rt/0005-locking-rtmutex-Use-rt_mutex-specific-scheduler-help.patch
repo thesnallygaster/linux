@@ -1,9 +1,9 @@
-From 0721bfab018a59ad69602cc6543013b2c30fb8f1 Mon Sep 17 00:00:00 2001
+From 1714943dda97cac2e6f767914db38a7de60d3898 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 8 Sep 2023 18:22:52 +0200
-Subject: [PATCH 005/196] locking/rtmutex: Use rt_mutex specific scheduler
+Subject: [PATCH 005/200] locking/rtmutex: Use rt_mutex specific scheduler
  helpers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Have rt_mutex use the rt_mutex specific scheduler helpers to avoid
 recursion vs rtlock on the PI state.
@@ -150,7 +150,7 @@ index 25ec0239477c..c7258cb32d91 100644
  }
  
 diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 9eabd585ce7a..2340b6d90ec6 100644
+index 11ed7ce6579e..62eac9fd809a 100644
 --- a/kernel/locking/rwsem.c
 +++ b/kernel/locking/rwsem.c
 @@ -1427,8 +1427,14 @@ static inline void __downgrade_write(struct rw_semaphore *sem)
@@ -188,5 +188,5 @@ index 48a19ed8486d..842037b2ba54 100644
  /*
   * The common functions which get wrapped into the rwlock API.
 -- 
-2.45.0
+2.45.2
 

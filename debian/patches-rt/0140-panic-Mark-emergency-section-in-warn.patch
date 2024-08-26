@@ -1,8 +1,8 @@
-From 16f9e31514dd851a3d5c8edea5f9e029e5c963da Mon Sep 17 00:00:00 2001
+From 348a34e37c1d2645f63358a81e1baac16e866037 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Mon, 11 Sep 2023 15:53:04 +0000
-Subject: [PATCH 140/196] panic: Mark emergency section in warn
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 140/200] panic: Mark emergency section in warn
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Mark the full contents of __warn() as an emergency section. In
 this section, the CPU will not perform console output for the
@@ -40,5 +40,5 @@ index f0e91a0c4001..147803c3a402 100644
  
  #ifdef CONFIG_BUG
 -- 
-2.45.0
+2.45.2
 

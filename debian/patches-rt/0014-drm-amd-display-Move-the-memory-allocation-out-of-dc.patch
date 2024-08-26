@@ -1,9 +1,9 @@
-From 8f72b8dfac25374f50b4f5c38191fd852e2f62bc Mon Sep 17 00:00:00 2001
+From 78c8dde20d1982c88d3c428dc84fcbb25a337b71 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 21 Sep 2023 16:15:16 +0200
-Subject: [PATCH 014/196] drm/amd/display: Move the memory allocation out of
+Subject: [PATCH 014/200] drm/amd/display: Move the memory allocation out of
  dcn20_validate_bandwidth_fp().
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 dcn20_validate_bandwidth_fp() is invoked while FPU access has been
 enabled. FPU access requires disabling preemption even on PREEMPT_RT.
@@ -127,5 +127,5 @@ index a81a0b9e6884..b6c34198ddc8 100644
  			     struct pp_smu_wm_range_sets *ranges,
  			     struct _vcs_dpi_soc_bounding_box_st *loaded_bb);
 -- 
-2.45.0
+2.45.2
 

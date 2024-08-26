@@ -1,8 +1,8 @@
-From 08d3e88cb0f94636d988af783028eb0c0e977581 Mon Sep 17 00:00:00 2001
+From 1093748bae3b49d27d22a711a359cc040cc48a9e Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 4 Aug 2023 13:30:38 +0200
-Subject: [PATCH 026/196] softirq: Add function to preempt serving softirqs.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 026/200] softirq: Add function to preempt serving softirqs.
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 Add a functionality for the softirq handler to preempt its current work
 if needed. The softirq core has no particular state. It reads and resets
@@ -40,7 +40,7 @@ index fc53e0ad56d9..448bbef47456 100644
  
  #endif /* _LINUX_BH_H */
 diff --git a/kernel/softirq.c b/kernel/softirq.c
-index c2474cc4fa51..cae0ae2e2b0b 100644
+index ea6198bf64e0..2fde8af88e48 100644
 --- a/kernel/softirq.c
 +++ b/kernel/softirq.c
 @@ -247,6 +247,19 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
@@ -64,5 +64,5 @@ index c2474cc4fa51..cae0ae2e2b0b 100644
   * Invoked from ksoftirqd_run() outside of the interrupt disabled section
   * to acquire the per CPU local lock for reentrancy protection.
 -- 
-2.45.0
+2.45.2
 

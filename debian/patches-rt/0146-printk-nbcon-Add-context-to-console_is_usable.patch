@@ -1,8 +1,8 @@
-From df5099b613cc5dba1afce6616527742686b109a7 Mon Sep 17 00:00:00 2001
+From c24387d27880e1e1d9f3cc569dbd58cebcc85aa5 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 26 Sep 2023 14:43:30 +0000
-Subject: [PATCH 146/196] printk: nbcon: Add context to console_is_usable()
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 146/200] printk: nbcon: Add context to console_is_usable()
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 The nbcon consoles have two callbacks to be used for different
 contexts. In order to determine if an nbcon console is usable,
@@ -117,5 +117,5 @@ index 2a77a4ad5619..3863e3dc3816 100644
  			if (flags & CON_NBCON) {
  				printk_seq = nbcon_seq_read(c);
 -- 
-2.45.0
+2.45.2
 

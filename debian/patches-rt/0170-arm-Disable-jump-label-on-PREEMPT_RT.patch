@@ -1,8 +1,8 @@
-From f867a95d070f8821e468219d9ec05261165f0a8a Mon Sep 17 00:00:00 2001
+From 8c7eb81022a6d981fd35666afb4cb3c713fc72fd Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Wed, 8 Jul 2015 17:14:48 +0200
-Subject: [PATCH 170/196] arm: Disable jump-label on PREEMPT_RT.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 170/200] arm: Disable jump-label on PREEMPT_RT.
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 jump-labels are used to efficiently switch between two possible code
 paths. To achieve this, stop_machine() is used to keep the CPU in a
@@ -38,5 +38,5 @@ index 57c0448d017a..dea47ba6576b 100644
  	select HAVE_ARCH_KGDB if !CPU_ENDIAN_BE32 && MMU
  	select HAVE_ARCH_KASAN if MMU && !XIP_KERNEL
 -- 
-2.45.0
+2.45.2
 

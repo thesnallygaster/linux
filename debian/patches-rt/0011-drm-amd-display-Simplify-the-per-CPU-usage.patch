@@ -1,8 +1,8 @@
-From 1e42e046acfbfa6eff8c7046c82f54eaaaa98896 Mon Sep 17 00:00:00 2001
+From 48035cee8f31618a1500e94836463901ddf78dce Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 21 Sep 2023 16:15:13 +0200
-Subject: [PATCH 011/196] drm/amd/display: Simplify the per-CPU usage.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.31-rt31.tar.xz
+Subject: [PATCH 011/200] drm/amd/display: Simplify the per-CPU usage.
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
 
 The fpu_recursion_depth counter is used to ensure that dc_fpu_begin()
 can be invoked multiple times while the FPU-disable function itself is
@@ -129,5 +129,5 @@ index 86f4c0e04654..8bd5926b47e0 100644
 +	preempt_enable();
  }
 -- 
-2.45.0
+2.45.2
 
