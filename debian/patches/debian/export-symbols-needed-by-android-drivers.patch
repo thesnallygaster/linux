@@ -22,7 +22,7 @@ Export the currently un-exported symbols they depend on.
 
 --- a/fs/file.c
 +++ b/fs/file.c
-@@ -812,6 +812,7 @@
+@@ -785,6 +785,7 @@
  
  	return file;
  }
@@ -32,7 +32,7 @@ Export the currently un-exported symbols they depend on.
  {
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -7254,6 +7254,7 @@
+@@ -7255,6 +7255,7 @@
  
  	return (nice_rlim <= task_rlimit(p, RLIMIT_NICE));
  }
@@ -52,7 +52,7 @@ Export the currently un-exported symbols they depend on.
   * Note: we use "set_current_state()" _after_ the wait-queue add,
 --- a/kernel/task_work.c
 +++ b/kernel/task_work.c
-@@ -73,6 +73,7 @@
+@@ -108,6 +108,7 @@
  
  	return 0;
  }
@@ -72,7 +72,7 @@ Export the currently un-exported symbols they depend on.
   * zap_vma_ptes - remove ptes mapping the vma
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
-@@ -4893,6 +4893,7 @@
+@@ -4890,6 +4890,7 @@
  
  	return 0;
  }

@@ -16,7 +16,7 @@ Signed-off-by: Serge Hallyn <serge.hallyn@ubuntu.com>
 ---
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -110,6 +110,11 @@
+@@ -111,6 +111,11 @@
  
  #define CREATE_TRACE_POINTS
  #include <trace/events/task.h>
@@ -28,7 +28,7 @@ Signed-off-by: Serge Hallyn <serge.hallyn@ubuntu.com>
  
  /*
   * Minimum number of threads to boot the kernel
-@@ -2260,6 +2265,10 @@
+@@ -2259,6 +2264,10 @@
  	if ((clone_flags & (CLONE_NEWUSER|CLONE_FS)) == (CLONE_NEWUSER|CLONE_FS))
  		return ERR_PTR(-EINVAL);
  
@@ -39,7 +39,7 @@ Signed-off-by: Serge Hallyn <serge.hallyn@ubuntu.com>
  	/*
  	 * Thread groups must share signals as well, and detached threads
  	 * can only be started up within the thread group.
-@@ -3413,6 +3422,12 @@
+@@ -3412,6 +3421,12 @@
  	if (unshare_flags & CLONE_NEWNS)
  		unshare_flags |= CLONE_FS;
  

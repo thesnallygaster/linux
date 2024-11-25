@@ -112,7 +112,7 @@ upstream submission.
  
 --- a/drivers/bluetooth/btmrvl_sdio.c
 +++ b/drivers/bluetooth/btmrvl_sdio.c
-@@ -470,8 +470,6 @@
+@@ -469,8 +469,6 @@
  	ret = request_firmware(&fw_helper, card->helper,
  						&card->func->dev);
  	if ((ret < 0) || !fw_helper) {
@@ -121,7 +121,7 @@ upstream submission.
  		ret = -ENOENT;
  		goto done;
  	}
-@@ -570,8 +568,6 @@
+@@ -569,8 +567,6 @@
  	ret = request_firmware(&fw_firmware, card->firmware,
  							&card->func->dev);
  	if ((ret < 0) || !fw_firmware) {
@@ -188,7 +188,7 @@ upstream submission.
  		release_firmware(rdev->me_fw);
 --- a/drivers/gpu/drm/radeon/r100.c
 +++ b/drivers/gpu/drm/radeon/r100.c
-@@ -1057,9 +1057,7 @@
+@@ -1077,9 +1077,7 @@
  	}
  
  	err = request_firmware(&rdev->me_fw, fw_name, rdev->dev);
@@ -1242,7 +1242,7 @@ upstream submission.
  		dev_err(&kaweth->intf->dev, "Firmware too big: %zu\n",
 --- a/drivers/net/wireless/ath/ath9k/hif_usb.c
 +++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -1250,9 +1250,6 @@
+@@ -1248,9 +1248,6 @@
  		if (!ret)
  			return;
  
@@ -2280,7 +2280,7 @@ upstream submission.
  	snd_emu1010_fpga_read(emu, EMU_HANA_ID, &reg);
 --- a/sound/pci/hda/hda_intel.c
 +++ b/sound/pci/hda/hda_intel.c
-@@ -2050,8 +2050,6 @@
+@@ -2042,8 +2042,6 @@
  
  	if (fw)
  		chip->fw = fw;
@@ -2347,7 +2347,7 @@ upstream submission.
  	if (err) {
 --- a/sound/pci/rme9652/hdsp.c
 +++ b/sound/pci/rme9652/hdsp.c
-@@ -5171,11 +5171,8 @@
+@@ -5173,11 +5173,8 @@
  		return -EINVAL;
  	}
  
