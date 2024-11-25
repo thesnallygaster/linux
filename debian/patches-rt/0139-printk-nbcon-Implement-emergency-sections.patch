@@ -1,8 +1,8 @@
-From 2416a470cee743dfb9f6c27619d854b6fb6c2498 Mon Sep 17 00:00:00 2001
+From 91bd42ac38dc1634500a96ff95920e4c472088a5 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Mon, 11 Sep 2023 15:21:57 +0000
 Subject: [PATCH 139/200] printk: nbcon: Implement emergency sections
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 In emergency situations (something has gone wrong but the
 system continues to operate), usually important information
@@ -240,5 +240,5 @@ index e8d60e29c17f..4a0df41d32b8 100644
  	}
  
 -- 
-2.45.2
+2.47.0
 

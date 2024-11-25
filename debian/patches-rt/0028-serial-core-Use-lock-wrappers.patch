@@ -1,11 +1,11 @@
-From 6cbb174a00cb86a0004e040c59f3cdc9e232d448 Mon Sep 17 00:00:00 2001
+From 5c6f2c49ce8cc4da23aefe27ebfec2440005eb3a Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:19 +0206
 Subject: [PATCH 028/200] serial: core: Use lock wrappers
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -95,5 +95,5 @@ index 052df85dfd59..71d925e8a79b 100644
  #endif	/* CONFIG_MAGIC_SYSRQ_SERIAL */
  
 -- 
-2.45.2
+2.47.0
 

@@ -1,7 +1,7 @@
-From 8e29a26c55339b84d743d055c50c8efd3ce1cd3f Mon Sep 17 00:00:00 2001
+From 1642189c255af3c453acbc4f563489e603440ef1 Mon Sep 17 00:00:00 2001
 From: Clark Williams <clark.williams@gmail.com>
-Date: Sun, 28 Jul 2024 15:53:21 -0500
-Subject: [PATCH 198/200] Linux 6.6.43-rt38 REBASE
+Date: Thu, 24 Oct 2024 13:54:42 -0500
+Subject: [PATCH 200/200] Linux 6.6.58-rt45 REBASE
 Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Signed-off-by: Clark Williams <clark.williams@gmail.com>
@@ -10,12 +10,12 @@ Signed-off-by: Clark Williams <clark.williams@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/localversion-rt b/localversion-rt
-index 21988f9ad53f..49bae8d6aa67 100644
+index 49bae8d6aa67..38c40b21a885 100644
 --- a/localversion-rt
 +++ b/localversion-rt
 @@ -1 +1 @@
---rt34
-+-rt38
+--rt38
++-rt45
 -- 
 2.47.0
 

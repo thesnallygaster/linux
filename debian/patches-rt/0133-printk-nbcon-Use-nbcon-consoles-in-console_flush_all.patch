@@ -1,9 +1,9 @@
-From 2e09f008dc17a4f0a4dbb8f0cd0ba0932b172a04 Mon Sep 17 00:00:00 2001
+From 069c92ac690c07394c09bb0afb5e56b9b1ad6ddb Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 19 Sep 2023 14:33:27 +0000
 Subject: [PATCH 133/200] printk: nbcon: Use nbcon consoles in
  console_flush_all()
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Allow nbcon consoles to print messages in the printk() caller
 context by integrating them into console_flush_all(). The
@@ -179,5 +179,5 @@ index 4185c58f7915..d6173575ea03 100644
  			if (!progress)
  				continue;
 -- 
-2.45.2
+2.47.0
 

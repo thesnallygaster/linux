@@ -1,8 +1,8 @@
-From 1ff623adf2fe448750b673413099670ae19e8e8f Mon Sep 17 00:00:00 2001
+From 9403a930c0556fbe80730cc8fcd46d258082fde3 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:53 +0206
 Subject: [PATCH 062/200] serial: men_z135_uart: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -78,5 +78,5 @@ index d2502aaa3e8c..8048fa542fc4 100644
  
  static const char *men_z135_type(struct uart_port *port)
 -- 
-2.45.2
+2.47.0
 

@@ -1,8 +1,8 @@
-From 77dbb0def582e5d2d9f82185289e2fc74196ab35 Mon Sep 17 00:00:00 2001
+From a920bc8209b360947e4ede24d64f2510287b7a7b Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Fri, 8 Jul 2011 20:25:16 +0200
 Subject: [PATCH 192/200] Add localversion for -RT release
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
@@ -18,5 +18,5 @@ index 000000000000..483ad771f201
 @@ -0,0 +1 @@
 +-rt19
 -- 
-2.45.2
+2.47.0
 

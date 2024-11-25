@@ -1,8 +1,8 @@
-From e20d1732179f80b9884d1487de0665b693e1da13 Mon Sep 17 00:00:00 2001
+From 596a8763c14fe902c6306f76cd0f9dcf29c25c4a Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:35 +0206
 Subject: [PATCH 044/200] serial: apb: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -78,5 +78,5 @@ index d3cb341f2c55..364599f256db 100644
  
  static const char *apbuart_type(struct uart_port *port)
 -- 
-2.45.2
+2.47.0
 

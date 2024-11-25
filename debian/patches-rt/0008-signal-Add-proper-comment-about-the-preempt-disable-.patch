@@ -1,9 +1,9 @@
-From 54d7bb86c6afda9a4f6420dfe10f08ed7b89a9c8 Mon Sep 17 00:00:00 2001
+From 8ef2b7f490031b7e63aa26ebe4962bc43d48f8c6 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 3 Aug 2023 12:09:31 +0200
 Subject: [PATCH 008/200] signal: Add proper comment about the preempt-disable
  in ptrace_stop().
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Commit 53da1d9456fe7 ("fix ptrace slowness") added a preempt-disable section
 between read_unlock() and the following schedule() invocation without
@@ -49,5 +49,5 @@ index 21903f524ef8..83865eeaadc5 100644
  	preempt_disable();
  	read_unlock(&tasklist_lock);
 -- 
-2.45.2
+2.47.0
 

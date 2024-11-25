@@ -1,8 +1,8 @@
-From c776e58c8df743a106fa2cb407cda44a182a4498 Mon Sep 17 00:00:00 2001
+From a6b084748ea369fd79da60a1c482524c4d530d6a Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Mon, 11 Dec 2023 09:36:52 +0000
 Subject: [PATCH 137/200] printk: Track nbcon consoles
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Add a global flag @have_nbcon_console to identify if any nbcon
 consoles are registered. This will be used in follow-up commits
@@ -69,5 +69,5 @@ index e92da55b8e9f..977a97f0396b 100644
  	return res;
  }
 -- 
-2.45.2
+2.47.0
 

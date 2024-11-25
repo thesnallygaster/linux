@@ -1,8 +1,8 @@
-From 9a5e83c5d454e487c6d6e325b794fcffa0a77023 Mon Sep 17 00:00:00 2001
+From b201744cbf34b51b05be401b250b9e9e05973cbd Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:22 +0206
 Subject: [PATCH 091/200] serial: sunhv: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -151,5 +151,5 @@ index c671d674bce4..5bfc0040f17b 100644
  
  static struct console sunhv_console = {
 -- 
-2.45.2
+2.47.0
 

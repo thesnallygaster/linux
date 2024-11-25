@@ -1,8 +1,8 @@
-From 33123b535b9e978d09c04debde1b7e65c00ac82f Mon Sep 17 00:00:00 2001
+From e7b50eb607da39bd8d5866dd582ef1894a0d7bf1 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 24 Oct 2023 14:13:14 +0000
 Subject: [PATCH 132/200] printk: Track registered boot consoles
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Unfortunately it is not known if a boot console and a regular
 (legacy or nbcon) console use the same hardware. For this reason
@@ -80,5 +80,5 @@ index 271865952a4d..4185c58f7915 100644
  }
  
 -- 
-2.45.2
+2.47.0
 

@@ -1,8 +1,8 @@
-From 39904d1806d20a7aadc74d6797d28e95b2787ab2 Mon Sep 17 00:00:00 2001
+From cb7a3928cd16fc812236f6c666f2be2331b47695 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:41 +0206
 Subject: [PATCH 050/200] serial: digicolor: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -115,5 +115,5 @@ index 128b5479e813..5004125f3045 100644
  	/* Wait for transmitter to become empty */
  	do {
 -- 
-2.45.2
+2.47.0
 

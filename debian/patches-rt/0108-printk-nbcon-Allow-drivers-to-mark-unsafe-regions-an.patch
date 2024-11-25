@@ -1,9 +1,9 @@
-From 159433cf4a30cbfbaa5dcaf494b85e9fb3b82604 Mon Sep 17 00:00:00 2001
+From 27515aae403ddc3d4e8b74c451722b5b92cf3bbd Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sat, 16 Sep 2023 21:26:07 +0206
 Subject: [PATCH 108/200] printk: nbcon: Allow drivers to mark unsafe regions
  and check state
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 For the write_atomic callback, the console driver may have unsafe
 regions that need to be appropriately marked. Provide functions
@@ -140,5 +140,5 @@ index 6e05d263fd22..b96077152f49 100644
   * nbcon_emit_next_record - Emit a record in the acquired context
   * @wctxt:	The write context that will be handed to the write function
 -- 
-2.45.2
+2.47.0
 

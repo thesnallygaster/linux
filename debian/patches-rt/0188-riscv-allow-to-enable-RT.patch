@@ -1,8 +1,8 @@
-From 585420a814687313a96fe2f48820d53b6c0810a5 Mon Sep 17 00:00:00 2001
+From 086cc58c4b5dde48ceef9431a91fe43638681468 Mon Sep 17 00:00:00 2001
 From: Jisheng Zhang <jszhang@kernel.org>
 Date: Tue, 31 Oct 2023 22:35:21 +0800
 Subject: [PATCH 188/200] riscv: allow to enable RT
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Now, it's ready to enable RT on riscv.
 
@@ -13,10 +13,10 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index ea01aa411e2c..e05c170781c6 100644
+index f05883adb5f7..391adf8ffc8d 100644
 --- a/arch/riscv/Kconfig
 +++ b/arch/riscv/Kconfig
-@@ -48,6 +48,7 @@ config RISCV
+@@ -49,6 +49,7 @@ config RISCV
  	select ARCH_SUPPORTS_HUGETLBFS if MMU
  	select ARCH_SUPPORTS_PAGE_TABLE_CHECK if MMU
  	select ARCH_SUPPORTS_PER_VMA_LOCK if MMU
@@ -25,5 +25,5 @@ index ea01aa411e2c..e05c170781c6 100644
  	select ARCH_USE_QUEUED_RWLOCKS
  	select ARCH_USES_CFI_TRAPS if CFI_CLANG
 -- 
-2.45.2
+2.47.0
 

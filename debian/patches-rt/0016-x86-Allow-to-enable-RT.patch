@@ -1,8 +1,8 @@
-From d3b6df512dfe902f1d8348338c60e98dcdd7b769 Mon Sep 17 00:00:00 2001
+From 2521fde4369f08afe3499134b1985760f31229ae Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 7 Aug 2019 18:15:38 +0200
 Subject: [PATCH 016/200] x86: Allow to enable RT
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Allow to select RT.
 
@@ -25,5 +25,5 @@ index 82d12c93feab..231e41817ea4 100644
  	select HAVE_ARCH_SOFT_DIRTY
  	select MODULES_USE_ELF_RELA
 -- 
-2.45.2
+2.47.0
 

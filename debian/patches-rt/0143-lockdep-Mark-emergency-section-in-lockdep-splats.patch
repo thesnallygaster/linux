@@ -1,8 +1,8 @@
-From 924d2a3a21677de19e46f6ed2eab612066274dce Mon Sep 17 00:00:00 2001
+From e479f7dbfe6ccad7cf5426b3547fa37d4b1b020f Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Mon, 18 Sep 2023 20:27:41 +0000
 Subject: [PATCH 143/200] lockdep: Mark emergency section in lockdep splats
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Mark an emergency section within print_usage_bug(), where
 lockdep bugs are printed. In this section, the CPU will not
@@ -17,7 +17,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  1 file changed, 5 insertions(+)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 151bd3de5936..5c21ba41e308 100644
+index 3468d8230e5f..6eef8527e654 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
 @@ -56,6 +56,7 @@
@@ -47,5 +47,5 @@ index 151bd3de5936..5c21ba41e308 100644
  
  /*
 -- 
-2.45.2
+2.47.0
 

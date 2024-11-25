@@ -1,8 +1,8 @@
-From b5cc3f79e02cfd3b64ada374fc5ef957ed54c598 Mon Sep 17 00:00:00 2001
+From 1c78941169e9357cfb77bbad73847a6d5233cb03 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:12 +0206
 Subject: [PATCH 081/200] serial: sc16is7xx: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -61,5 +61,5 @@ index 7a9924d9b294..be9ae5cdd1b8 100644
  
  static void sc16is7xx_reconf_rs485(struct uart_port *port)
 -- 
-2.45.2
+2.47.0
 

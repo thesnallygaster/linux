@@ -1,8 +1,8 @@
-From 811b435ebb4bbfec1176f98b89ae3890574e8e93 Mon Sep 17 00:00:00 2001
+From a1bc69663e5290ad1b200443f8a7df64995e8d03 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Mon, 9 Oct 2023 13:55:19 +0000
 Subject: [PATCH 123/200] printk: Add sparse notation to console_srcu locking
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 kernel/printk/printk.c:284:5: sparse: sparse: context imbalance in
 'console_srcu_read_lock' - wrong count at exit
@@ -38,5 +38,5 @@ index ae3bf0cf215a..ea13c808c282 100644
  	srcu_read_unlock_nmisafe(&console_srcu, cookie);
  }
 -- 
-2.45.2
+2.47.0
 

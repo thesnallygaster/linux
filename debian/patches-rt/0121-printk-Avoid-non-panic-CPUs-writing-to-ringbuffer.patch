@@ -1,8 +1,8 @@
-From e5e906ec18a5725e185adac5412e6927ac795f67 Mon Sep 17 00:00:00 2001
+From 3960bd4e68e56d7d623692d5abd22ae36e25450f Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Fri, 20 Oct 2023 09:37:05 +0000
 Subject: [PATCH 121/200] printk: Avoid non-panic CPUs writing to ringbuffer
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Commit 13fb0f74d702 ("printk: Avoid livelock with heavy printk
 during panic") introduced a mechanism to silence non-panic CPUs
@@ -80,5 +80,5 @@ index 807692fd386a..7c5ab5c01abb 100644
  	if (may_suppress && suppress_message_printing(r.info->level))
  		goto out;
 -- 
-2.45.2
+2.47.0
 

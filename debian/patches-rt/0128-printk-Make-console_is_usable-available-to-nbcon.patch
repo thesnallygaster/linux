@@ -1,8 +1,8 @@
-From a137c4460a3f2fd6a8c109f014d981374c34b8bf Mon Sep 17 00:00:00 2001
+From 7906d0df520f8a48091f09bc047cd4e85248be38 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Tue, 12 Sep 2023 13:25:41 +0000
 Subject: [PATCH 128/200] printk: Make console_is_usable() available to nbcon
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Move console_is_usable() as-is into internal.h so that it can
 be used by nbcon printing functions as well.
@@ -107,5 +107,5 @@ index ea13c808c282..d959be5c4102 100644
  {
  	console_locked = 0;
 -- 
-2.45.2
+2.47.0
 

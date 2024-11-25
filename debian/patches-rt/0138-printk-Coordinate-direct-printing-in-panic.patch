@@ -1,8 +1,8 @@
-From e5c811c4e055218dce49c0f7cfcf9c9e2b6b1050 Mon Sep 17 00:00:00 2001
+From 349cc9ecacbcd86f8cef022c481132c230a0b9c2 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Wed, 22 Nov 2023 11:56:58 +0000
 Subject: [PATCH 138/200] printk: Coordinate direct printing in panic
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Perform printing by nbcon consoles on the panic CPU from the
 printk() caller context in order to get panic messages printed
@@ -140,5 +140,5 @@ index 977a97f0396b..e8d60e29c17f 100644
  	return printed_len;
  }
 -- 
-2.45.2
+2.47.0
 

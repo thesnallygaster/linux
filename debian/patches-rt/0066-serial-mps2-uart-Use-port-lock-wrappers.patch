@@ -1,8 +1,8 @@
-From 522d4cf4fd7570e943aace69bd519c33bbcf3187 Mon Sep 17 00:00:00 2001
+From d0e9170a36c9861d23b14d5b9e623073e7341a95 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:57 +0206
 Subject: [PATCH 066/200] serial: mps2-uart: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -105,5 +105,5 @@ index ea5a7911cb15..2a4c09f3a834 100644
  	if (tty_termios_baud_rate(termios))
  		tty_termios_encode_baud_rate(termios, baud, baud);
 -- 
-2.45.2
+2.47.0
 

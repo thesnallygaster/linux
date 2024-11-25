@@ -1,9 +1,9 @@
-From 362c2198c3365b9bcbe7c9c4b848cdaf90f8ae0d Mon Sep 17 00:00:00 2001
+From ca3bf25951d42477c6ca23915e31981226bffc4b Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Wed, 13 Sep 2023 08:35:23 +0000
 Subject: [PATCH 126/200] printk: nbcon: Implement processing in port->lock
  wrapper
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Currently the port->lock wrappers uart_port_lock(),
 uart_port_unlock() (and their variants) only lock/unlock
@@ -252,5 +252,5 @@ index 8ecd76aa22e6..a5707fe1e95e 100644
 +}
 +EXPORT_SYMBOL_GPL(nbcon_release);
 -- 
-2.45.2
+2.47.0
 

@@ -1,8 +1,8 @@
-From 194f8956ecc544192307e5c83848dc67aad1ba48 Mon Sep 17 00:00:00 2001
+From 6359c840a9e71dba8ddc41593da520367867afe8 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:22 +0206
 Subject: [PATCH 031/200] serial: 8250_bcm7271: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -153,5 +153,5 @@ index 9afd5979c9e0..db23b3a02aef 100644
  
  	return 0;
 -- 
-2.45.2
+2.47.0
 

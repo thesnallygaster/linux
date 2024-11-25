@@ -1,8 +1,8 @@
-From fbd2ede7785729e68cab93411ba74fd14b0e2f02 Mon Sep 17 00:00:00 2001
+From 82e4344d2e4ccffd3d9bbb7e890ebd58fe8c189d Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 7 Dec 2023 14:15:15 +0000
 Subject: [PATCH 112/200] printk: Adjust mapping for 32bit seq macros
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Note: This change only applies to 32bit architectures. On 64bit
       architectures the macros are NOPs.
@@ -73,5 +73,5 @@ index b82a96dc2ea2..12f60c782e46 100644
  	return seq;
  }
 -- 
-2.45.2
+2.47.0
 

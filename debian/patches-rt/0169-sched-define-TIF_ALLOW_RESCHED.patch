@@ -1,8 +1,8 @@
-From b0271319d6f5dbc9d3eeafc4d4024aa621b34a94 Mon Sep 17 00:00:00 2001
+From 67043ab2d639e0e214378836a20bca0e3c33635a Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sat, 23 Sep 2023 03:11:05 +0200
 Subject: [PATCH 169/200] sched: define TIF_ALLOW_RESCHED
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 On Fri, Sep 22 2023 at 00:55, Thomas Gleixner wrote:
 > On Thu, Sep 21 2023 at 09:00, Linus Torvalds wrote:
@@ -329,7 +329,7 @@ index 9ea0b28068f4..5ded1450ac1a 100644
  
  #ifndef CONFIG_HAVE_ARCH_WITHIN_STACK_FRAMES
 diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 696f8dc4aa53..e44b47305235 100644
+index cb8bd759e800..ce1fefc37cb5 100644
 --- a/include/linux/trace_events.h
 +++ b/include/linux/trace_events.h
 @@ -178,8 +178,8 @@ unsigned int tracing_gen_ctx_irq_test(unsigned int irqs_status);
@@ -438,7 +438,7 @@ index 2e0f75bcb7fd..d952fa5ee880 100644
  
  		if (ti_work & _TIF_NOTIFY_RESUME)
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index fb30aad3c1b6..f8ae421b2fed 100644
+index 5b20a4057945..5e65826dd984 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
 @@ -897,14 +897,15 @@ static inline void hrtick_rq_init(struct rq *rq)
@@ -584,7 +584,7 @@ index 4c3d0d9f3db6..63e19b89c8c3 100644
  }
  late_initcall(sched_init_debug);
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index b2e1009e5706..e7e5569fd505 100644
+index 5eb4807bad20..23c53e633289 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
 @@ -1022,8 +1022,10 @@ static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se);
@@ -652,7 +652,7 @@ index b2e1009e5706..e7e5569fd505 100644
  static void update_curr_fair(struct rq *rq)
  {
  	update_curr(cfs_rq_of(&rq->curr->se));
-@@ -5403,7 +5419,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
+@@ -5479,7 +5495,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
  	/*
  	 * Update run-time statistics of the 'current'.
  	 */
@@ -661,7 +661,7 @@ index b2e1009e5706..e7e5569fd505 100644
  
  	/*
  	 * Ensure that runnable average is periodically updated.
-@@ -5417,7 +5433,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
+@@ -5493,7 +5509,7 @@ entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
  	 * validating it and just reschedule.
  	 */
  	if (queued) {
@@ -670,7 +670,7 @@ index b2e1009e5706..e7e5569fd505 100644
  		return;
  	}
  	/*
-@@ -5563,7 +5579,7 @@ static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
+@@ -5639,7 +5655,7 @@ static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
  	 * hierarchy can be throttled
  	 */
  	if (!assign_cfs_rq_runtime(cfs_rq) && likely(cfs_rq->curr))
@@ -679,7 +679,7 @@ index b2e1009e5706..e7e5569fd505 100644
  }
  
  static __always_inline
-@@ -5823,7 +5839,7 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+@@ -5899,7 +5915,7 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
  
  	/* Determine whether we need to wake up potentially idle CPU: */
  	if (rq->curr == rq->idle && rq->cfs.nr_running)
@@ -688,7 +688,7 @@ index b2e1009e5706..e7e5569fd505 100644
  }
  
  #ifdef CONFIG_SMP
-@@ -6528,7 +6544,7 @@ static void hrtick_start_fair(struct rq *rq, struct task_struct *p)
+@@ -6604,7 +6620,7 @@ static void hrtick_start_fair(struct rq *rq, struct task_struct *p)
  
  		if (delta < 0) {
  			if (task_current(rq, p))
@@ -697,7 +697,7 @@ index b2e1009e5706..e7e5569fd505 100644
  			return;
  		}
  		hrtick_start(rq, delta);
-@@ -8206,7 +8222,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
+@@ -8282,7 +8298,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
  	 * prevents us from potentially nominating it as a false LAST_BUDDY
  	 * below.
  	 */
@@ -705,8 +705,8 @@ index b2e1009e5706..e7e5569fd505 100644
 +	if (need_resched())
  		return;
  
- 	/* Idle tasks are by definition preempted by non-idle tasks. */
-@@ -8248,7 +8264,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
+ 	if (!sched_feat(WAKEUP_PREEMPTION))
+@@ -8320,7 +8336,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
  	return;
  
  preempt:
@@ -715,7 +715,7 @@ index b2e1009e5706..e7e5569fd505 100644
  }
  
  #ifdef CONFIG_SMP
-@@ -12394,7 +12410,7 @@ static inline void task_tick_core(struct rq *rq, struct task_struct *curr)
+@@ -12466,7 +12482,7 @@ static inline void task_tick_core(struct rq *rq, struct task_struct *curr)
  	 */
  	if (rq->core->core_forceidle_count && rq->cfs.nr_running == 1 &&
  	    __entity_slice_used(&curr->se, MIN_NR_TASKS_DURING_FORCEIDLE))
@@ -724,7 +724,7 @@ index b2e1009e5706..e7e5569fd505 100644
  }
  
  /*
-@@ -12559,7 +12575,7 @@ prio_changed_fair(struct rq *rq, struct task_struct *p, int oldprio)
+@@ -12631,7 +12647,7 @@ prio_changed_fair(struct rq *rq, struct task_struct *p, int oldprio)
  	 */
  	if (task_current(rq, p)) {
  		if (p->prio > oldprio)
@@ -770,10 +770,10 @@ index 8cbbbea7fdbb..00cdf0db8732 100644
  
  extern struct rt_bandwidth def_rt_bandwidth;
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index fd398af792b4..03653fcb3ee3 100644
+index 4f93d57cc029..f255d551e5e5 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -2708,6 +2708,8 @@ unsigned int tracing_gen_ctx_irq_test(unsigned int irqs_status)
+@@ -2706,6 +2706,8 @@ unsigned int tracing_gen_ctx_irq_test(unsigned int irqs_status)
  
  	if (tif_need_resched())
  		trace_flags |= TRACE_FLAG_NEED_RESCHED;
@@ -783,7 +783,7 @@ index fd398af792b4..03653fcb3ee3 100644
  		trace_flags |= TRACE_FLAG_PREEMPT_RESCHED;
  	return (trace_flags << 16) | (min_t(unsigned int, pc & 0xff, 0xf)) |
 diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 3b7d3e9eb6ea..5a4fefbc0856 100644
+index db575094c498..c251a44ad8ac 100644
 --- a/kernel/trace/trace_output.c
 +++ b/kernel/trace/trace_output.c
 @@ -460,17 +460,29 @@ int trace_print_lat_fmt(struct trace_seq *s, struct trace_entry *entry)
@@ -819,5 +819,5 @@ index 3b7d3e9eb6ea..5a4fefbc0856 100644
  		need_resched = 'p';
  		break;
 -- 
-2.45.2
+2.47.0
 

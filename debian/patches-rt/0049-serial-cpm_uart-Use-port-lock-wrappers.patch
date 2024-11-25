@@ -1,8 +1,8 @@
-From d816749abf87690b8b20743c6984a4d1137e27ba Mon Sep 17 00:00:00 2001
+From 468758a08f8047073cbce45aa4a8c9eca57fada2 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:40 +0206
 Subject: [PATCH 049/200] serial: cpm_uart: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -72,5 +72,5 @@ index 626423022d62..be4af6eda4c2 100644
  }
  
 -- 
-2.45.2
+2.47.0
 

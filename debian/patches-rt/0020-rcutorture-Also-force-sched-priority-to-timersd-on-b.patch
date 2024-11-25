@@ -1,9 +1,9 @@
-From 0a0992d76d7462ceebfafc9d57215aa3f62060d6 Mon Sep 17 00:00:00 2001
+From 66d247ad03fea7440eec68b8f2b31967302e59ca Mon Sep 17 00:00:00 2001
 From: Frederic Weisbecker <frederic@kernel.org>
 Date: Tue, 5 Apr 2022 03:07:51 +0200
 Subject: [PATCH 020/200] rcutorture: Also force sched priority to timersd on
  boosting test.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 ksoftirqd is statically boosted to the priority level right above the
 one of rcu_torture_boost() so that timers, which torture readers rely on,
@@ -47,7 +47,7 @@ index 0efba74a835c..f459b0f27c94 100644
  extern void raise_hrtimer_softirq(void);
  
 diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 781146600aa4..7ee1c84b52ee 100644
+index 46612fb15fc6..f893f4cfdd38 100644
 --- a/kernel/rcu/rcutorture.c
 +++ b/kernel/rcu/rcutorture.c
 @@ -2409,6 +2409,12 @@ static int rcutorture_booster_init(unsigned int cpu)
@@ -77,5 +77,5 @@ index 0e43058c2e58..63e8b9ad2727 100644
  
  static unsigned int local_pending_timers(void)
 -- 
-2.45.2
+2.47.0
 

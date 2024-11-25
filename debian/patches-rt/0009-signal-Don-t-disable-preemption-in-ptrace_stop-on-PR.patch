@@ -1,9 +1,9 @@
-From 6eabd5ae946e572aaf30aa9db6e99cf9a165fa13 Mon Sep 17 00:00:00 2001
+From 7944faab2feddfd1d89cddd2fb1c63f41cbca2ff Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Thu, 3 Aug 2023 12:09:32 +0200
 Subject: [PATCH 009/200] signal: Don't disable preemption in ptrace_stop() on
  PREEMPT_RT.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 On PREEMPT_RT keeping preemption disabled during the invocation of
 cgroup_enter_frozen() is a problem because the function acquires css_set_lock
@@ -50,5 +50,5 @@ index 83865eeaadc5..9f240d9cb240 100644
  	cgroup_leave_frozen(true);
  
 -- 
-2.45.2
+2.47.0
 

@@ -1,8 +1,8 @@
-From 8808aaf47fd6a44edcbedbeff2893b9db7e2dbfc Mon Sep 17 00:00:00 2001
+From cdfacd4949c6f2ed42be1755493e2ddb11c0e8c6 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:44:09 +0206
 Subject: [PATCH 078/200] serial: sa1100: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -119,5 +119,5 @@ index ad011f1e2f4d..be7bcd75d9f4 100644
  
  static const char *sa1100_type(struct uart_port *port)
 -- 
-2.45.2
+2.47.0
 

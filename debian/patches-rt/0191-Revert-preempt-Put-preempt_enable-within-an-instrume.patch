@@ -1,9 +1,9 @@
-From 69bf5b5f3dd79e298acc2a4b6b22140c472a6321 Mon Sep 17 00:00:00 2001
+From 73f9da857ed56367de9d910a66c1b8f521fc9a6e Mon Sep 17 00:00:00 2001
 From: Clark Williams <clark.williams@gmail.com>
 Date: Tue, 6 Feb 2024 12:17:19 -0600
 Subject: [PATCH 191/200] Revert "preempt: Put preempt_enable() within an
  instrumentation*() section."
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 This reverts commit cc3d27d9fdeddcb82db3ea176a44a5509e70eb1c.
 
@@ -44,5 +44,5 @@ index cd16f0330fba..9aa6358a1a16 100644
  
  #define preempt_check_resched() \
 -- 
-2.45.2
+2.47.0
 

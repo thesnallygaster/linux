@@ -1,8 +1,8 @@
-From df86179351eceb90629fcc29db92c17c3e3f5b96 Mon Sep 17 00:00:00 2001
+From 3cbabe0c97f5dab33cb53cfcefe2acc0bf02085f Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Tue, 26 Sep 2023 13:03:52 +0000
 Subject: [PATCH 147/200] printk: nbcon: Add printer thread wakeups
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Add a function to wakeup the printer threads. Use the new function
 when:
@@ -172,5 +172,5 @@ index 3863e3dc3816..3cdda6dd8941 100644
  }
  
 -- 
-2.45.2
+2.47.0
 

@@ -1,8 +1,8 @@
-From 5102b1b22dd8465e266c8d83a3084969104c1bb9 Mon Sep 17 00:00:00 2001
+From 0a32b7149bca2438f26585b8ed14af1472d89b1d Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:29 +0206
 Subject: [PATCH 038/200] serial: 8250_omap: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -38,7 +38,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  1 file changed, 26 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index 8f472a2080ff..78fc1f17d5e2 100644
+index 4caecc3525bf..d732ad6a7cd2 100644
 --- a/drivers/tty/serial/8250/8250_omap.c
 +++ b/drivers/tty/serial/8250/8250_omap.c
 @@ -405,7 +405,7 @@ static void omap_8250_set_termios(struct uart_port *port,
@@ -238,5 +238,5 @@ index 8f472a2080ff..78fc1f17d5e2 100644
  
  	priv->latency = priv->calc_latency;
 -- 
-2.45.2
+2.47.0
 

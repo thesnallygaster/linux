@@ -1,8 +1,8 @@
-From 7f4ecc8e16a895bbb0f10d6d72f819152b613e10 Mon Sep 17 00:00:00 2001
+From a1d5166e27a6ff8f6de780a69c520a3a4f260154 Mon Sep 17 00:00:00 2001
 From: Frederic Weisbecker <frederic@kernel.org>
 Date: Tue, 5 Apr 2022 03:07:52 +0200
 Subject: [PATCH 021/200] tick: Fix timer storm since introduction of timersd
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 If timers are pending while the tick is reprogrammed on nohz_mode, the
 next expiry is not armed to fire now, it is delayed one jiffy forward
@@ -112,5 +112,5 @@ index 55cbc49f70d1..1a0ed106b192 100644
  
  static ktime_t tick_nohz_next_event(struct tick_sched *ts, int cpu)
 -- 
-2.45.2
+2.47.0
 

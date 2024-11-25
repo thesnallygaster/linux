@@ -1,8 +1,8 @@
-From c3c52ffe17dd2b7862968e6921f42a3777cbb2d3 Mon Sep 17 00:00:00 2001
+From c2582da1718ecc52e316779a64a441a18b55bf35 Mon Sep 17 00:00:00 2001
 From: Peter Zijlstra <peterz@infradead.org>
 Date: Fri, 8 Sep 2023 18:22:51 +0200
 Subject: [PATCH 004/200] sched: Provide rt_mutex specific scheduler helpers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 With PREEMPT_RT there is a rt_mutex recursion problem where
 sched_submit_work() can use an rtlock (aka spinlock_t). More
@@ -73,10 +73,10 @@ index 994c25640e15..b2b9e6eb9683 100644
   * Must hold either p->pi_lock or task_rq(p)->lock.
   */
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 716f521d6e3e..c3dc0103e2f3 100644
+index 64dae1427bf2..d39768247cd1 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -6724,9 +6724,6 @@ static inline void sched_submit_work(struct task_struct *tsk)
+@@ -6725,9 +6725,6 @@ static inline void sched_submit_work(struct task_struct *tsk)
  	static DEFINE_WAIT_OVERRIDE_MAP(sched_map, LD_WAIT_CONFIG);
  	unsigned int task_flags;
  
@@ -86,7 +86,7 @@ index 716f521d6e3e..c3dc0103e2f3 100644
  	/*
  	 * Establish LD_WAIT_CONFIG context to ensure none of the code called
  	 * will use a blocking primitive -- which would lead to recursion.
-@@ -6784,7 +6781,12 @@ asmlinkage __visible void __sched schedule(void)
+@@ -6785,7 +6782,12 @@ asmlinkage __visible void __sched schedule(void)
  {
  	struct task_struct *tsk = current;
  
@@ -100,7 +100,7 @@ index 716f521d6e3e..c3dc0103e2f3 100644
  	__schedule_loop(SM_NONE);
  	sched_update_worker(tsk);
  }
-@@ -7045,6 +7047,32 @@ static void __setscheduler_prio(struct task_struct *p, int prio)
+@@ -7046,6 +7048,32 @@ static void __setscheduler_prio(struct task_struct *p, int prio)
  
  #ifdef CONFIG_RT_MUTEXES
  
@@ -134,5 +134,5 @@ index 716f521d6e3e..c3dc0103e2f3 100644
  {
  	if (pi_task)
 -- 
-2.45.2
+2.47.0
 

@@ -1,8 +1,8 @@
-From 1093748bae3b49d27d22a711a359cc040cc48a9e Mon Sep 17 00:00:00 2001
+From a4845b597b99ed167e8e6bf01f480c88f2c0f11e Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 4 Aug 2023 13:30:38 +0200
 Subject: [PATCH 026/200] softirq: Add function to preempt serving softirqs.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Add a functionality for the softirq handler to preempt its current work
 if needed. The softirq core has no particular state. It reads and resets
@@ -64,5 +64,5 @@ index ea6198bf64e0..2fde8af88e48 100644
   * Invoked from ksoftirqd_run() outside of the interrupt disabled section
   * to acquire the per CPU local lock for reentrancy protection.
 -- 
-2.45.2
+2.47.0
 

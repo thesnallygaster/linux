@@ -1,8 +1,8 @@
-From b96326b72a3df7d0b6028707326d56f156bffffe Mon Sep 17 00:00:00 2001
+From 6593300d9bf2bce94886faf1f2e1fe16ff583630 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Fri, 20 Oct 2023 10:03:42 +0000
 Subject: [PATCH 135/200] printk: nbcon: Add unsafe flushing on panic
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Add nbcon_atomic_flush_unsafe() to flush all nbcon consoles
 using the write_atomic() callback and allowing unsafe hostile
@@ -102,5 +102,5 @@ index 3e999784ba5c..1c01f88d596d 100644
  
  /**
 -- 
-2.45.2
+2.47.0
 

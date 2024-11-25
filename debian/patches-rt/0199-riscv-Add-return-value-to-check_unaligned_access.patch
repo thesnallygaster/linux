@@ -1,8 +1,8 @@
-From cea05c7dc6b60be3377cb435d00464ebb1e58d3c Mon Sep 17 00:00:00 2001
+From 8b4279e1e4e0016680c8ee5aac72451e9c575b83 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Mon, 5 Aug 2024 09:48:12 -0500
 Subject: [PATCH 199/200] riscv: Add return value to check_unaligned_access().
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 The stable backport of commit c20d36cc2a207 ("riscv: don't probe
 unaligned access speed if already done") added a `return' stament to
@@ -20,10 +20,10 @@ Signed-off-by: Clark Williams <clark.williams@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index dd118773e717..347cdf56f3a1 100644
+index 25b6819b66a3..3f2767c9b01f 100644
 --- a/arch/riscv/kernel/cpufeature.c
 +++ b/arch/riscv/kernel/cpufeature.c
-@@ -588,7 +588,7 @@ static int check_unaligned_access(void *param)
+@@ -592,7 +592,7 @@ static int check_unaligned_access(void *param)
  
  	/* We are already set since the last check */
  	if (per_cpu(misaligned_access_speed, cpu) != RISCV_HWPROBE_MISALIGNED_UNKNOWN)
@@ -33,5 +33,5 @@ index dd118773e717..347cdf56f3a1 100644
  	/* Make an unaligned destination buffer. */
  	dst = (void *)((unsigned long)page_address(page) | 0x1);
 -- 
-2.45.2
+2.47.0
 

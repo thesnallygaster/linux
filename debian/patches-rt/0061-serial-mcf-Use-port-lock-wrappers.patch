@@ -1,8 +1,8 @@
-From d7cf2bde4b3aa96ec719e3494e97013ef453b54a Mon Sep 17 00:00:00 2001
+From 82124aaa1ceb27675d21190de0941caf1508c2c9 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:52 +0206
 Subject: [PATCH 061/200] serial: mcf: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -129,5 +129,5 @@ index aea29b4e6567..ee40af20a08f 100644
  	return ret;
  }
 -- 
-2.45.2
+2.47.0
 

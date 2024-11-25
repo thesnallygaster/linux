@@ -1,8 +1,8 @@
-From 1b21c110976b90f6168e86e7bc760194bc4a7737 Mon Sep 17 00:00:00 2001
+From 1e358a5650ad296de288abbf1fc5211374075586 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Wed, 1 Dec 2021 17:41:09 +0100
 Subject: [PATCH 019/200] softirq: Use a dedicated thread for timer wakeups.
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 A timer/hrtimer softirq is raised in-IRQ context. With threaded
 interrupts enabled or on PREEMPT_RT this leads to waking the ksoftirqd
@@ -195,10 +195,10 @@ index bd9716d7bb63..0e43058c2e58 100644
  }
  early_initcall(spawn_ksoftirqd);
 diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index edb0f821dcea..a7290012179a 100644
+index 57e5cb36f1bc..c4ae45701fab 100644
 --- a/kernel/time/hrtimer.c
 +++ b/kernel/time/hrtimer.c
-@@ -1809,7 +1809,7 @@ void hrtimer_interrupt(struct clock_event_device *dev)
+@@ -1812,7 +1812,7 @@ void hrtimer_interrupt(struct clock_event_device *dev)
  	if (!ktime_before(now, cpu_base->softirq_expires_next)) {
  		cpu_base->softirq_expires_next = KTIME_MAX;
  		cpu_base->softirq_activated = 1;
@@ -207,7 +207,7 @@ index edb0f821dcea..a7290012179a 100644
  	}
  
  	__hrtimer_run_queues(cpu_base, now, flags, HRTIMER_ACTIVE_HARD);
-@@ -1922,7 +1922,7 @@ void hrtimer_run_queues(void)
+@@ -1925,7 +1925,7 @@ void hrtimer_run_queues(void)
  	if (!ktime_before(now, cpu_base->softirq_expires_next)) {
  		cpu_base->softirq_expires_next = KTIME_MAX;
  		cpu_base->softirq_activated = 1;
@@ -230,5 +230,5 @@ index 63a8ce7177dd..7cad6fe3c035 100644
  
  /*
 -- 
-2.45.2
+2.47.0
 

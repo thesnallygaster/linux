@@ -1,8 +1,8 @@
-From ac45992a88e13249acde64b0ac9de187761a0d01 Mon Sep 17 00:00:00 2001
+From ae8e293eba8d97590c5f7e010ef3ec1f800b262f Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:38 +0206
 Subject: [PATCH 047/200] serial: atmel: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -38,7 +38,7 @@ Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
  1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-index 88cdafa5ac54..1946fafc3f3e 100644
+index bcca5627afac..5a3f2fc476f9 100644
 --- a/drivers/tty/serial/atmel_serial.c
 +++ b/drivers/tty/serial/atmel_serial.c
 @@ -861,7 +861,7 @@ static void atmel_complete_tx_dma(void *arg)
@@ -121,5 +121,5 @@ index 88cdafa5ac54..1946fafc3f3e 100644
  	}
  }
 -- 
-2.45.2
+2.47.0
 

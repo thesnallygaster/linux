@@ -1,8 +1,8 @@
-From fbd8ed0a565d74d254ffb3f6fbd929d13f2d06f3 Mon Sep 17 00:00:00 2001
+From a0d5f901b67f9d171a2ece320925e69833557954 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sat, 16 Sep 2023 21:26:03 +0206
 Subject: [PATCH 104/200] printk: nbcon: Add buffer management
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 In case of hostile takeovers it must be ensured that the previous
 owner cannot scribble over the output buffer of the emergency/panic
@@ -319,5 +319,5 @@ index dd68135cb371..58b57deb0cbe 100644
  	console_sysfs_notify();
  
 -- 
-2.45.2
+2.47.0
 

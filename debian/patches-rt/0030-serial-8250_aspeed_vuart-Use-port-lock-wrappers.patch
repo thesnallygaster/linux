@@ -1,8 +1,8 @@
-From deeff9a4358ee6cf3b3c8c3fec09417829e1adf6 Mon Sep 17 00:00:00 2001
+From 2a77b2770c01f7df46b13a98b873d04b14c60096 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:21 +0206
 Subject: [PATCH 030/200] serial: 8250_aspeed_vuart: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -63,5 +63,5 @@ index 4a9e71b2dbbc..021949f252f8 100644
  	lsr = serial_port_in(port, UART_LSR);
  
 -- 
-2.45.2
+2.47.0
 

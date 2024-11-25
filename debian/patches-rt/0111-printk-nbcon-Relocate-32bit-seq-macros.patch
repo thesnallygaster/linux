@@ -1,8 +1,8 @@
-From cc4e3316dd0a48aa5f68b37854cbda3c13023086 Mon Sep 17 00:00:00 2001
+From e29c7461c0cd7c7a826ad68e148d561fdea9f409 Mon Sep 17 00:00:00 2001
 From: John Ogness <john.ogness@linutronix.de>
 Date: Wed, 6 Dec 2023 12:01:56 +0000
 Subject: [PATCH 111/200] printk: nbcon: Relocate 32bit seq macros
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 The macros __seq_to_nbcon_seq() and __nbcon_seq_to_seq() are
 used to provide support for atomic handling of sequence numbers
@@ -145,5 +145,5 @@ index 18cd25e489b8..b82a96dc2ea2 100644
 +
  #endif /* _KERNEL_PRINTK_RINGBUFFER_H */
 -- 
-2.45.2
+2.47.0
 

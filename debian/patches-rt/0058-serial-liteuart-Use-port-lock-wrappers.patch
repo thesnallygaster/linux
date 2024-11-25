@@ -1,8 +1,8 @@
-From 87ea771fb92e18a46a76b14f773b7d14b39b541f Mon Sep 17 00:00:00 2001
+From 430c731b6c3a2214cbf346319ca105887f773bc4 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Thu, 14 Sep 2023 20:43:49 +0206
 Subject: [PATCH 058/200] serial: liteuart: Use port lock wrappers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 When a serial port is used for kernel console output, then all
 modifications to the UART registers which are done from other contexts,
@@ -112,5 +112,5 @@ index d881cdd2a58f..a25ab1efe38f 100644
  
  static int liteuart_console_setup(struct console *co, char *options)
 -- 
-2.45.2
+2.47.0
 

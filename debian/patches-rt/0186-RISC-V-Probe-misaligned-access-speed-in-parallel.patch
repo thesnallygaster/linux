@@ -1,8 +1,8 @@
-From 1eca1d3468c701a89e28e59735189ac66ad6d2c7 Mon Sep 17 00:00:00 2001
+From c3cb39b06a92918de72e567a4cff798ecc812eda Mon Sep 17 00:00:00 2001
 From: Evan Green <evan@rivosinc.com>
 Date: Mon, 6 Nov 2023 14:58:55 -0800
 Subject: [PATCH 186/200] RISC-V: Probe misaligned access speed in parallel
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Probing for misaligned access speed takes about 0.06 seconds. On a
 system with 64 cores, doing this in smp_callin() means it's done
@@ -45,7 +45,7 @@ index d0345bd659c9..23fed53b8815 100644
 -
  #endif
 diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index e39a905aca24..9d8b6b463592 100644
+index bb5fb2b820a2..01dc099bfcdf 100644
 --- a/arch/riscv/kernel/cpufeature.c
 +++ b/arch/riscv/kernel/cpufeature.c
 @@ -8,6 +8,7 @@
@@ -64,7 +64,7 @@ index e39a905aca24..9d8b6b463592 100644
  #define MISALIGNED_COPY_SIZE ((MISALIGNED_BUFFER_SIZE / 2) - 0x80)
  
  unsigned long elf_hwcap __read_mostly;
-@@ -571,14 +573,15 @@ unsigned long riscv_get_elf_hwcap(void)
+@@ -575,14 +577,15 @@ unsigned long riscv_get_elf_hwcap(void)
  	return hwcap;
  }
  
@@ -82,7 +82,7 @@ index e39a905aca24..9d8b6b463592 100644
  	void *dst;
  	void *src;
  	long speed = RISCV_HWPROBE_MISALIGNED_SLOW;
-@@ -645,7 +648,7 @@ void check_unaligned_access(int cpu)
+@@ -649,7 +652,7 @@ void check_unaligned_access(int cpu)
  		pr_warn("cpu%d: rdtime lacks granularity needed to measure unaligned access speed\n",
  			cpu);
  
@@ -91,7 +91,7 @@ index e39a905aca24..9d8b6b463592 100644
  	}
  
  	if (word_cycles < byte_cycles)
-@@ -659,18 +662,83 @@ void check_unaligned_access(int cpu)
+@@ -663,18 +666,83 @@ void check_unaligned_access(int cpu)
  		(speed == RISCV_HWPROBE_MISALIGNED_FAST) ? "fast" : "slow");
  
  	per_cpu(misaligned_access_speed, cpu) = speed;
@@ -193,5 +193,5 @@ index 1b8da4e40a4d..2cb5e651412c 100644
  	if (has_vector()) {
  		if (riscv_v_setup_vsize())
 -- 
-2.45.2
+2.47.0
 

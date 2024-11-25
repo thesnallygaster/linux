@@ -1,9 +1,9 @@
-From 7c9f87b242a7d6237fc4e6dfbd055786274c7de7 Mon Sep 17 00:00:00 2001
+From e3cf09dc5d4f79a571d5a4102c89edbf9214c2f9 Mon Sep 17 00:00:00 2001
 From: Mike Galbraith <umgwanakikbuti@gmail.com>
 Date: Sat, 27 Feb 2016 08:09:11 +0100
 Subject: [PATCH 158/200] drm/i915: Use preempt_disable/enable_rt() where
  recommended
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Mario Kleiner suggest in commit
   ad3543ede630f ("drm/intel: Push get_scanout_position() timestamping into kms driver.")
@@ -58,5 +58,5 @@ index f5659ebd08eb..5b6d2f55528d 100644
  	spin_unlock_irqrestore(&dev_priv->uncore.lock, irqflags);
  
 -- 
-2.45.2
+2.47.0
 

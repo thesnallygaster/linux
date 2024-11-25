@@ -1,9 +1,9 @@
-From 1714943dda97cac2e6f767914db38a7de60d3898 Mon Sep 17 00:00:00 2001
+From 7f93766ae9c943df761051f82dde7bffaeb15a16 Mon Sep 17 00:00:00 2001
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Date: Fri, 8 Sep 2023 18:22:52 +0200
 Subject: [PATCH 005/200] locking/rtmutex: Use rt_mutex specific scheduler
  helpers
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Have rt_mutex use the rt_mutex specific scheduler helpers to avoid
 recursion vs rtlock on the PI state.
@@ -59,7 +59,7 @@ index ce2889f12375..f8e65b27d9d6 100644
  	/*
  	 * Fixup the pi_state owner and possibly acquire the lock if we
 diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index bcec0533a0cc..a3fe05dfd0d8 100644
+index ad15a7d81e59..f9c66d1415d6 100644
 --- a/kernel/locking/rtmutex.c
 +++ b/kernel/locking/rtmutex.c
 @@ -1632,7 +1632,7 @@ static int __sched rt_mutex_slowlock_block(struct rt_mutex_base *lock,
@@ -71,8 +71,8 @@ index bcec0533a0cc..a3fe05dfd0d8 100644
  
  		raw_spin_lock_irq(&lock->wait_lock);
  		set_current_state(state);
-@@ -1661,7 +1661,7 @@ static void __sched rt_mutex_handle_deadlock(int res, int detect_deadlock,
- 	WARN(1, "rtmutex deadlock detected\n");
+@@ -1662,7 +1662,7 @@ static void __sched rt_mutex_handle_deadlock(int res, int detect_deadlock,
+ 
  	while (1) {
  		set_current_state(TASK_INTERRUPTIBLE);
 -		schedule();
@@ -80,7 +80,7 @@ index bcec0533a0cc..a3fe05dfd0d8 100644
  	}
  }
  
-@@ -1756,6 +1756,15 @@ static int __sched rt_mutex_slowlock(struct rt_mutex_base *lock,
+@@ -1757,6 +1757,15 @@ static int __sched rt_mutex_slowlock(struct rt_mutex_base *lock,
  	unsigned long flags;
  	int ret;
  
@@ -96,7 +96,7 @@ index bcec0533a0cc..a3fe05dfd0d8 100644
  	/*
  	 * Technically we could use raw_spin_[un]lock_irq() here, but this can
  	 * be called in early boot if the cmpxchg() fast path is disabled
-@@ -1767,6 +1776,7 @@ static int __sched rt_mutex_slowlock(struct rt_mutex_base *lock,
+@@ -1768,6 +1777,7 @@ static int __sched rt_mutex_slowlock(struct rt_mutex_base *lock,
  	raw_spin_lock_irqsave(&lock->wait_lock, flags);
  	ret = __rt_mutex_slowlock_locked(lock, ww_ctx, state);
  	raw_spin_unlock_irqrestore(&lock->wait_lock, flags);
@@ -188,5 +188,5 @@ index 48a19ed8486d..842037b2ba54 100644
  /*
   * The common functions which get wrapped into the rwlock API.
 -- 
-2.45.2
+2.47.0
 

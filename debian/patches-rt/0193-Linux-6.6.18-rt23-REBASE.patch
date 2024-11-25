@@ -1,8 +1,8 @@
-From a879175afc8b430c8456afedbe47e3689bb9febc Mon Sep 17 00:00:00 2001
+From 89b8cc517d9a6ea6225d3a4f54623ca63be89fef Mon Sep 17 00:00:00 2001
 From: Clark Williams <clark.williams@gmail.com>
 Date: Tue, 27 Feb 2024 17:13:28 -0600
 Subject: [PATCH 193/200] Linux 6.6.18-rt23 REBASE
-Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.44-rt39.tar.xz
+Origin: https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/older/patches-6.6.58-rt45.tar.xz
 
 Signed-off-by: Clark Williams <clark.williams@gmail.com>
 ---
@@ -17,5 +17,5 @@ index 483ad771f201..9a218ca23053 100644
 --rt19
 +-rt23
 -- 
-2.45.2
+2.47.0
 
