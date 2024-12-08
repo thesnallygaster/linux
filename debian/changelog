@@ -1,10 +1,11 @@
-linux (6.12.3-2) UNRELEASED; urgency=medium
+linux (6.12.3-2) unstable; urgency=medium
 
   * Rebuild for bookworm-gd:
     - Revert compiler version to gcc-12
     - debian_linux.config_v2: Add workaround for a bug in older dacite
+    - Set enable_signed to false in defines.toml
 
- -- Damian Duży <dame@zakonfeniksa.org>  Sun, 08 Dec 2024 12:59:59 +0100
+ -- Damian Duży <dame@zakonfeniksa.org>  Sun, 08 Dec 2024 13:03:31 +0100
 
 linux (6.12.3-1) unstable; urgency=medium
 
