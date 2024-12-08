@@ -2,6 +2,7 @@ linux (6.12.3-2) UNRELEASED; urgency=medium
 
   * Rebuild for bookworm-gd:
     - Revert compiler version to gcc-12
+    - debian_linux.config_v2: Add workaround for a bug in older dacite
 
  -- Damian Duży <dame@zakonfeniksa.org>  Sun, 08 Dec 2024 12:59:59 +0100
 
