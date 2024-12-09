@@ -3,6 +3,8 @@ linux (6.12.5-1) UNRELEASED; urgency=medium
   * New upstream stable update
   * Re-enable compressing all modules: (closes: #1089515)
     - Set MODULE_COMPRESS.
+  [ Salvatore Bonaccorso ]
+  * d/u/signing-key.asc: Merge keys into a single OpenPGP ASCII Armored block
 
  -- Damian Duży <dame@zakonfeniksa.org>  Tue, 17 Dec 2024 07:49:31 +0100
 
