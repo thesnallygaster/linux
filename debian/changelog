@@ -1,8 +1,8 @@
-linux (6.12.4-1) UNRELEASED; urgency=medium
+linux (6.12.4-1) unstable; urgency=medium
 
   * New upstream stable update
 
- -- Damian Duży <dame@zakonfeniksa.org>  Thu, 12 Dec 2024 09:35:00 +0100
+ -- Damian Duży <dame@zakonfeniksa.org>  Thu, 12 Dec 2024 09:36:34 +0100
 
 linux (6.12.3-2) unstable; urgency=medium
 
