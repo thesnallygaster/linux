@@ -5,6 +5,8 @@ linux (6.12.6-1) UNRELEASED; urgency=medium
     - Enable ZRAM_BACKEND_LZ4, ZRAM_BACKEND_LZ4HC and ZRAM_BACKEND_ZSTD
     (Closes: #1086172)
   * drivers/block/zram: Enable ZRAM_BACKEND_DEFLATE
+  [ Uwe Kleine-König ]
+  * [arm64] Enable rx8025 driver as module.
 
  -- Damian Duży <dame@zakonfeniksa.org>  Fri, 20 Dec 2024 13:34:20 +0100
 
