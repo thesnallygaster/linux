@@ -1,4 +1,4 @@
-linux (6.12.5-1) UNRELEASED; urgency=medium
+linux (6.12.5-1) unstable; urgency=medium
 
   * New upstream stable update
   * Re-enable compressing all modules: (closes: #1089515)
@@ -7,7 +7,7 @@ linux (6.12.5-1) UNRELEASED; urgency=medium
   * d/u/signing-key.asc: Merge keys into a single OpenPGP ASCII Armored block
   * d/config: Update with the help of kconfigeditor2
 
- -- Damian Duży <dame@zakonfeniksa.org>  Tue, 17 Dec 2024 07:49:31 +0100
+ -- Damian Duży <dame@zakonfeniksa.org>  Tue, 17 Dec 2024 08:08:56 +0100
 
 linux (6.12.4-1) unstable; urgency=medium
 
