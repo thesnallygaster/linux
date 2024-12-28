@@ -5,6 +5,7 @@ linux (6.12.9-1) UNRELEASED; urgency=medium
   [ Salvatore Bonaccorso ]
   * debian/salsa-ci.yml: Include run of .build-after-script from common
     pipeline.
+  * nfsd: fix legacy client tracking initialization (Closes: #1087900)
 
  -- Damian Duży <dame@zakonfeniksa.org>  Mon, 13 Jan 2025 11:20:58 +0100
 
