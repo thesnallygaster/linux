@@ -7,6 +7,9 @@ linux (6.12.11-1) UNRELEASED; urgency=medium
     (Modern userland supports MBIM, disabling breaks connections by default,
      Ubuntu ships kernels without this patch and it's reliable there.)
 
+  [ Jochen Sprickerhof ]
+  * [arm64] Enable modules for Google Pixel 6 (Exynos)
+
  -- Damian Duży <dame@zakonfeniksa.org>  Sat, 01 Feb 2025 10:41:08 +0100
 
 linux (6.12.10-1) unstable; urgency=medium
