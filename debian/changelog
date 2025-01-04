@@ -13,6 +13,8 @@ linux (6.12.9-1) UNRELEASED; urgency=medium
   * debian/salsa-ci.yml: Reference .build-after-script from after_script
     section
 
+  * [mips*] Increase RELOCATION_TABLE_SIZE to 0x00201000 (fixes FTBFS)
+
  -- Damian Duży <dame@zakonfeniksa.org>  Mon, 13 Jan 2025 11:20:58 +0100
 
 linux (6.12.8-1) unstable; urgency=medium
