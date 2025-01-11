@@ -2,6 +2,8 @@ linux (6.12.10-1) UNRELEASED; urgency=medium
 
   * New upstream stable update
 
+  * [amd64/cloud] drivers/idle: Enable INTEL_IDLE (Closes: #1078005)
+
  -- Damian Duży <dame@zakonfeniksa.org>  Sun, 19 Jan 2025 10:31:31 +0100
 
 linux (6.12.9-1) unstable; urgency=medium
