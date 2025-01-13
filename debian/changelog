@@ -1,4 +1,4 @@
-linux (6.12.9-1) UNRELEASED; urgency=medium
+linux (6.12.9-1) unstable; urgency=medium
 
   * New upstream stable update
 
@@ -17,7 +17,7 @@ linux (6.12.9-1) UNRELEASED; urgency=medium
 
   * Update rt patches
 
- -- Damian Duży <dame@zakonfeniksa.org>  Mon, 13 Jan 2025 11:20:58 +0100
+ -- Damian Duży <dame@zakonfeniksa.org>  Mon, 13 Jan 2025 11:36:02 +0100
 
 linux (6.12.8-1) unstable; urgency=medium
 
