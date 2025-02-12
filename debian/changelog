@@ -1,4 +1,4 @@
-linux (6.12.13-1) UNRELEASED; urgency=medium
+linux (6.12.13-1) unstable; urgency=medium
 
   * New upstream stable update
   * Drop patches applied upstream
@@ -10,7 +10,7 @@ linux (6.12.13-1) UNRELEASED; urgency=medium
   [ Salvatore Bonaccorso ]
   * [rt] Refresh upstream patches
 
- -- Damian Duży <dame@zakonfeniksa.org>  Wed, 12 Feb 2025 08:41:22 +0100
+ -- Damian Duży <dame@zakonfeniksa.org>  Wed, 12 Feb 2025 09:04:36 +0100
 
 linux (6.12.12-1) unstable; urgency=medium
 
