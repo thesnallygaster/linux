@@ -1,6 +1,7 @@
 linux (6.12.13-1) UNRELEASED; urgency=medium
 
   * New upstream stable update
+  * Drop patches applied upstream
 
   [ Emanuele Rocca]
   * [amd64, arm64] Add pmem modules to amd64 and arm64 kernel-image udeb
