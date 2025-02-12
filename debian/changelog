@@ -7,6 +7,9 @@ linux (6.12.13-1) UNRELEASED; urgency=medium
   * [amd64, arm64] Add pmem modules to amd64 and arm64 kernel-image udeb
     to support UEFI HTTP boot (or u-boot) in debian-installer
 
+  [ Salvatore Bonaccorso ]
+  * [rt] Refresh upstream patches
+
  -- Damian Duży <dame@zakonfeniksa.org>  Wed, 12 Feb 2025 08:41:22 +0100
 
 linux (6.12.12-1) unstable; urgency=medium
