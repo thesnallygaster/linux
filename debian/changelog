@@ -5,6 +5,9 @@ linux (6.12.15-1) UNRELEASED; urgency=medium
   [ Sebastian Siewior ]
   * Enable RCU_LAZY to not wake up the CPU for RCU callbacks
 
+  [ Yoann Congal ]
+  * [arm64/rt] Re-enable KVM
+
  -- Damian Duży <dame@zakonfeniksa.org>  Thu, 20 Feb 2025 08:54:48 +0100
 
 linux (6.12.13-1) unstable; urgency=medium
